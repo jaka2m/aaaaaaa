@@ -207,26 +207,26 @@ function generateWebPage(request, prxList, page = 0, searchTerm = "") {
 
         :root {
             /* Dark Mode Defaults */
-            --primary: #00ff88;
-            --secondary: #00ffff;
-            --accent: #ff00ff;
-            --dark: #080c14;
-            --darker: #040608;
-            --light: #e0ffff;
-            --card-bg: rgba(8, 12, 20, 0.95);
-            --glow: 0 0 20px rgba(0, 255, 136, 0.3);
+            --primary: #4f46e5;
+            --secondary: #6366f1;
+            --accent: #818cf8;
+            --dark: #111827;
+            --darker: #0d1117;
+            --light: #f9fafb;
+            --card-bg: #1f2937;
+            --glow: 0 0 20px rgba(79, 70, 229, 0.3);
         }
 
         /* Light Mode Overrides */
 html.light {
-  --primary: #0088ff;
-  --secondary: #00ffff;
-  --accent: #ff00ff;
-  --dark: #f0f8ff;
+  --primary: #3b82f6;
+  --secondary: #60a5fa;
+  --accent: #93c5fd;
+  --dark: #f9fafb;
   --darker: #ffffff;
-  --light: #2c2c2c;
-  --card-bg: rgba(224, 242, 255, 0.7); /* Latar belakang kartu putih kebiruan transparan */
-  --glow: 0 0 30px rgba(173, 216, 230, 0.8); /* Efek blur putih kebiruan */
+  --light: #1f2937;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --glow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 
@@ -497,45 +497,6 @@ html.light select {
             background: rgba(0, 255, 136, 0.1);
         }
 
-        .quantum-table {
-            width: 100%;
-            min-width: 800px;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-        }
-
-        .quantum-table th {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--primary);
-            padding: 1.2rem;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 2px solid var(--primary);
-            white-space: nowrap;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .quantum-table td {
-            padding: 1rem;
-            background: rgba(0, 255, 136, 0.03);
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .quantum-table tr {
-            transition: all 0.3s ease;
-        }
-
-        .quantum-table tr:hover td {
-            background: rgba(0, 255, 136, 0.08);
-            transform: scale(1.01);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.1);
-        }
 
         .btn-icon {
             font-size: 1.2rem;
@@ -595,38 +556,66 @@ html.light select {
             }
         }
 
-        .table-wrapper {
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .server-card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), var(--glow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .server-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15), var(--glow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-header .flag-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+        }
+
+        .card-body h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .card-body p {
+            color: #a0aec0; /* gray-400 */
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .button-grid .button-style {
             width: 100%;
-            max-height: calc(80vh - 200px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 1rem 0;
-            border-radius: 10px;
-            background: rgba(0, 255, 136, 0.02);
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            background-color: var(--primary);
+            color: var(--light);
         }
 
-        .table-wrapper:hover {
-            pointer-events: auto;
-        }
-
-        .table-wrapper::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-track {
-            background: rgba(0, 255, 136, 0.1);
-            border-radius: 4px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary);
-        }
 
         /*
         * =============================================
@@ -860,30 +849,14 @@ html.light select {
   ${buildCountryFlag(prxList)}
 </div>
             
-            <div class="table-wrapper">
-                <table class="quantum-table">
-                    <thead>
-                        <tr>
-                            <th class="text-center">No.</th>
-                            <th class="text-center">IP:Port</th>
-                            <th class="text-center">STATUS</th>
-                            <th class="text-center">ISP</th>
-                            <th class="text-center">Negara</th>
-                            <th class="text-center">Vless</th>
-                            <th class="text-center">Trojan</th>
-                            <th class="text-center">Shadowsocks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <div class="server-grid">
   `;
 
   if (prxToShow.length === 0) {
     html += `
-      <tr>
-        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-          Tidak ada data yang ditemukan.
-        </td>
-      </tr>
+      <div class="text-center text-gray-500 py-10">
+        Tidak ada data yang ditemukan.
+      </div>
     `;
   } else {
     prxToShow.forEach((prx, index) => {
@@ -891,44 +864,36 @@ html.light select {
       const displayIndex = startIndex + index + 1;
 
       const generateConfig = (protocol) => {
-        const configs = {
-          tls: "",
-          ntls: ""
+        const configs = { tls: "", ntls: "" };
+        const baseUri = (port, security, sni, hashSuffix) => {
+            let uri = new URL(`${protocol}://${modifiedHostName}`);
+            uri.port = port;
+            uri.searchParams.set("encryption", "none");
+            uri.searchParams.set("type", "ws");
+            uri.searchParams.set("host", hostName);
+            uri.searchParams.set("security", security);
+            uri.searchParams.set("path", `/Free-VPN-Geo-Project/${prxIP}-${prxPort}`);
+            uri.hash = `${displayIndex} ${getFlagEmoji(country)} ${org} ${hashSuffix} [${serviceName}]`;
+            if (protocol === "ss") {
+                uri.username = btoa(`none:${uuid}`);
+                const pluginOpts = [
+                    "mux=0",
+                    "mode=websocket",
+                    `path=/Free-VPN-Geo-Project/${prxIP}-${prxPort}`,
+                    `host=${modifiedHostName}`
+                ];
+                if (security === "tls") pluginOpts.unshift("tls");
+                uri.searchParams.set("plugin", `${atob(v2)}-plugin;${pluginOpts.join(";")}`);
+            } else {
+                uri.username = uuid;
+                if (sni) uri.searchParams.set("sni", sni);
+            }
+            return uri.toString();
         };
-        const port = selectedConfigType === 'tls' ? 443 : 80;
 
-        let uriTls = new URL(`${protocol}://${modifiedHostName}`);
-        uriTls.port = 443;
-        uriTls.searchParams.set("encryption", "none");
-        uriTls.searchParams.set("type", "ws");
-        uriTls.searchParams.set("host", hostName);
-        uriTls.searchParams.set("security", "tls");
-        uriTls.searchParams.set("path", `/Free-VPN-Geo-Project/${prxIP}-${prxPort}`);
-        uriTls.hash = `${displayIndex} ${getFlagEmoji(country)} ${org} WS TLS [${serviceName}]`;
-        if (protocol === "ss") {
-          uriTls.username = btoa(`none:${uuid}`);
-          uriTls.searchParams.set("plugin", `${atob(v2)}-plugin;tls;mux=0;mode=websocket;path=/Free-VPN-Geo-Project/${prxIP}-${prxPort};host=${modifiedHostName}`);
-        } else {
-          uriTls.username = uuid;
-        }
-        configs.tls = uriTls.toString();
+        configs.tls = baseUri(443, "tls", hostName, "WS TLS");
+        configs.ntls = baseUri(80, "none", "", "WS NTLS");
 
-        let uriNtls = new URL(`${protocol}://${modifiedHostName}`);
-        uriNtls.port = 80;
-        uriNtls.searchParams.set("encryption", "none");
-        uriNtls.searchParams.set("type", "ws");
-        uriNtls.searchParams.set("host", hostName);
-        uriNtls.searchParams.set("security", "none");
-        uriNtls.searchParams.set("path", `/Free-VPN-Geo-Project/${prxIP}-${prxPort}`);
-        uriNtls.hash = `${displayIndex} ${getFlagEmoji(country)} ${org} WS NTLS [${serviceName}]`;
-        if (protocol === "ss") {
-          uriNtls.username = btoa(`none:${uuid}`);
-          uriNtls.searchParams.set("plugin", `${atob(v2)}-plugin;mux=0;mode=websocket;path=/Free-VPN-Geo-Project/${prxIP}-${prxPort};host=${modifiedHostName}`);
-        } else {
-          uriNtls.username = uuid;
-          uriNtls.searchParams.set("sni", "");
-        }
-        configs.ntls = uriNtls.toString();
         return configs;
       };
 
@@ -937,46 +902,31 @@ html.light select {
       const ssConfigs = generateConfig("ss");
       
       html += `
-        <tr class="config-row text-center font-serif tracking-wider">
-  <td>${displayIndex}.</td>
-  <td class="ip-port">${prxIP}:${prxPort}</td>
-  <td class="proxy-status"></td>
-  <td>${org}</td>
-  <td class="px-1 py-1 text-center">
-    <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()}"
-      style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
-    </span>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap">
-    <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? vlessConfigs.tls : vlessConfigs.ntls}')">
-        VLESS
-      </button>
-    </div>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap">
-    <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? trojanConfigs.tls : trojanConfigs.ntls}')">
-        TROJAN
-      </button>
-    </div>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap">
-    <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? ssConfigs.tls : ssConfigs.ntls}')">
-        Shadowsocks
-      </button>
-    </div>
-  </td>
-</tr>
+        <div class="server-card">
+            <div class="card-header">
+                <div class="proxy-status font-bold"></div>
+                <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()}"></span>
+            </div>
+            <div class="card-body">
+                <h3 class="text-lg font-bold">${org}</h3>
+                <p class="text-sm ip-address">IP: ${prxIP}</p>
+                <p class="text-sm port">Port: ${prxPort}</p>
+            </div>
+            <div class="card-footer button-grid">
+                <button class="button-style" onclick="showPopup('${trojanConfigs.tls}')">TROJAN TLS</button>
+                <button class="button-style" onclick="showPopup('${vlessConfigs.tls}')">VLESS TLS</button>
+                <button class="button-style" onclick="showPopup('${ssConfigs.tls}')">SS TLS</button>
+                <button class="button-style" onclick="showPopup('${trojanConfigs.ntls}')">TROJAN NTLS</button>
+                <button class="button-style" onclick="showPopup('${vlessConfigs.ntls}')">VLESS NTLS</button>
+                <button class="button-style" onclick="showPopup('${ssConfigs.ntls}')">SS NTLS</button>
+            </div>
+        </div>
       `;
     });
   }
   
   html += `
-      </tbody>
-    </table>
-  </div>
+      </div>
   
   <div id="urlPopup" class="hidden fixed inset-0 z-50 flex items-center justify-center">
   <div class="absolute inset-0 bg-blue-500 opacity-20 backdrop-blur-md"></div>
@@ -1480,7 +1430,7 @@ document.getElementById('closePopupBtn').addEventListener('click', () => {
 Â  </script>
  <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const proxyRows = document.querySelectorAll('.config-row');
+        const proxyRows = document.querySelectorAll('.server-card');
         const CORS_API_URL = 'https://cors.checker-ip.web.id/';
         const CHECKER_API_URL = 'https://geovpn.vercel.app/check?ip=';
 
@@ -1495,15 +1445,18 @@ document.getElementById('closePopupBtn').addEventListener('click', () => {
         const deadCountEl = document.getElementById('dead-count');
 
         const promises = Array.from(proxyRows).map(async (row) => {
-            const ipPortElement = row.querySelector('.ip-port');
             const statusElement = row.querySelector('.proxy-status');
+            const ipElement = row.querySelector('.ip-address');
+            const portElement = row.querySelector('.port');
 
-            if (!ipPortElement || !statusElement) {
-                console.error("Elemen .ip-port atau .proxy-status tidak ditemukan pada satu baris. Melewati baris ini.");
+            if (!statusElement || !ipElement || !portElement) {
+                console.error("Elemen penting tidak ditemukan di kartu server. Melewati kartu ini.");
                 return;
             }
 
-            const ipPort = ipPortElement.textContent.trim();
+            const ip = ipElement.textContent.replace('IP: ', '').trim();
+            const port = portElement.textContent.replace('Port: ', '').trim();
+            const ipPort = `${ip}:${port}`;
             const fullApiUrl = CORS_API_URL + '?url=' + CHECKER_API_URL + ipPort;
 
             // Tampilkan spinner saat memuat
@@ -1529,18 +1482,18 @@ document.getElementById('closePopupBtn').addEventListener('click', () => {
                     delay = '';
                 }
 
+                statusElement.classList.remove('text-green-400', 'text-red-500', 'text-gray-500');
                 if (status === 'ACTIVE') {
                     activeCount++;
-                    statusHtml =
-                        '<div class="flex flex-col items-center">' +
-                        '<i class="fas fa-check-circle active-icon-glow"></i>' +
-                        '<span class="text-xs font-normal text-amber-400 mt-1">' + delay + '</span>' +
-                        '</div>';
+                    statusHtml = `Active ${delay.replace(/[()]/g, '')}`;
+                    statusElement.classList.add('text-green-400');
                 } else if (status === 'DEAD') {
                     deadCount++;
-                    statusHtml = '<span class="text-red-500 font-bold">DEAD</span>';
+                    statusHtml = 'Dead';
+                    statusElement.classList.add('text-red-500');
                 } else {
-                    statusHtml = '<span class="text-cyan-500 font-bold">UNKNOWN</span>';
+                    statusHtml = 'Unknown';
+                     statusElement.classList.add('text-gray-500');
                 }
 
                 statusElement.innerHTML = statusHtml;
