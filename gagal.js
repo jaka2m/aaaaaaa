@@ -378,6 +378,25 @@ html.light select {
             width: 100%;
         }
 
+        .table-button {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .table-button:hover {
+            background-color: var(--primary);
+            color: var(--dark);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
         .button-search:hover,
         .input-search:focus {
             background-color: rgba(0, 255, 136, 0.1);
@@ -493,20 +512,20 @@ html.light select {
         .quantum-table {
             width: 100%;
             min-width: 800px;
-            border-collapse: separate;
-            border-spacing: 0 8px;
+            border-collapse: collapse;
+            border-spacing: 0;
         }
 
         .quantum-table th {
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.15);
             color: var(--primary);
-            padding: 1.2rem;
+            padding: 1rem 1.5rem;
             font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 1rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 2px solid var(--primary);
+            letter-spacing: 1.5px;
+            border-bottom: 3px solid var(--primary);
             white-space: nowrap;
             position: sticky;
             top: 0;
@@ -514,10 +533,11 @@ html.light select {
         }
 
         .quantum-table td {
-            padding: 1rem;
-            background: rgba(0, 255, 136, 0.03);
-            border: none;
+            padding: 1.2rem 1.5rem;
+            background: transparent;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
             transition: all 0.3s ease;
+            vertical-align: middle;
         }
 
         .quantum-table tr {
@@ -525,9 +545,7 @@ html.light select {
         }
 
         .quantum-table tr:hover td {
-            background: rgba(0, 255, 136, 0.08);
-            transform: scale(1.01);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.05);
         }
 
         .btn-icon {
@@ -930,7 +948,7 @@ html.light select {
       const ssConfigs = generateConfig("ss");
       
       html += `
-        <tr class="config-row text-center font-serif tracking-wider">
+        <tr class="config-row text-center">
   <td>${displayIndex}.</td>
   <td class="ip-port">${prxIP}:${prxPort}</td>
   <td class="proxy-status"></td>
@@ -942,21 +960,21 @@ html.light select {
   </td>
   <td class="px-6 py-4 whitespace-nowrap">
     <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? vlessConfigs.tls : vlessConfigs.ntls}')">
+      <button class="table-button" onclick="showPopup('${selectedConfigType === 'tls' ? vlessConfigs.tls : vlessConfigs.ntls}')">
         VLESS
       </button>
     </div>
   </td>
   <td class="px-6 py-4 whitespace-nowrap">
     <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? trojanConfigs.tls : trojanConfigs.ntls}')">
+      <button class="table-button" onclick="showPopup('${selectedConfigType === 'tls' ? trojanConfigs.tls : trojanConfigs.ntls}')">
         TROJAN
       </button>
     </div>
   </td>
   <td class="px-6 py-4 whitespace-nowrap">
     <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? ssConfigs.tls : ssConfigs.ntls}')">
+      <button class="table-button" onclick="showPopup('${selectedConfigType === 'tls' ? ssConfigs.tls : ssConfigs.ntls}')">
         Shadowsocks
       </button>
     </div>
