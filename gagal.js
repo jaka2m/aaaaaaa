@@ -1074,14 +1074,58 @@ export default {
         const result = generateWebPage(request, prxList, pageIndex, searchTerm);
         return result;
       } else if (url.pathname.startsWith("/check")) {
-        const target = url.searchParams.get("target").split(":");
-        const result = await checkPrxHealth(target[0], target[1] || "443");
+        const ip = url.searchParams.get("ip");
 
-        return new Response(JSON.stringify(result), {
+        if (!ip) {
+          return new Response("IP parameter is missing", { status: 400 });
+        }
+
+        // Anti-view source logic
+        const html = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Private API</title>
+              <script>
+                // Simple anti-view source
+                document.onkeydown = function(e) {
+                  if (e.ctrlKey &&
+                      (e.keyCode === 67 || // Ctrl+C
+                       e.keyCode === 86 || // Ctrl+V
+                       e.keyCode === 85 || // Ctrl+U
+                       e.keyCode === 117)) { // F6 (often used for view source)
+                      return false;
+                  } else {
+                      return true;
+                  }
+                };
+
+                // More advanced anti-devtools
+                (function() {
+                  const devtools = /./;
+                  devtools.toString = function() {
+                    this.opened = true;
+                  }
+                  setInterval(() => {
+                    console.log('%c', devtools);
+                    if (devtools.opened) {
+                      document.body.innerHTML = '<h1>ACCESS DENIED: Viewing source code is not allowed.</h1>';
+                    }
+                  }, 1000);
+                })();
+              </script>
+            </head>
+            <body>
+              <h1>This is a private API.</h1>
+              <p>Your IP is: ${ip}</p>
+            </body>
+          </html>
+        `;
+
+        return new Response(html, {
           status: 200,
           headers: {
-            ...CORS_HEADER_OPTIONS,
-            "Content-Type": "application/json",
+            "Content-Type": "text/html",
           },
         });
       } else if (url.pathname.startsWith("/api/v1")) {
