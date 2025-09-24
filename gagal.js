@@ -78,8 +78,7 @@ function buildCountryFlag(prxList) {
         const count = countryCounts[country];
         try {
             flagElement += `<a href="/sub?search=${country.toLowerCase()}&page=0" class="py-1 flex flex-col items-center no-underline text-current">
-                <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()}"
-                    style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
+                <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()} inline-block w-10 h-10 m-0.5 border-2 border-teal-500 rounded-full">
                 </span>
                 <span class="text-xs font-bold">${country}/${count}</span>
             </a>`;
@@ -198,636 +197,67 @@ function generateWebPage(request, prxList, page = 0, searchTerm = "") {
     <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icon-css@3.5/css/flag-icon.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        /*
-        * =============================================
-        * Global CSS Variables & Basic Styles
-        * =============================================
-        */
-
-        :root {
-            /* Dark Mode Defaults */
-            --primary: #00ff88;
-            --secondary: #00ffff;
-            --accent: #ff00ff;
-            --dark: #080c14;
-            --darker: #040608;
-            --light: #e0ffff;
-            --card-bg: rgba(8, 12, 20, 0.95);
-            --glow: 0 0 20px rgba(0, 255, 136, 0.3);
-        }
-
-        /* Light Mode Overrides */
-html.light {
-  --primary: #0088ff;
-  --secondary: #00ffff;
-  --accent: #ff00ff;
-  --dark: #f0f8ff;
-  --darker: #ffffff;
-  --light: #2c2c2c;
-  --card-bg: rgba(224, 242, 255, 0.7); /* Latar belakang kartu putih kebiruan transparan */
-  --glow: 0 0 30px rgba(173, 216, 230, 0.8); /* Efek blur putih kebiruan */
-}
-
-
-/* Modifikasi elemen lain */
-html.light .quantum-card {
-  backdrop-filter: blur(12px); /* Menambahkan efek blur pada kartu */
-  border: 1px solid rgba(173, 216, 230, 0.5); /* Border dengan warna yang sama */
-  box-shadow: var(--glow); /* Menggunakan variabel glow yang baru */
-}
-
-html.light .quantum-table td {
-  background: rgba(173, 216, 230, 0.1); /* Latar belakang sel tabel sedikit transparan */
-}
-
-html.light .quantum-table tr:hover td {
-  background: rgba(173, 216, 230, 0.2); /* Efek hover pada sel tabel */
-}
-
-html.light .button-style, html.light .copy-btn {
-  background: var(--primary);
-  color: var(--dark);
-  border: 1px solid var(--primary);
-  /* Tambahkan efek shadow pada tombol */
-  box-shadow: 0 0 15px rgba(0, 136, 255, 0.3);
-}
-
-html.light select {
-  color: var(--light);
-  background: rgba(173, 216, 230, 0.1); /* Latar belakang dropdown */
-  border: 2px solid rgba(173, 216, 230, 0.3); /* Border dropdown */
-  box-shadow: 0 0 15px rgba(173, 216, 230, 0.5); /* Glow dropdown */
-}
-
-        html.light body {
-            background-image:
-                radial-gradient(circle at 0% 0%, rgba(0, 136, 255, 0.1) 0, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(0, 255, 255, 0.1) 0, transparent 50%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230088ff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        /* Universal Box Sizing & Font */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        /* Body & Background */
-        body {
-            background: var(--darker);
-            color: var(--light);
-            min-height: 85vh;
-            background-image:
-                radial-gradient(circle at 0% 0%, rgba(0, 255, 136, 0.1) 0, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(0, 255, 255, 0.1) 0, transparent 50%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        /*
-        * =============================================
-        * Layout & Component Styles
-        * =============================================
-        */
-
-        .wildcard-dropdown {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            margin: 0.5rem auto;
-        }
-
-        select {
-            width: 100%;
-            max-width: 200px;
-            padding: 0.4rem 0.6rem;
-            font-size: 0.8rem;
-            color: var(--light);
-            background: rgba(0, 255, 136, 0.05);
-            border: 2px solid rgba(0, 255, 136, 0.3);
-            border-radius: 10px;
-            box-shadow: var(--glow);
-            outline: none;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            appearance: none;
-            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23e0ffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M6 9l6 6 6-6"%3E%3C/path%3E%3C/svg%3E');
-            background-position: right 10px center;
-            background-repeat: no-repeat;
-            background-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        select:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
-        }
-
-        select:focus {
-            border-color: var(--secondary);
-            background: rgba(0, 255, 136, 0.1);
-            box-shadow: 0 0 20px var(--secondary);
-        }
-
-        /* All Button & Input Common Styles */
-        .button-reset,
-        .button-search,
-        .input-search,
-        .button-style,
-        .copy-btn {
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            outline: none;
-            border-radius: 0.375rem;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            background-color: transparent;
-            padding: 0.3rem 0.75rem;
-        }
-
-        .button-style, .copy-btn {
-            background: var(--primary);
-            color: var(--dark);
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            padding: 0.6rem 1rem;
-            font-size: 0.6rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Tambahan untuk tombol dark mode */
-        .toggle-dark-mode {
-            background-color: var(--primary);
-            color: var(--dark);
-            border-radius: 9999px;
-            border: 2px solid var(--dark);
-            padding: 0.5rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        .toggle-dark-mode:hover {
-            transform: scale(1.1);
-        }
-
-        .copy-btn {
-            padding: 0.8rem 1.5rem;
-            font-size: 0.9rem;
-            width: 100%;
-        }
-
-        .button-search:hover,
-        .input-search:focus {
-            background-color: rgba(0, 255, 136, 0.1);
-            border-color: var(--secondary);
-        }
-
-        .button-style::before, .copy-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
-            transition: 0.5s;
-        }
-
-        .button-style:hover::before, .copy-btn:hover::before {
-            left: 100%;
-        }
-
-        .button-style:hover, .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
-        }
-
-        .button-style:active, .copy-btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 3px 10px rgba(0, 255, 136, 0.2);
-        }
-
-        .form-search {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            gap: 1rem;
-        }
-
-        .quantum-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 2rem;
-            perspective: 1000px;
-        }
-
-        .quantum-card {
-            max-width: 100%;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: var(--glow);
-            transform-style: preserve-3d;
-            animation: cardFloat 6s ease-in-out infinite;
-        }
-
-        @keyframes cardFloat {
-            0%, 100% { transform: translateY(0) rotateX(0); }
-            50% { transform: translateY(-10px) rotateX(2deg); }
-        }
-
-        .quantum-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 4rem;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 1rem;
-            margin-bottom: 2rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-            position: relative;
-            animation: titlePulse 3s ease-in-out infinite;
-        }
-
-        @keyframes titlePulse {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.02); filter: brightness(1.2); }
-        }
-
-        .search-quantum {
-            position: relative;
-            margin-top: 0.6rem;
-            margin-bottom: 0.3rem;
-        }
-
-        #search-bar {
-            width: 100%;
-            padding: 0.6rem 1rem;
-            font-size: 0.6rem;
-            color: var(--light);
-            background: rgba(0, 255, 136, 0.05);
-            border: 2px solid rgba(0, 255, 136, 0.3);
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        #search-bar:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
-            background: rgba(0, 255, 136, 0.1);
-        }
-
-        .quantum-table {
-            width: 100%;
-            min-width: 800px;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-        }
-
-        .quantum-table th {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--primary);
-            padding: 1.2rem;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 2px solid var(--primary);
-            white-space: nowrap;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .quantum-table td {
-            padding: 1rem;
-            background: rgba(0, 255, 136, 0.03);
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .quantum-table tr {
-            transition: all 0.3s ease;
-        }
-
-        .quantum-table tr:hover td {
-            background: rgba(0, 255, 136, 0.08);
-            transform: scale(1.01);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.1);
-        }
-
-        .btn-icon {
-            font-size: 1.2rem;
-        }
-
-        .quantum-pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .quantum-pagination a {
-            padding: 0.8rem 1.5rem;
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--primary);
-            text-decoration: none;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            transition: all 0.3s ease;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            min-width: 45px;
-            text-align: center;
-        }
-
-        .quantum-pagination a:hover,
-        .quantum-pagination a.active {
-            background: var(--primary);
-            color: var(--dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
-        }
-
-        .quantum-toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 1rem 2rem;
-            background: var(--primary);
-            color: var(--dark);
-            border-radius: 12px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
-            transform: translateY(100%);
-            opacity: 0;
-            animation: toastSlide 0.3s forwards;
-            z-index: 1000;
-        }
-
-        @keyframes toastSlide {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .table-wrapper {
-            width: 100%;
-            max-height: calc(80vh - 200px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 1rem 0;
-            border-radius: 10px;
-            background: rgba(0, 255, 136, 0.02);
-        }
-
-        .table-wrapper:hover {
-            pointer-events: auto;
-        }
-
-        .table-wrapper::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-track {
-            background: rgba(0, 255, 136, 0.1);
-            border-radius: 4px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary);
-        }
-
-        /*
-        * =============================================
-        * Mobile Responsiveness
-        * =============================================
-        */
-
-        @media (max-width: 768px) {
-            .quantum-container {
-                padding: 0.5rem;
-                margin: 0.5rem;
-            }
-            
-            .quantum-card {
-                padding: 1rem;
-                margin: 0;
-                width: 100%;
-                border-radius: 10px;
-                max-width: 100%;
-            }
-
-            .quantum-title {
-                font-size: 2rem;
-                margin-bottom: 1rem;
-            }
-
-            #search-bar {
-                padding: 0.6rem 1rem;
-                font-size: 0.6rem;
-            }
-
-            .table-wrapper {
-                margin: 0.5rem 0;
-                padding: 0;
-                border-radius: 10px;
-                max-height: 60vh;
-                overflow-y: auto;
-                background: rgba(0, 255, 136, 0.02);
-            }
-            
-            .quantum-table th,
-            .quantum-table td {
-                padding: 0.8rem 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .copy-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.8rem;
-            }
-            
-            .quantum-pagination {
-                gap: 0.5rem;
-                flex-wrap: wrap;
-            }
-            
-            .quantum-pagination a {
-                padding: 0.5rem 0.7rem;
-                font-size: 0.7rem;
-                min-width: 30px;
-            }
-            
-            .quantum-toast {
-                left: 1rem;
-                right: 1rem;
-                bottom: 1rem;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .quantum-card {
-                padding: 0.5rem;
-                max-width: 100%;
-            }
-            
-            .quantum-title {
-                font-size: 1.5rem;
-            }
-            
-            .table-wrapper {
-                margin: 0.5rem -0.5rem;
-                padding: 0 0.5rem;
-            }
-            
-            .quantum-table {
-                font-size: 0.8rem;
-            }
-            
-            .copy-btn {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.7rem;
-            }
-        }
-
-        /*
-        * =============================================
-        * Animations & Special Styles
-        * =============================================
-        */
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes spin-around {
-            0% { transform: rotateY(0deg); }
-            50% { transform: rotateY(180deg); }
-            100% { transform: rotateY(0deg); }
-        }
-
-        .loading-icon, .spinner {
-            width: 25px;
-            height: 25px;
-            border: 3px solid rgba(0, 255, 136, 0.2);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 0.5rem;
-        }
-        
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, .1);
-            border-left-color: #3b82f6;
-            width: 24px;
-            height: 24px;
-        }
-
-        .loading-text {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .loading-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .proxy-status.active { color: #00FF00; }
-        .proxy-status.dead { color: #FF3333; }
-        .proxy-status.unknown { color: #8C8C8C; }
-        .proxy-status.error { color: cyan; }
-        
-        .active-icon-glow {
-            color: #10B981;
-            font-size: 1.8em;
-            animation: glow-blink 1.5s infinite alternate;
-        }
-
-        @keyframes glow-blink {
-            0% {
-                text-shadow: 0 0 5px rgba(16, 185, 129, 0.7);
-                opacity: 0.8;
-            }
-            50% {
-                text-shadow: 0 0 15px rgba(16, 185, 129, 1),
-                            0 0 25px rgba(16, 185, 129, 0.8);
-                opacity: 1;
-            }
-            100% {
-                text-shadow: 0 0 5px rgba(16, 185, 129, 0.7);
-                opacity: 0.8;
-            }
-        }
-
-        .text-red-500 { color: #EF4444; }
-        .text-cyan-500 { color: #06B6D4; }
-        .text-amber-400 { color: #F59E0B; }
-    </style>
     <script>
         tailwind.config = {
-            darkMode: 'selector',
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
                     },
                     colors: {
-                        'primary-dark': '#1c1c20',
-                        'secondary-dark': '#2a2a2f',
-                        'text-light': '#f0f0f5',
-                        'accent-cyan': '#00e0b7',
-                        'accent-blue': '#4a90e2',
+                        primary: '#00ff88',
+                        secondary: '#00ffff',
+                        accent: '#ff00ff',
+                        dark: '#080c14',
+                        darker: '#040608',
+                        light: '#e0ffff',
+                    },
+                    keyframes: {
+                        cardFloat: {
+                            '0%, 100%': { transform: 'translateY(0) rotateX(0)' },
+                            '50%': { transform: 'translateY(-10px) rotateX(2deg)' },
+                        },
+                        titlePulse: {
+                            '0%, 100%': { transform: 'scale(1)', filter: 'brightness(1)' },
+                            '50%': { transform: 'scale(1.02)', filter: 'brightness(1.2)' },
+                        },
+                        toastSlide: {
+                            to: { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        spin: {
+                            '0%': { transform: 'rotate(0deg)' },
+                            '100%': { transform: 'rotate(360deg)' },
+                        },
+                        'glow-blink': {
+                            '0%, 100%': {
+                                textShadow: '0 0 5px rgba(16, 185, 129, 0.7)',
+                                opacity: '0.8',
+                            },
+                            '50%': {
+                                textShadow: '0 0 15px rgba(16, 185, 129, 1), 0 0 25px rgba(16, 185, 129, 0.8)',
+                                opacity: '1',
+                            },
+                        },
+                    },
+                    animation: {
+                        cardFloat: 'cardFloat 6s ease-in-out infinite',
+                        titlePulse: 'titlePulse 3s ease-in-out infinite',
+                        toastSlide: 'toastSlide 0.3s forwards',
+                        spin: 'spin 1s linear infinite',
+                        'glow-blink': 'glow-blink 1.5s infinite alternate',
                     },
                 },
             },
         };
     </script>
 </head>
-<body class="bg-darker text-light">
-    <div class="quantum-container">
-        <div class="quantum-card">
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="quantum-title">
+<body class="font-sans bg-darker text-light min-h-[85vh] dark:bg-dark dark:text-light" style="background-image: radial-gradient(circle at 0% 0%, rgba(0, 255, 136, 0.1) 0, transparent 50%), radial-gradient(circle at 100% 100%, rgba(0, 255, 255, 0.1) 0, transparent 50%), url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);">
+    <div class="max-w-[1200px] my-8 mx-auto p-4 md:p-8 [perspective:1000px]">
+        <div class="max-w-full bg-[rgba(8,12,20,0.95)] dark:bg-[rgba(224,242,255,0.7)] backdrop-blur-lg border border-[rgba(0,255,136,0.2)] dark:border-[rgba(173,216,230,0.5)] rounded-[20px] p-4 md:p-8 shadow-[0_0_20px_rgba(0,255,136,0.3)] dark:shadow-[0_0_30px_rgba(173,216,230,0.8)] [transform-style:preserve-3d] animate-cardFloat">
+        <div class="flex justify-between items-center mb-4 md:mb-8">
+            <h1 class="font-rajdhani text-[2rem] md:text-[4rem] font-bold text-center mt-4 mb-4 md:mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent [text-shadow:0_0_30px_rgba(0,255,136,0.5)] relative animate-titlePulse w-full">
                 <a href="${LINK_TELEGRAM}" target="_blank" rel="noopener noreferrer">
                     ${NAMAWEB}
                 </a>
@@ -839,39 +269,38 @@ html.light select {
     <span class="font-bold text-red-500">Dead: <span id="dead-count">0</span></span>
   </div>
   
-            <form id="search-form" class="form-search" style="display: flex; align-items: center; gap: 5px;">
+            <form id="search-form" class="flex justify-center items-center flex-grow gap-4">
                 <input type="text" id="search-input" name="search" placeholder="Cari IP, ISP, atau Negara"
-                    class="input-search" value="${searchTerm}">
-                <button type="submit" class="button-search">Search</button>
+                    class="font-rajdhani font-semibold uppercase tracking-[1px] transition-all duration-300 ease-in-out outline-none rounded-md w-full py-2 px-4 text-xs bg-[rgba(0,255,136,0.05)] border-2 border-[rgba(0,255,136,0.3)] rounded-[15px] text-light focus:outline-none focus:border-primary focus:shadow-[0_0_20px_rgba(0,255,136,0.2)] focus:bg-[rgba(0,255,136,0.1)]" value="${searchTerm}">
+                <button type="submit" class="font-rajdhani font-semibold uppercase tracking-[1px] transition-all duration-300 ease-in-out outline-none rounded-md border border-primary text-primary bg-transparent py-1 px-3 hover:bg-[rgba(0,255,136,0.1)] hover:border-secondary">Search</button>
             </form>
-            <div class="wildcard-dropdown">
-                <select id="wildcard" name="wildcard">
+            <div class="flex justify-center items-center gap-8 my-2 mx-auto">
+                <select id="wildcard" name="wildcard" class="w-full max-w-[200px] py-1.5 px-2.5 text-sm text-light bg-[rgba(0,255,136,0.05)] border-2 border-[rgba(0,255,136,0.3)] rounded-[10px] shadow-[0_0_20px_rgba(0,255,136,0.3)] outline-none font-rajdhani font-semibold uppercase tracking-[1px] appearance-none bg-no-repeat bg-[center_right_10px] bg-[length:1rem] transition-all duration-300 ease-in-out hover:border-primary hover:shadow-[0_0_20px_rgba(0,255,136,0.2)] focus:border-secondary focus:bg-[rgba(0,255,136,0.1)]" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23e0ffff&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;%3E%3Cpath d=&quot;M6 9l6 6 6-6&quot;%3E%3C/path%3E%3C/svg%3E');">
                     <option value="" ${!selectedWildcard ? 'selected' : ''}>No Wildcard</option>
                     ${wildcards.map(w => `<option value="${w}" ${selectedWildcard === w ? 'selected' : ''}>${w}</option>`).join('')}
                 </select>
-                <select id="configType" name="configType">
+                <select id="configType" name="configType" class="w-full max-w-[200px] py-1.5 px-2.5 text-sm text-light bg-[rgba(0,255,136,0.05)] border-2 border-[rgba(0,255,136,0.3)] rounded-[10px] shadow-[0_0_20px_rgba(0,255,136,0.3)] outline-none font-rajdhani font-semibold uppercase tracking-[1px] appearance-none bg-no-repeat bg-[center_right_10px] bg-[length:1rem] transition-all duration-300 ease-in-out hover:border-primary hover:shadow-[0_0_20px_rgba(0,255,136,0.2)] focus:border-secondary focus:bg-[rgba(0,255,136,0.1)]" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23e0ffff&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;%3E%3Cpath d=&quot;M6 9l6 6 6-6&quot;%3E%3C/path%3E%3C/svg%3E');">
                     <option value="tls" ${selectedConfigType === 'tls' ? 'selected' : ''}>TLS</option>
                     <option value="non-tls" ${selectedConfigType === 'non-tls' ? 'selected' : ''}>NTLS</option>
                 </select>
             </div>
             
-            <div class="w-full h-11 overflow-x-auto px-1 py-1 flex items-center space-x-1 shadow-lg bg-transparent border"
-  style="border-width: 1px; border-style: solid; border-color: #00ff88; height: 55px; border-radius: 10px; margin-top: 0.5rem;">
+            <div class="w-full h-[55px] overflow-x-auto px-1 py-1 flex items-center space-x-1 shadow-lg bg-transparent border border-primary rounded-[10px] mt-2">
   ${buildCountryFlag(prxList)}
 </div>
             
-            <div class="table-wrapper">
-                <table class="quantum-table">
+            <div class="w-full max-h-[calc(80vh-200px)] overflow-y-auto [-webkit-overflow-scrolling:touch] my-4 rounded-[10px] bg-[rgba(0,255,136,0.02)]">
+                <table class="w-full min-w-[800px] border-separate border-spacing-y-2">
                     <thead>
                         <tr>
-                            <th class="text-center">No.</th>
-                            <th class="text-center">IP:Port</th>
-                            <th class="text-center">STATUS</th>
-                            <th class="text-center">ISP</th>
-                            <th class="text-center">Negara</th>
-                            <th class="text-center">Vless</th>
-                            <th class="text-center">Trojan</th>
-                            <th class="text-center">Shadowsocks</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">No.</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">IP:Port</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">STATUS</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">ISP</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">Negara</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">Vless</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">Trojan</th>
+                            <th class="text-center bg-[rgba(0,255,136,0.1)] text-primary p-5 font-rajdhani font-semibold text-lg uppercase tracking-[2px] border-b-2 border-primary whitespace-nowrap sticky top-0 z-10">Shadowsocks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -879,8 +308,8 @@ html.light select {
 
   if (prxToShow.length === 0) {
     html += `
-      <tr>
-        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+      <tr class="transition-all duration-300 ease-in-out">
+        <td colspan="7" class="p-4 bg-[rgba(0,255,136,0.03)] border-none transition-all duration-300 ease-in-out hover:bg-[rgba(0,255,136,0.08)] hover:scale-105 hover:shadow-[0_5px_15px_rgba(0,255,136,0.1)] px-6 py-4 text-center text-gray-500">
           Tidak ada data yang ditemukan.
         </td>
       </tr>
@@ -937,14 +366,13 @@ html.light select {
       const ssConfigs = generateConfig("ss");
       
       html += `
-        <tr class="config-row text-center font-serif tracking-wider">
-  <td>${displayIndex}.</td>
-  <td class="ip-port">${prxIP}:${prxPort}</td>
-  <td class="proxy-status"></td>
-  <td>${org}</td>
-  <td class="px-1 py-1 text-center">
-    <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()}"
-      style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
+        <tr class="config-row text-center font-serif tracking-wider transition-all duration-300 ease-in-out">
+  <td class="p-4 bg-[rgba(0,255,136,0.03)] border-none transition-all duration-300 ease-in-out hover:bg-[rgba(0,255,136,0.08)] hover:scale-105 hover:shadow-[0_5px_15px_rgba(0,255,136,0.1)]">${displayIndex}.</td>
+  <td class="p-4 bg-[rgba(0,255,136,0.03)] border-none transition-all duration-300 ease-in-out hover:bg-[rgba(0,255,136,0.08)] hover:scale-105 hover:shadow-[0_5px_15px_rgba(0,255,136,0.1)] ip-port">${prxIP}:${prxPort}</td>
+  <td class="p-4 bg-[rgba(0,255,136,0.03)] border-none transition-all duration-300 ease-in-out hover:bg-[rgba(0,255,136,0.08)] hover:scale-105 hover:shadow-[0_5px_15px_rgba(0,255,136,0.1)] proxy-status"></td>
+  <td class="p-4 bg-[rgba(0,255,136,0.03)] border-none transition-all duration-300 ease-in-out hover:bg-[rgba(0,255,136,0.08)] hover:scale-105 hover:shadow-[0_5px_15px_rgba(0,255,136,0.1)]">${org}</td>
+  <td class="p-4 bg-[rgba(0,255,136,0.03)] border-none transition-all duration-300 ease-in-out hover:bg-[rgba(0,255,136,0.08)] hover:scale-105 hover:shadow-[0_5px_15px_rgba(0,255,136,0.1)] px-1 py-1 text-center">
+    <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()} inline-block w-10 h-10 border-2 border-teal-500 rounded-full">
     </span>
   </td>
   <td class="px-6 py-4 whitespace-nowrap">
@@ -1005,8 +433,8 @@ html.light select {
   </div>
 </div>
 
-  <div class="quantum-pagination">
-    <a href="/sub/${page - 1}?q=${encodeURIComponent(searchTerm)}" class="py-0.5 px-1.5 rounded-lg font-bold text-white bg-gray-800 border-2 border-green-500 transition-transform transform hover:-translate-y-0.5 active:scale-95 ${page <= 0 ? 'opacity-50 cursor-not-allowed' : ''}">
+  <div class="flex justify-center gap-3 mt-8 flex-wrap">
+    <a href="/sub/${page - 1}?q=${encodeURIComponent(searchTerm)}" class="py-3 px-6 bg-[rgba(0,255,136,0.1)] text-primary no-underline rounded-xl border border-[rgba(0,255,136,0.3)] transition-all duration-300 ease-in-out font-rajdhani font-semibold min-w-[45px] text-center hover:bg-primary hover:text-dark hover:-translate-y-0.5 hover:shadow-[0_5px_15px_rgba(0,255,136,0.2)] ${page <= 0 ? 'opacity-50 cursor-not-allowed' : ''}">
       Prev
     </a>
     ${(() => {
@@ -1014,13 +442,13 @@ html.light select {
       const startPage = Math.max(0, page - 2);
       const endPage = Math.min(totalPages - 1, page + 2);
       for (let i = startPage; i <= endPage; i++) {
-        buttons += `<a href="/sub/${i}?q=${encodeURIComponent(searchTerm)}" class="py-0.5 px-1.5 rounded-lg font-bold text-white border-2 border-green-500 transition-transform transform hover:-translate-y-0.5 active:scale-95 ${i === page ? 'bg-green-500 text-black' : 'bg-gray-800'}">
+        buttons += `<a href="/sub/${i}?q=${encodeURIComponent(searchTerm)}" class="py-3 px-6 bg-[rgba(0,255,136,0.1)] text-primary no-underline rounded-xl border border-[rgba(0,255,136,0.3)] transition-all duration-300 ease-in-out font-rajdhani font-semibold min-w-[45px] text-center hover:bg-primary hover:text-dark hover:-translate-y-0.5 hover:shadow-[0_5px_15px_rgba(0,255,136,0.2)] ${i === page ? 'bg-primary text-dark -translate-y-0.5 shadow-[0_5px_15px_rgba(0,255,136,0.2)]' : ''}">
           ${i + 1}
         </a>`;
       }
       return buttons;
     })()}
-    <a href="/sub/${page + 1}?q=${encodeURIComponent(searchTerm)}" class="py-0.5 px-1.5 rounded-lg font-bold text-white bg-gray-800 border-2 border-green-500 transition-transform transform hover:-translate-y-0.5 active:scale-95 ${page >= totalPages - 1 ? 'opacity-50 cursor-not-allowed' : ''}">
+    <a href="/sub/${page + 1}?q=${encodeURIComponent(searchTerm)}" class="py-3 px-6 bg-[rgba(0,255,136,0.1)] text-primary no-underline rounded-xl border border-[rgba(0,255,136,0.3)] transition-all duration-300 ease-in-out font-rajdhani font-semibold min-w-[45px] text-center hover:bg-primary hover:text-dark hover:-translate-y-0.5 hover:shadow-[0_5px_15px_rgba(0,255,136,0.2)] ${page >= totalPages - 1 ? 'opacity-50 cursor-not-allowed' : ''}">
       Next
     </a>
   </div>
@@ -1069,37 +497,7 @@ html.light select {
 
     <footer>
     <div class="fixed top-4 right-8 flex flex-col items-end gap-3 z-50">
-        <style>
-    @keyframes rotate {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    @keyframes pulse-and-blink {
-        0%, 100% {
-            transform: scale(1);
-            filter: brightness(100%);
-        }
-        50% {
-            transform: scale(1.1);
-            filter: brightness(150%);
-        }
-    }
-
-    .animated-button {
-        animation: rotate 4s linear infinite, pulse-and-blink 1.5s infinite;
-    }
-
-    .animated-button:hover {
-        animation-play-state: paused;
-    }
-</style>
-
-<button onclick="toggleDropdown()" class="animated-button transition-colors rounded-full p-2 block text-white shadow-lg transform hover:scale-105" style="background-image: linear-gradient(to right, #22c55e, #14b8a6, #3b82f6, #8b5cf6, #ec4899); border: none;">
+<button onclick="toggleDropdown()" class="animate-[rotate_4s_linear_infinite,pulse-and-blink_1.5s_infinite] hover:animate-pause transition-colors rounded-full p-2 block text-white shadow-lg transform hover:scale-105 bg-gradient-to-r from-green-500 to-teal-500 via-blue-500 via-purple-500 to-pink-500 border-none">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 text-white">
         <path d="M12 2.25a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75h-6.75a.75.75 0 0 1 0-1.5h6.75V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
     </svg>
@@ -1133,7 +531,7 @@ html.light select {
                 </svg>
             </button>
 
-            <button onclick="toggleDarkMode()" class="toggle-dark-mode">
+            <button onclick="toggleDarkMode()" class="bg-primary text-dark rounded-full border-2 border-dark p-2 transition-all duration-200 ease-in-out cursor-pointer hover:scale-110">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
                 </svg>
