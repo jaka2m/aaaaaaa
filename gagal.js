@@ -63,25 +63,32 @@ const CORS_HEADER_OPTIONS = {
 };
 
 function buildCountryFlag(prxList) {
-  const flagList = prxList.map((prx) => prx.country);
-  const uniqueFlags = new Set(flagList);
+    const countryCounts = prxList.reduce((acc, prx) => {
+        const country = prx.country;
+        if (country && country !== "Unknown") {
+            acc[country] = (acc[country] || 0) + 1;
+        }
+        return acc;
+    }, {});
 
-  let flagElement = "";
-  for (const flag of uniqueFlags) {
-    if (flag && flag !== "Unknown") {
-      try {
-        flagElement += `<a href="/sub?search=${flag.toLowerCase()}&page=0" class="py-1">
-          <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}"
-          style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
-          </span>
-          </a>`;
-      } catch (err) {
-        console.error(`Error generating flag for country: ${flag}`, err);
-      }
+    let flagElement = "";
+    const sortedCountries = Object.keys(countryCounts).sort();
+
+    for (const country of sortedCountries) {
+        const count = countryCounts[country];
+        try {
+            flagElement += `<a href="/sub?search=${country.toLowerCase()}&page=0" class="py-1 flex flex-col items-center no-underline text-current">
+                <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()}"
+                    style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
+                </span>
+                <span class="text-xs font-bold">${country}/${count}</span>
+            </a>`;
+        } catch (err) {
+            console.error(`Error generating flag for country: ${country}`, err);
+        }
     }
-  }
 
-  return flagElement;
+    return flagElement;
 }
 
 
