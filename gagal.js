@@ -53,7 +53,7 @@ const wildcards = [
 ];
 const BAD_WORDS_LIST =
   "https://gist.githubusercontent.com/adierebel/a69396d79b787b84d89b45002cb37cd6/raw/6df5f8728b18699496ad588b3953931078ab9cf1/kata-kasar.txt";
-const PRX_PER_PAGE = 10;
+const PRX_PER_PAGE = 100;
 const WS_READY_STATE_OPEN = 1;
 const WS_READY_STATE_CLOSING = 2;
 const CORS_HEADER_OPTIONS = {
@@ -63,25 +63,32 @@ const CORS_HEADER_OPTIONS = {
 };
 
 function buildCountryFlag(prxList) {
-  const flagList = prxList.map((prx) => prx.country);
-  const uniqueFlags = new Set(flagList);
+    const countryCounts = prxList.reduce((acc, prx) => {
+        const country = prx.country;
+        if (country && country !== "Unknown") {
+            acc[country] = (acc[country] || 0) + 1;
+        }
+        return acc;
+    }, {});
 
-  let flagElement = "";
-  for (const flag of uniqueFlags) {
-    if (flag && flag !== "Unknown") {
-      try {
-        flagElement += `<a href="/sub?search=${flag.toLowerCase()}&page=0" class="py-1">
-          <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}"
-          style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
-          </span>
-          </a>`;
-      } catch (err) {
-        console.error(`Error generating flag for country: ${flag}`, err);
-      }
+    let flagElement = "";
+    const sortedCountries = Object.keys(countryCounts).sort();
+
+    for (const country of sortedCountries) {
+        const count = countryCounts[country];
+        try {
+            flagElement += `<a href="/sub?search=${country.toLowerCase()}&page=0" class="py-1 flex flex-col items-center no-underline text-current">
+                <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()}"
+                    style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
+                </span>
+                <span class="text-xs font-bold">${country}/${count}</span>
+            </a>`;
+        } catch (err) {
+            console.error(`Error generating flag for country: ${country}`, err);
+        }
     }
-  }
 
-  return flagElement;
+    return flagElement;
 }
 
 
@@ -148,37 +155,37 @@ async function reverseWeb(request, target, targetPath) {
 }
 
 function generateWebPage(request, prxList, page = 0, searchTerm = "") {
-  const totalPrxs = prxList.length;
-  const totalPages = Math.ceil(totalPrxs / PRX_PER_PAGE);
-  const startIndex = PRX_PER_PAGE * page;
-  const url = new URL(request.url);
-  const selectedConfigType = url.searchParams.get('configType') || 'tls';
-  const selectedWildcard = url.searchParams.get('wildcard');
-  
-  // 👇 Ini adalah perbaikan utamanya
-  let filteredPrxList = prxList.filter(prx => {
-    const normalizedSearchTerm = searchTerm.toLowerCase();
-    const isSearchTermCountry = normalizedSearchTerm.length === 2; // Asumsi kode negara 2 huruf
+Â  const totalPrxs = prxList.length;
+Â  const totalPages = Math.ceil(totalPrxs / PRX_PER_PAGE);
+Â  const startIndex = PRX_PER_PAGE * page;
+Â  const url = new URL(request.url);
+Â  const selectedConfigType = url.searchParams.get('configType') || 'tls';
+Â  const selectedWildcard = url.searchParams.get('wildcard');
+Â  
+Â  // ðŸ‘‡ Ini adalah perbaikan utamanya
+Â  let filteredPrxList = prxList.filter(prx => {
+Â  Â  const normalizedSearchTerm = searchTerm.toLowerCase();
+Â  Â  const isSearchTermCountry = normalizedSearchTerm.length === 2; // Asumsi kode negara 2 huruf
 
-    if (isSearchTermCountry) {
-      // Untuk kode negara, lakukan pencocokan eksak
-      return prx.country.toLowerCase() === normalizedSearchTerm;
-    } else {
-      // Untuk IP, ISP, dan Port, tetap gunakan pencarian substring
-      return prx.prxIP.includes(normalizedSearchTerm) ||
-             prx.org.toLowerCase().includes(normalizedSearchTerm) ||
-             prx.prxPort.includes(normalizedSearchTerm);
-    }
-  });
-  // 👆 Akhir dari perbaikan
+Â  Â  if (isSearchTermCountry) {
+Â  Â  Â  // Untuk kode negara, lakukan pencocokan eksak
+Â  Â  Â  return prx.country.toLowerCase() === normalizedSearchTerm;
+Â  Â  } else {
+Â  Â  Â  // Untuk IP, ISP, dan Port, tetap gunakan pencarian substring
+Â  Â  Â  return prx.prxIP.includes(normalizedSearchTerm) ||
+Â  Â  Â  Â  Â  Â  Â prx.org.toLowerCase().includes(normalizedSearchTerm) ||
+Â  Â  Â  Â  Â  Â  Â prx.prxPort.includes(normalizedSearchTerm);
+Â  Â  }
+Â  });
+Â  // ðŸ‘† Akhir dari perbaikan
 
-  const prxToShow = filteredPrxList.slice(startIndex, startIndex + PRX_PER_PAGE);
-  const hostName = request.headers.get("Host");
-  const uuid = crypto.randomUUID();
+Â  const prxToShow = filteredPrxList.slice(startIndex, startIndex + PRX_PER_PAGE);
+Â  const hostName = request.headers.get("Host");
+Â  const uuid = crypto.randomUUID();
 
-  const modifiedHostName = selectedWildcard || hostName;
+Â  const modifiedHostName = selectedWildcard || hostName;
 
-  let html = `
+Â  let html = `
     <!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="en">
@@ -1175,232 +1182,232 @@ html.light select {
 
 
      <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const loadingScreen = document.getElementById('loading-screen');
-    if (loadingScreen) {
-      // Tunggu 5 detik sebelum memulai transisi
-      setTimeout(() => {
-        // Atur opacity menjadi 0 untuk memulai efek fade out
-        loadingScreen.style.opacity = '0';
-        
-        // Setelah efek fade out selesai (500ms), sembunyikan elemen
-        setTimeout(() => {
-          loadingScreen.style.display = 'none';
-        }, 500); // Durasi ini harus sama dengan durasi transisi di CSS (duration-500)
-      }, 1000); // <-- Ini adalah jeda 5 detik
-    }
-  });
-    
-      // Shared
-      const rootDomain = "${serviceName}.${rootDomain}";
-      const notification = document.getElementById("notification-badge");
-      const windowContainer = document.getElementById("container-window");
-      const windowInfoContainer = document.getElementById("container-window-info");
-      const converterUrl =
-        "https://script.google.com/macros/s/AKfycbwwVeHNUlnP92syOP82p1dOk_-xwBgRIxkTjLhxxZ5UXicrGOEVNc5JaSOu0Bgsx_gG/exec";
+Â  document.addEventListener('DOMContentLoaded', function() {
+Â  Â  const loadingScreen = document.getElementById('loading-screen');
+Â  Â  if (loadingScreen) {
+Â  Â  Â  // Tunggu 5 detik sebelum memulai transisi
+Â  Â  Â  setTimeout(() => {
+Â  Â  Â  Â  // Atur opacity menjadi 0 untuk memulai efek fade out
+Â  Â  Â  Â  loadingScreen.style.opacity = '0';
+Â  Â  Â  Â Â 
+Â  Â  Â  Â  // Setelah efek fade out selesai (500ms), sembunyikan elemen
+Â  Â  Â  Â  setTimeout(() => {
+Â  Â  Â  Â  Â  loadingScreen.style.display = 'none';
+Â  Â  Â  Â  }, 500); // Durasi ini harus sama dengan durasi transisi di CSS (duration-500)
+Â  Â  Â  }, 1000); // <-- Ini adalah jeda 5 detik
+Â  Â  }
+Â  });
+Â  Â Â 
+Â  Â  Â  // Shared
+Â  Â  Â  const rootDomain = "${serviceName}.${rootDomain}";
+Â  Â  Â  const notification = document.getElementById("notification-badge");
+Â  Â  Â  const windowContainer = document.getElementById("container-window");
+Â  Â  Â  const windowInfoContainer = document.getElementById("container-window-info");
+Â  Â  Â  const converterUrl =
+Â  Â  Â  Â  "https://script.google.com/macros/s/AKfycbwwVeHNUlnP92syOP82p1dOk_-xwBgRIxkTjLhxxZ5UXicrGOEVNc5JaSOu0Bgsx_gG/exec";
 
 
-      // Switches
-      let isDomainListFetched = false;
+Â  Â  Â  // Switches
+Â  Â  Â  let isDomainListFetched = false;
 
-      // Local variable
-      let rawConfig = "";
+Â  Â  Â  // Local variable
+Â  Â  Â  let rawConfig = "";
 
-      function getDomainList() {
-        if (isDomainListFetched) return;
-        isDomainListFetched = true;
+Â  Â  Â  function getDomainList() {
+Â  Â  Â  Â  if (isDomainListFetched) return;
+Â  Â  Â  Â  isDomainListFetched = true;
 
-        windowInfoContainer.innerText = "Fetching data...";
+Â  Â  Â  Â  windowInfoContainer.innerText = "Fetching data...";
 
-        const url = "https://" + rootDomain + "/api/v1/domains/get";
-        const res = fetch(url).then(async (res) => {
-          const domainListContainer = document.getElementById("container-domains");
-          domainListContainer.innerHTML = "";
+Â  Â  Â  Â  const url = "https://" + rootDomain + "/api/v1/domains/get";
+Â  Â  Â  Â  const res = fetch(url).then(async (res) => {
+Â  Â  Â  Â  Â  const domainListContainer = document.getElementById("container-domains");
+Â  Â  Â  Â  Â  domainListContainer.innerHTML = "";
 
-          if (res.status == 200) {
-            windowInfoContainer.innerText = "Done!";
-            const respJson = await res.json();
-            for (const domain of respJson) {
-              const domainElement = document.createElement("p");
-              domainElement.classList.add("w-full", "bg-amber-400", "rounded-md");
-              domainElement.innerText = domain;
-              domainListContainer.appendChild(domainElement);
-            }
-          } else {
-            windowInfoContainer.innerText = "Failed!";
-          }
-        });
-      }
+Â  Â  Â  Â  Â  if (res.status == 200) {
+Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Done!";
+Â  Â  Â  Â  Â  Â  const respJson = await res.json();
+Â  Â  Â  Â  Â  Â  for (const domain of respJson) {
+Â  Â  Â  Â  Â  Â  Â  const domainElement = document.createElement("p");
+Â  Â  Â  Â  Â  Â  Â  domainElement.classList.add("w-full", "bg-amber-400", "rounded-md");
+Â  Â  Â  Â  Â  Â  Â  domainElement.innerText = domain;
+Â  Â  Â  Â  Â  Â  Â  domainListContainer.appendChild(domainElement);
+Â  Â  Â  Â  Â  Â  }
+Â  Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Failed!";
+Â  Â  Â  Â  Â  }
+Â  Â  Â  Â  });
+Â  Â  Â  }
 
-      function registerDomain() {
-        const domainInputElement = document.getElementById("new-domain-input");
-        const rawDomain = domainInputElement.value.toLowerCase();
-        const domain = domainInputElement.value + "." + rootDomain;
+Â  Â  Â  function registerDomain() {
+Â  Â  Â  Â  const domainInputElement = document.getElementById("new-domain-input");
+Â  Â  Â  Â  const rawDomain = domainInputElement.value.toLowerCase();
+Â  Â  Â  Â  const domain = domainInputElement.value + "." + rootDomain;
 
-        if (!rawDomain.match(/\\w+\\.\\w+$/) || rawDomain.endsWith(rootDomain)) {
-          windowInfoContainer.innerText = "Invalid URL!";
-          return;
-        }
+Â  Â  Â  Â  if (!rawDomain.match(/\\w+\\.\\w+$/) || rawDomain.endsWith(rootDomain)) {
+Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Invalid URL!";
+Â  Â  Â  Â  Â  return;
+Â  Â  Â  Â  }
 
-        windowInfoContainer.innerText = "Pushing request...";
+Â  Â  Â  Â  windowInfoContainer.innerText = "Pushing request...";
 
-        const url = "https://" + rootDomain + "/api/v1/domains/put?domain=" + domain;
-        const res = fetch(url).then((res) => {
-          if (res.status == 200) {
-            windowInfoContainer.innerText = "Done!";
-            domainInputElement.value = "";
-            isDomainListFetched = false;
-            getDomainList();
-          } else {
-            if (res.status == 409) {
-              windowInfoContainer.innerText = "Domain exists!";
-            } else {
-              windowInfoContainer.innerText = "Error " + res.status;
-            }
-          }
-        });
-      }
+Â  Â  Â  Â  const url = "https://" + rootDomain + "/api/v1/domains/put?domain=" + domain;
+Â  Â  Â  Â  const res = fetch(url).then((res) => {
+Â  Â  Â  Â  Â  if (res.status == 200) {
+Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Done!";
+Â  Â  Â  Â  Â  Â  domainInputElement.value = "";
+Â  Â  Â  Â  Â  Â  isDomainListFetched = false;
+Â  Â  Â  Â  Â  Â  getDomainList();
+Â  Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  Â  if (res.status == 409) {
+Â  Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Domain exists!";
+Â  Â  Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Error " + res.status;
+Â  Â  Â  Â  Â  Â  }
+Â  Â  Â  Â  Â  }
+Â  Â  Â  Â  });
+Â  Â  Â  }
 
-      function copyToClipboard(text) {
-        toggleOutputWindow();
-        rawConfig = text;
-      }
+Â  Â  Â  function copyToClipboard(text) {
+Â  Â  Â  Â  toggleOutputWindow();
+Â  Â  Â  Â  rawConfig = text;
+Â  Â  Â  }
 
-      function copyToClipboardAsRaw() {
-        navigator.clipboard.writeText(rawConfig);
+Â  Â  Â  function copyToClipboardAsRaw() {
+Â  Â  Â  Â  navigator.clipboard.writeText(rawConfig);
 
-        notification.classList.remove("opacity-0");
-        setTimeout(() => {
-          notification.classList.add("opacity-0");
-        }, 2000);
-      }
+Â  Â  Â  Â  notification.classList.remove("opacity-0");
+Â  Â  Â  Â  setTimeout(() => {
+Â  Â  Â  Â  Â  notification.classList.add("opacity-0");
+Â  Â  Â  Â  }, 2000);
+Â  Â  Â  }
 
-      async function copyToClipboardAsTarget(target) {
-        windowInfoContainer.innerText = "Generating config...";
-        const url = "${CONVERTER_URL}";
-        const res = await fetch(url, {
-          method: "POST",
-          body: JSON.stringify({
-            url: rawConfig,
-            format: target,
-            template: "cf",
-          }),
-        });
+Â  Â  Â  async function copyToClipboardAsTarget(target) {
+Â  Â  Â  Â  windowInfoContainer.innerText = "Generating config...";
+Â  Â  Â  Â  const url = "${CONVERTER_URL}";
+Â  Â  Â  Â  const res = await fetch(url, {
+Â  Â  Â  Â  Â  method: "POST",
+Â  Â  Â  Â  Â  body: JSON.stringify({
+Â  Â  Â  Â  Â  Â  url: rawConfig,
+Â  Â  Â  Â  Â  Â  format: target,
+Â  Â  Â  Â  Â  Â  template: "cf",
+Â  Â  Â  Â  Â  }),
+Â  Â  Â  Â  });
 
-        if (res.status == 200) {
-          windowInfoContainer.innerText = "Done!";
-          navigator.clipboard.writeText(await res.text());
+Â  Â  Â  Â  if (res.status == 200) {
+Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Done!";
+Â  Â  Â  Â  Â  navigator.clipboard.writeText(await res.text());
 
-          notification.classList.remove("opacity-0");
-          setTimeout(() => {
-            notification.classList.add("opacity-0");
-          }, 2000);
-        } else {
-          windowInfoContainer.innerText = "Error " + res.statusText;
-        }
-      }
+Â  Â  Â  Â  Â  notification.classList.remove("opacity-0");
+Â  Â  Â  Â  Â  setTimeout(() => {
+Â  Â  Â  Â  Â  Â  notification.classList.add("opacity-0");
+Â  Â  Â  Â  Â  }, 2000);
+Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Error " + res.statusText;
+Â  Â  Â  Â  }
+Â  Â  Â  }
 
-      function navigateTo(link) {
-        window.location.href = link + window.location.search;
-      }
+Â  Â  Â  function navigateTo(link) {
+Â  Â  Â  Â  window.location.href = link + window.location.search;
+Â  Â  Â  }
 
-      function toggleOutputWindow() {
-        windowInfoContainer.innerText = "Select output:";
-        toggleWindow();
-        const rootElement = document.getElementById("output-window");
-        if (rootElement.classList.contains("hidden")) {
-          rootElement.classList.remove("hidden");
-        } else {
-          rootElement.classList.add("hidden");
-        }
-      }
+Â  Â  Â  function toggleOutputWindow() {
+Â  Â  Â  Â  windowInfoContainer.innerText = "Select output:";
+Â  Â  Â  Â  toggleWindow();
+Â  Â  Â  Â  const rootElement = document.getElementById("output-window");
+Â  Â  Â  Â  if (rootElement.classList.contains("hidden")) {
+Â  Â  Â  Â  Â  rootElement.classList.remove("hidden");
+Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  rootElement.classList.add("hidden");
+Â  Â  Â  Â  }
+Â  Â  Â  }
 
-      function toggleWildcardsWindow() {
-        windowInfoContainer.innerText = "Domain list";
-        toggleWindow();
-        getDomainList();
-        const rootElement = document.getElementById("wildcards-window");
-        if (rootElement.classList.contains("hidden")) {
-          rootElement.classList.remove("hidden");
-        } else {
-          rootElement.classList.add("hidden");
-        }
-      }
+Â  Â  Â  function toggleWildcardsWindow() {
+Â  Â  Â  Â  windowInfoContainer.innerText = "Domain list";
+Â  Â  Â  Â  toggleWindow();
+Â  Â  Â  Â  getDomainList();
+Â  Â  Â  Â  const rootElement = document.getElementById("wildcards-window");
+Â  Â  Â  Â  if (rootElement.classList.contains("hidden")) {
+Â  Â  Â  Â  Â  rootElement.classList.remove("hidden");
+Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  rootElement.classList.add("hidden");
+Â  Â  Â  Â  }
+Â  Â  Â  }
 
-      function toggleWindow() {
-        if (windowContainer.classList.contains("hidden")) {
-          windowContainer.classList.remove("hidden");
-        } else {
-          windowContainer.classList.add("hidden");
-        }
-      }
+Â  Â  Â  function toggleWindow() {
+Â  Â  Â  Â  if (windowContainer.classList.contains("hidden")) {
+Â  Â  Â  Â  Â  windowContainer.classList.remove("hidden");
+Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  windowContainer.classList.add("hidden");
+Â  Â  Â  Â  }
+Â  Â  Â  }
 
-      function checkRegion() {
-        for (let i = 0; ; i++) {
-          const containerRegionCheck = document.getElementById("container-region-check-" + i);
-          const configSample = document.getElementById("config-sample-" + i).value.replaceAll(" ", "");
-          if (containerRegionCheck == undefined) break;
+Â  Â  Â  function checkRegion() {
+Â  Â  Â  Â  for (let i = 0; ; i++) {
+Â  Â  Â  Â  Â  const containerRegionCheck = document.getElementById("container-region-check-" + i);
+Â  Â  Â  Â  Â  const configSample = document.getElementById("config-sample-" + i).value.replaceAll(" ", "");
+Â  Â  Â  Â  Â  if (containerRegionCheck == undefined) break;
 
-          const res = fetch(
-            "https://api.foolvpn.me/regioncheck?config=" + encodeURIComponent(configSample)
-          ).then(async (res) => {
-            if (res.status == 200) {
-              containerRegionCheck.innerHTML = "<hr>";
-              for (const result of await res.json()) {
-                containerRegionCheck.innerHTML += "<p>" + result.name + ": " + result.region + "</p>";
-              }
-            }
-          });
-        }
-      }
+Â  Â  Â  Â  Â  const res = fetch(
+Â  Â  Â  Â  Â  Â  "https://api.foolvpn.me/regioncheck?config=" + encodeURIComponent(configSample)
+Â  Â  Â  Â  Â  ).then(async (res) => {
+Â  Â  Â  Â  Â  Â  if (res.status == 200) {
+Â  Â  Â  Â  Â  Â  Â  containerRegionCheck.innerHTML = "<hr>";
+Â  Â  Â  Â  Â  Â  Â  for (const result of await res.json()) {
+Â  Â  Â  Â  Â  Â  Â  Â  containerRegionCheck.innerHTML += "<p>" + result.name + ": " + result.region + "</p>";
+Â  Â  Â  Â  Â  Â  Â  }
+Â  Â  Â  Â  Â  Â  }
+Â  Â  Â  Â  Â  });
+Â  Â  Â  Â  }
+Â  Â  Â  }
 
-      function checkGeoip() {
-        const containerIP = document.getElementById("container-info-ip");
-        const containerCountry = document.getElementById("container-info-country");
-        const containerISP = document.getElementById("container-info-isp");
-        const res = fetch("https://" + rootDomain + "/api/v1/myip").then(async (res) => {
-          if (res.status == 200) {
-            const respJson = await res.json();
-            containerIP.innerText = "IP: " + respJson.ip;
-            containerCountry.innerText = "Country: " + respJson.country;
-            containerISP.innerText = "ISP: " + respJson.asOrganization;
-          }
-        });
-      }
+Â  Â  Â  function checkGeoip() {
+Â  Â  Â  Â  const containerIP = document.getElementById("container-info-ip");
+Â  Â  Â  Â  const containerCountry = document.getElementById("container-info-country");
+Â  Â  Â  Â  const containerISP = document.getElementById("container-info-isp");
+Â  Â  Â  Â  const res = fetch("https://" + rootDomain + "/api/v1/myip").then(async (res) => {
+Â  Â  Â  Â  Â  if (res.status == 200) {
+Â  Â  Â  Â  Â  Â  const respJson = await res.json();
+Â  Â  Â  Â  Â  Â  containerIP.innerText = "IP: " + respJson.ip;
+Â  Â  Â  Â  Â  Â  containerCountry.innerText = "Country: " + respJson.country;
+Â  Â  Â  Â  Â  Â  containerISP.innerText = "ISP: " + respJson.asOrganization;
+Â  Â  Â  Â  Â  }
+Â  Â  Â  Â  });
+Â  Â  Â  }
 
-     function updateTime() {
-    const timeElement = document.getElementById("time-info-value");
-    if (timeElement) {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('en-GB');
-        timeElement.textContent = timeString;
-    }
+Â  Â  Â function updateTime() {
+Â  Â  const timeElement = document.getElementById("time-info-value");
+Â  Â  if (timeElement) {
+Â  Â  Â  Â  const now = new Date();
+Â  Â  Â  Â  const timeString = now.toLocaleTimeString('en-GB');
+Â  Â  Â  Â  timeElement.textContent = timeString;
+Â  Â  }
 }
 
 setInterval(updateTime, 1000);
 
-      window.onload = () => {
-        checkGeoip();
-        updateTime();
-        // checkRegion();
-        const observer = lozad(".lozad", {
-          load: function (el) {
-            el.classList.remove("scale-95");
-          },
-        });
-        observer.observe();
-      };
+Â  Â  Â  window.onload = () => {
+Â  Â  Â  Â  checkGeoip();
+Â  Â  Â  Â  updateTime();
+Â  Â  Â  Â  // checkRegion();
+Â  Â  Â  Â  const observer = lozad(".lozad", {
+Â  Â  Â  Â  Â  load: function (el) {
+Â  Â  Â  Â  Â  Â  el.classList.remove("scale-95");
+Â  Â  Â  Â  Â  },
+Â  Â  Â  Â  });
+Â  Â  Â  Â  observer.observe();
+Â  Â  Â  };
 
-      window.onscroll = () => {
-        const paginationContainer = document.getElementById("container-pagination");
+Â  Â  Â  window.onscroll = () => {
+Â  Â  Â  Â  const paginationContainer = document.getElementById("container-pagination");
 
-        if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
-          paginationContainer.classList.remove("-translate-y-6");
-        } else {
-          paginationContainer.classList.add("-translate-y-6");
-        }
-      };
-    </script>
+Â  Â  Â  Â  if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
+Â  Â  Â  Â  Â  paginationContainer.classList.remove("-translate-y-6");
+Â  Â  Â  Â  } else {
+Â  Â  Â  Â  Â  paginationContainer.classList.add("-translate-y-6");
+Â  Â  Â  Â  }
+Â  Â  Â  };
+Â  Â  </script>
     <script>
 function showPopup(url) {
   const urlTextarea = document.getElementById('urlTextarea');
@@ -1449,28 +1456,28 @@ document.getElementById('closePopupBtn').addEventListener('click', () => {
 });
 </script>
   <script>
-    document.getElementById('search-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const searchTerm = document.getElementById('search-input').value;
-      const wildcard = document.getElementById('wildcard').value;
-      const configType = document.getElementById('configType').value;
-      window.location.href = \`/sub/0?search=\${searchTerm}&wildcard=\${wildcard}&configType=\${configType}\`;
-    });
+Â  Â  document.getElementById('search-form').addEventListener('submit', function(e) {
+Â  Â  Â  e.preventDefault();
+Â  Â  Â  const searchTerm = document.getElementById('search-input').value;
+Â  Â  Â  const wildcard = document.getElementById('wildcard').value;
+Â  Â  Â  const configType = document.getElementById('configType').value;
+Â  Â  Â  window.location.href = \`/sub/0?search=\${searchTerm}&wildcard=\${wildcard}&configType=\${configType}\`;
+Â  Â  });
 
-    document.getElementById('wildcard').addEventListener('change', function(e) {
-      const selectedWildcard = e.target.value;
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.set('wildcard', selectedWildcard);
-      window.location.href = currentUrl.toString();
-    });
+Â  Â  document.getElementById('wildcard').addEventListener('change', function(e) {
+Â  Â  Â  const selectedWildcard = e.target.value;
+Â  Â  Â  const currentUrl = new URL(window.location.href);
+Â  Â  Â  currentUrl.searchParams.set('wildcard', selectedWildcard);
+Â  Â  Â  window.location.href = currentUrl.toString();
+Â  Â  });
 
-    document.getElementById('configType').addEventListener('change', function(e) {
-        const selectedType = e.target.value;
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('configType', selectedType);
-        window.location.href = currentUrl.toString();
-    });
-  </script>
+Â  Â  document.getElementById('configType').addEventListener('change', function(e) {
+Â  Â  Â  Â  const selectedType = e.target.value;
+Â  Â  Â  Â  const currentUrl = new URL(window.location.href);
+Â  Â  Â  Â  currentUrl.searchParams.set('configType', selectedType);
+Â  Â  Â  Â  window.location.href = currentUrl.toString();
+Â  Â  });
+Â  </script>
  <script>
     document.addEventListener('DOMContentLoaded', () => {
         const proxyRows = document.querySelectorAll('.config-row');
