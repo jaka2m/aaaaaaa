@@ -148,317 +148,294 @@ async function reverseWeb(request, target, targetPath) {
 }
 
 function generateWebPage(request, prxList, page = 0, searchTerm = "") {
-Â  const totalPrxs = prxList.length;
-Â  const totalPages = Math.ceil(totalPrxs / PRX_PER_PAGE);
-Â  const startIndex = PRX_PER_PAGE * page;
-Â  const url = new URL(request.url);
-Â  const selectedConfigType = url.searchParams.get('configType') || 'tls';
-Â  const selectedWildcard = url.searchParams.get('wildcard');
-Â  
-Â  // ðŸ‘‡ Ini adalah perbaikan utamanya
-Â  let filteredPrxList = prxList.filter(prx => {
-Â  Â  const normalizedSearchTerm = searchTerm.toLowerCase();
-Â  Â  const isSearchTermCountry = normalizedSearchTerm.length === 2; // Asumsi kode negara 2 huruf
+  const totalPrxs = prxList.length;
+  const totalPages = Math.ceil(totalPrxs / PRX_PER_PAGE);
+  const startIndex = PRX_PER_PAGE * page;
+  const url = new URL(request.url);
+  const selectedConfigType = url.searchParams.get('configType') || 'tls';
+  const selectedWildcard = url.searchParams.get('wildcard');
 
-Â  Â  if (isSearchTermCountry) {
-Â  Â  Â  // Untuk kode negara, lakukan pencocokan eksak
-Â  Â  Â  return prx.country.toLowerCase() === normalizedSearchTerm;
-Â  Â  } else {
-Â  Â  Â  // Untuk IP, ISP, dan Port, tetap gunakan pencarian substring
-Â  Â  Â  return prx.prxIP.includes(normalizedSearchTerm) ||
-Â  Â  Â  Â  Â  Â  Â prx.org.toLowerCase().includes(normalizedSearchTerm) ||
-Â  Â  Â  Â  Â  Â  Â prx.prxPort.includes(normalizedSearchTerm);
-Â  Â  }
-Â  });
-Â  // ðŸ‘† Akhir dari perbaikan
+  let filteredPrxList = prxList.filter(prx => {
+    const normalizedSearchTerm = searchTerm.toLowerCase();
+    const isSearchTermCountry = normalizedSearchTerm.length === 2;
+    if (isSearchTermCountry) {
+      return prx.country.toLowerCase() === normalizedSearchTerm;
+    } else {
+      return prx.prxIP.includes(normalizedSearchTerm) ||
+        prx.org.toLowerCase().includes(normalizedSearchTerm) ||
+        prx.prxPort.includes(normalizedSearchTerm);
+    }
+  });
 
-Â  const prxToShow = filteredPrxList.slice(startIndex, startIndex + PRX_PER_PAGE);
-Â  const hostName = request.headers.get("Host");
-Â  const uuid = crypto.randomUUID();
+  const prxToShow = filteredPrxList.slice(startIndex, startIndex + PRX_PER_PAGE);
+  const hostName = request.headers.get("Host");
+  const uuid = crypto.randomUUID();
 
-Â  const modifiedHostName = selectedWildcard || hostName;
+  const modifiedHostName = selectedWildcard || hostName;
 
-Â  let html = `
-    <!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${NAMAWEB}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icon-css@3.5/css/flag-icon.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'selector',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary-dark': '#1c1c20',
-                        'secondary-dark': '#2a2a2f',
-                        'text-light': '#f0f0f5',
-                        'accent-cyan': '#00e0b7',
-                        'accent-blue': '#4a90e2',
-                    },
-                },
-            },
-        };
-    </script>
-</head>
-<body class="bg-darker text-light">
-    <div class="quantum-container">
-        <div class="quantum-card">
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="quantum-title">
-                <a href="${LINK_TELEGRAM}" target="_blank" rel="noopener noreferrer">
-                    ${NAMAWEB}
-                </a>
-            </h1>
-        </div>
-        
-            <div class="flex justify-around my-2 text-sm">
-    <span class="font-bold text-green-500">Active: <span id="active-count">0</span></span>
-    <span class="font-bold text-red-500">Dead: <span id="dead-count">0</span></span>
-  </div>
-  
-            <form id="search-form" class="form-search" style="display: flex; align-items: center; gap: 5px;">
-                <input type="text" id="search-input" name="search" placeholder="Cari IP, ISP, atau Negara"
-                    class="input-search" value="${searchTerm}">
-                <button type="submit" class="button-search">Search</button>
-            </form>
-            <div class="wildcard-dropdown">
-                <select id="wildcard" name="wildcard">
-                    <option value="" ${!selectedWildcard ? 'selected' : ''}>No Wildcard</option>
-                    ${wildcards.map(w => `<option value="${w}" ${selectedWildcard === w ? 'selected' : ''}>${w}</option>`).join('')}
-                </select>
-                <select id="configType" name="configType">
-                    <option value="tls" ${selectedConfigType === 'tls' ? 'selected' : ''}>TLS</option>
-                    <option value="non-tls" ${selectedConfigType === 'non-tls' ? 'selected' : ''}>NTLS</option>
-                </select>
-            </div>
-            
-            <div class="w-full h-11 overflow-x-auto px-1 py-1 flex items-center space-x-1 shadow-lg bg-transparent border"
-  style="border-width: 1px; border-style: solid; border-color: #00ff88; height: 55px; border-radius: 10px; margin-top: 0.5rem;">
-  ${buildCountryFlag(prxList)}
-</div>
-            
-            <div class="table-wrapper">
-                <table class="quantum-table">
-                    <thead>
-                        <tr>
-                            <th class="text-center">No.</th>
-                            <th class="text-center">IP:Port</th>
-                            <th class="text-center">STATUS</th>
-                            <th class="text-center">ISP</th>
-                            <th class="text-center">Negara</th>
-                            <th class="text-center">Vless</th>
-                            <th class="text-center">Trojan</th>
-                            <th class="text-center">Shadowsocks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-  `;
+  const STYLE = `
+    /* General Body Styles */
+    body {
+        background-color: #1a1a1a;
+        color: #f0f0f5;
+        font-family: 'Space Grotesk', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-  if (prxToShow.length === 0) {
-    html += `
-      <tr>
-        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-          Tidak ada data yang ditemukan.
-        </td>
-      </tr>
-    `;
-  } else {
-    prxToShow.forEach((prx, index) => {
-      const { prxIP, prxPort, country, org } = prx;
-      const displayIndex = startIndex + index + 1;
+    /* Container */
+    .quantum-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-      const generateConfig = (protocol) => {
-        const configs = {
-          tls: "",
-          ntls: ""
-        };
-        const port = selectedConfigType === 'tls' ? 443 : 80;
+    /* Card */
+    .quantum-card {
+        background-color: #2a2a2f;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border: 1px solid #444;
+    }
 
-        let uriTls = new URL(`${protocol}://${modifiedHostName}`);
-        uriTls.port = 443;
-        uriTls.searchParams.set("encryption", "none");
-        uriTls.searchParams.set("type", "ws");
-        uriTls.searchParams.set("host", hostName);
-        uriTls.searchParams.set("security", "tls");
-        uriTls.searchParams.set("path", `/Free-VPN-Geo-Project/${prxIP}-${prxPort}`);
-        uriTls.hash = `${displayIndex} ${getFlagEmoji(country)} ${org} WS TLS [${serviceName}]`;
-        if (protocol === "ss") {
-          uriTls.username = btoa(`none:${uuid}`);
-          uriTls.searchParams.set("plugin", `${atob(v2)}-plugin;tls;mux=0;mode=websocket;path=/Free-VPN-Geo-Project/${prxIP}-${prxPort};host=${modifiedHostName}`);
-        } else {
-          uriTls.username = uuid;
+    /* Title */
+    .quantum-title a {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .quantum-title a:hover {
+        color: #00e0b7;
+    }
+
+    /* Search Form */
+    .form-search {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .input-search {
+        flex-grow: 1;
+        background-color: #1c1c20;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        color: #f0f0f5;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .input-search:focus {
+        outline: none;
+        border-color: #00e0b7;
+        box-shadow: 0 0 0 3px rgba(0, 224, 183, 0.2);
+    }
+
+    .button-search {
+        background-color: #00e0b7;
+        color: #1c1c20;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button-search:hover {
+        background-color: #00c4a3;
+    }
+
+    /* Dropdowns */
+    .wildcard-dropdown {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .wildcard-dropdown select {
+        background-color: #1c1c20;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        color: #f0f0f5;
+        font-size: 1rem;
+        flex-grow: 1;
+    }
+
+    /* Table */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .quantum-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1.5rem;
+    }
+
+    .quantum-table th,
+    .quantum-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #444;
+    }
+
+    .quantum-table th {
+        font-weight: 600;
+        color: #00e0b7;
+    }
+
+    .quantum-table tbody tr:hover {
+        background-color: #3a3a3f;
+    }
+
+    /* Copy Buttons */
+    .copy-btn {
+        background: linear-gradient(90deg, #00e0b7, #4a90e2);
+        color: white;
+        font-weight: 500;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .copy-btn:hover {
+        transform: scale(1.05);
+    }
+
+    /* Pagination */
+    .quantum-pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .quantum-pagination a {
+        background-color: #1c1c20;
+        border: 1px solid #444;
+        color: #f0f0f5;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .quantum-pagination a:hover,
+    .quantum-pagination a.active {
+        background-color: #00e0b7;
+        color: #1c1c20;
+        border-color: #00e0b7;
+    }
+
+    /* Status Icons */
+    .active-icon-glow {
+        color: #39ff14;
+        filter: drop-shadow(0 0 5px #39ff14);
+    }
+
+    .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-left-color: #00e0b7;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
         }
-        configs.tls = uriTls.toString();
+    }
 
-        let uriNtls = new URL(`${protocol}://${modifiedHostName}`);
-        uriNtls.port = 80;
-        uriNtls.searchParams.set("encryption", "none");
-        uriNtls.searchParams.set("type", "ws");
-        uriNtls.searchParams.set("host", hostName);
-        uriNtls.searchParams.set("security", "none");
-        uriNtls.searchParams.set("path", `/Free-VPN-Geo-Project/${prxIP}-${prxPort}`);
-        uriNtls.hash = `${displayIndex} ${getFlagEmoji(country)} ${org} WS NTLS [${serviceName}]`;
-        if (protocol === "ss") {
-          uriNtls.username = btoa(`none:${uuid}`);
-          uriNtls.searchParams.set("plugin", `${atob(v2)}-plugin;mux=0;mode=websocket;path=/Free-VPN-Geo-Project/${prxIP}-${prxPort};host=${modifiedHostName}`);
-        } else {
-          uriNtls.username = uuid;
-          uriNtls.searchParams.set("sni", "");
-        }
-        configs.ntls = uriNtls.toString();
-        return configs;
-      };
+    /* Popup */
+    #urlPopup .relative {
+        background-color: #2a2a2f;
+        border: 1px solid #444;
+    }
 
-      const vlessConfigs = generateConfig(atob(flash));
-      const trojanConfigs = generateConfig(atob(horse));
-      const ssConfigs = generateConfig("ss");
-      
-      html += `
-        <tr class="config-row text-center font-serif tracking-wider">
-  <td>${displayIndex}.</td>
-  <td class="ip-port">${prxIP}:${prxPort}</td>
-  <td class="proxy-status"></td>
-  <td>${org}</td>
-  <td class="px-1 py-1 text-center">
-    <span class="flag-circle flag-icon flag-icon-${country.toLowerCase()}"
-      style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
-    </span>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap">
-    <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? vlessConfigs.tls : vlessConfigs.ntls}')">
-        VLESS
-      </button>
-    </div>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap">
-    <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? trojanConfigs.tls : trojanConfigs.ntls}')">
-        TROJAN
-      </button>
-    </div>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap">
-    <div class="flex flex-col gap-2">
-      <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105 copy-btn copy-tls text-xs" onclick="showPopup('${selectedConfigType === 'tls' ? ssConfigs.tls : ssConfigs.ntls}')">
-        Shadowsocks
-      </button>
-    </div>
-  </td>
-</tr>
-      `;
-    });
-  }
-  
-  html += `
-      </tbody>
-    </table>
-  </div>
-  
-  <div id="urlPopup" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-  <div class="absolute inset-0 bg-blue-500 opacity-20 backdrop-blur-md"></div>
-  <div class="relative w-80 p-4 border rounded-2xl shadow-xl transition-all duration-300 transform scale-95
-              bg-white/10 backdrop-filter backdrop-blur-lg border-opacity-20 border-white/20 text-white">
-    <div class="mt-2 text-center">
-      <h3 class="text-xl font-bold leading-6 mb-4">Copy URL</h3>
-      <div class="px-2 py-2 mb-4 relative">
-        <textarea 
-          id="urlTextarea" 
-          class="w-full h-24 p-2 text-sm border-transparent rounded-lg resize-none 
-                 bg-white/5 backdrop-filter backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-300 
-                 text-white placeholder-gray-300" 
-          readonly
-        ></textarea>
-      </div>
-      <div class="items-center px-4 py-2 space-x-2 flex">
-        <button id="copyUrlBtn" class="flex-1 px-3 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white text-sm font-medium rounded-lg shadow-lg hover:from-green-500 hover:to-green-700 focus:outline-none transition-all duration-200">
-          Copy
-        </button>
-        <button id="closePopupBtn" class="flex-1 px-3 py-2 bg-gradient-to-r from-red-400 to-red-600 text-white text-sm font-medium rounded-lg shadow-lg hover:from-red-500 hover:to-red-700 focus:outline-none transition-all duration-200">
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+    #urlTextarea {
+        background-color: #1c1c20;
+        border: 1px solid #444;
+    }
 
-  <div class="quantum-pagination">
-    <a href="/sub/${page - 1}?q=${encodeURIComponent(searchTerm)}" class="py-0.5 px-1.5 rounded-lg font-bold text-white bg-gray-800 border-2 border-green-500 transition-transform transform hover:-translate-y-0.5 active:scale-95 ${page <= 0 ? 'opacity-50 cursor-not-allowed' : ''}">
-      Prev
-    </a>
-    ${(() => {
-      let buttons = '';
-      const startPage = Math.max(0, page - 2);
-      const endPage = Math.min(totalPages - 1, page + 2);
-      for (let i = startPage; i <= endPage; i++) {
-        buttons += `<a href="/sub/${i}?q=${encodeURIComponent(searchTerm)}" class="py-0.5 px-1.5 rounded-lg font-bold text-white border-2 border-green-500 transition-transform transform hover:-translate-y-0.5 active:scale-95 ${i === page ? 'bg-green-500 text-black' : 'bg-gray-800'}">
-          ${i + 1}
-        </a>`;
-      }
-      return buttons;
-    })()}
-    <a href="/sub/${page + 1}?q=${encodeURIComponent(searchTerm)}" class="py-0.5 px-1.5 rounded-lg font-bold text-white bg-gray-800 border-2 border-green-500 transition-transform transform hover:-translate-y-0.5 active:scale-95 ${page >= totalPages - 1 ? 'opacity-50 cursor-not-allowed' : ''}">
-      Next
-    </a>
-  </div>
-  <div class="flex justify-center mt-3 text-green-500">
-    <span class="text-xs">
-      Showing ${startIndex + 1} to ${startIndex + prxToShow.length} of ${totalPrxs} Proxies
-    </span>
-  </div>
-</div>
-  
-  
-  <div id="container-window" class="hidden">
-    <div class="fixed z-20 top-0 inset-0 w-full h-full bg-gray-900/80 backdrop-blur-sm flex justify-center items-center animate-fade-in">
-        <p id="container-window-info" class="text-center w-full h-full top-1/4 absolute text-white animate-pulse"></p>
-    </div>
+    /* Dark Mode Toggle */
+    .toggle-dark-mode {
+        background-color: #2a2a2f;
+        border: 1px solid #444;
+        border-radius: 50%;
+        padding: 0.5rem;
+        color: #f0f0f5;
+        transition: all 0.3s ease;
+    }
 
-    <div id="output-window" class="fixed z-30 inset-0 flex justify-center items-center p-2 hidden">
-        <div class="w-full max-w-xs flex flex-col gap-2 p-4 text-center rounded-xl bg-gray-800 border border-gray-700 shadow-lg animate-zoom-in">
+    .toggle-dark-mode:hover {
+        background-color: #00e0b7;
+        color: #1c1c20;
+    }
 
-        </div>
-    </div>
-</div>
-</div>
-     <div id="wildcards-window" class="fixed hidden z-30 top-0 right-0 w-full h-full flex justify-center items-center">
-    <div class="w-[75%] max-w-md h-auto flex flex-col gap-2 p-4 rounded-lg bg-white bg-opacity-20 backdrop-blur-sm border border-gray-300">
-        <div class="flex w-full h-full gap-2 justify-between">
-            <input id="new-domain-input" type="text" placeholder="Input wildcard" class="w-full h-full px-4 py-2 rounded-md focus:outline-0 bg-gray-700 text-white"/>
-            <button onclick="registerDomain()" class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                    <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
-                </svg>
-            </button>
-        </div>
+    /* Light mode */
+    .light body {
+        background-color: #f0f2f5;
+        color: #333;
+    }
 
-        <div id="container-domains" class="w-full h-32 rounded-md flex flex-col gap-1 overflow-y-scroll scrollbar-hide p-2 bg-gray-900"></div>
+    .light .quantum-card {
+        background-color: #fff;
+        border-color: #e0e0e0;
+        color: #333;
+    }
 
-        <button onclick="toggleWildcardsWindow()" class="transform-gpu flex items-center justify-center gap-1 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-sm font-medium shadow-lg hover:shadow-blue-500/30 transition-all duration-200 hover:-translate-y-0.5 p-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/>
-            </svg>
-            Close
-        </button>
-    </div>
-</div>
-    </div>
+    .light .quantum-title a {
+        color: #333;
+    }
 
-    <footer>
-    <div class="fixed top-4 right-8 flex flex-col items-end gap-3 z-50">
-        <style>
+    .light .input-search, .light .wildcard-dropdown select {
+        background-color: #e9ecef;
+        border-color: #ced4da;
+        color: #333;
+    }
+
+    .light .quantum-table th, .light .quantum-table td {
+        border-color: #e0e0e0;
+    }
+
+    .light .quantum-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .light .quantum-pagination a {
+        background-color: #fff;
+        border-color: #e0e0e0;
+        color: #333;
+    }
+
+    .light .quantum-pagination a:hover, .light .quantum-pagination a.active {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+    }
+
+    .light #urlPopup .relative {
+        background-color: #fff;
+        border-color: #e0e0e0;
+        color: #333;
+    }
+
+    .light #urlTextarea {
+        background-color: #e9ecef;
+        border-color: #ced4da;
+        color: #333;
+    }
     @keyframes rotate {
         from {
             transform: rotate(0deg);
@@ -467,7 +444,6 @@ function generateWebPage(request, prxList, page = 0, searchTerm = "") {
             transform: rotate(360deg);
         }
     }
-
     @keyframes pulse-and-blink {
         0%, 100% {
             transform: scale(1);
@@ -478,476 +454,520 @@ function generateWebPage(request, prxList, page = 0, searchTerm = "") {
             filter: brightness(150%);
         }
     }
-
     .animated-button {
         animation: rotate 4s linear infinite, pulse-and-blink 1.5s infinite;
     }
-
     .animated-button:hover {
         animation-play-state: paused;
     }
-</style>
+    `;
 
-<button onclick="toggleDropdown()" class="animated-button transition-colors rounded-full p-2 block text-white shadow-lg transform hover:scale-105" style="background-image: linear-gradient(to right, #22c55e, #14b8a6, #3b82f6, #8b5cf6, #ec4899); border: none;">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 text-white">
-        <path d="M12 2.25a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75h-6.75a.75.75 0 0 1 0-1.5h6.75V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-    </svg>
-</button>
-
-        <div id="dropdown-menu" class="hidden flex flex-col gap-3">
-            <a href="${DONATE_LINK}" target="_blank">
-                <button class="bg-accent-cyan hover:bg-teal-600 rounded-full border-2 border-gray-900 p-2 block transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                        <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
-                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </a>
-
-            <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank">
-                <button class="bg-green-500 hover:bg-green-600 rounded-full border-2 border-gray-900 p-2 block transition-colors duration-200">
-                    <img src="https://geoproject.biz.id/circle-flags/whatsapp.png" alt="WhatsApp Icon" class="size-6">
-                </button>
-            </a>
-
-            <a href="https://t.me/${TELEGRAM_USERNAME}" target="_blank">
-                <button class="bg-blue-500 hover:bg-blue-600 rounded-full border-2 border-gray-900 p-2 block transition-colors duration-200">
-                    <img src="https://geoproject.biz.id/circle-flags/telegram.png" alt="Telegram Icon" class="size-6">
-                </button>
-            </a>
-            
-            <button onclick="toggleWildcardsWindow()" class="bg-indigo-500 hover:bg-indigo-600 rounded-full border-2 border-gray-900 p-2 transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" />
-                </svg>
-            </button>
-
-            <button onclick="toggleDarkMode()" class="toggle-dark-mode">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-                </svg>
-            </button>
-        </div>
-    </div>
-</footer>
-<script>
-        // Fungsi dark mode yang sudah diperbaiki
+    const SCRIPT = `
         function toggleDarkMode() {
             const htmlElement = document.documentElement;
             htmlElement.classList.toggle("light");
         }
-    </script>
-    <script>
-    function toggleDropdown() {
-        const dropdownMenu = document.getElementById('dropdown-menu');
-        dropdownMenu.classList.toggle('hidden');
-    }
-</script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-    const runningTitle = document.getElementById('runningTitle');
-    const container = runningTitle.parentElement;
-    let position = -runningTitle.offsetWidth; // Mulai dari luar kiri
-    const speed = 1.5; // Kecepatan pergerakan
-
-    function animateTitle() {
-        position += speed;
-
-        // Jika teks sudah melewati container, kembalikan ke posisi awal
-        if (position > container.offsetWidth) {
-            position = -runningTitle.offsetWidth;
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            dropdownMenu.classList.toggle('hidden');
         }
 
-        // PERBAIKAN: Menggabungkan string dan variabel dengan tanda '+'
-        runningTitle.style.transform = 'translateX(' + position + 'px)';
+        document.addEventListener('DOMContentLoaded', () => {
+            const runningTitle = document.getElementById('runningTitle');
+            if (runningTitle) {
+                const container = runningTitle.parentElement;
+                let position = -runningTitle.offsetWidth;
+                const speed = 1.5;
 
-        requestAnimationFrame(animateTitle);
-    }
+                function animateTitle() {
+                    position += speed;
+                    if (position > container.offsetWidth) {
+                        position = -runningTitle.offsetWidth;
+                    }
+                    runningTitle.style.transform = 'translateX(' + position + 'px)';
+                    requestAnimationFrame(animateTitle);
+                }
+                animateTitle();
+            }
+        });
 
-    animateTitle();
-});
-</script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }, 1000);
+            }
+        });
 
+        const rootDomain = "${serviceName}.${rootDomain}";
+        const notification = document.getElementById("notification-badge");
+        const windowContainer = document.getElementById("container-window");
+        const windowInfoContainer = document.getElementById("container-window-info");
+        const converterUrl = "https://script.google.com/macros/s/AKfycbwwVeHNUlnP92syOP82p1dOk_-xwBgRIxkTjLhxxZ5UXicrGOEVNc5JaSOu0Bgsx_gG/exec";
+        let isDomainListFetched = false;
+        let rawConfig = "";
 
-     <script>
-Â  document.addEventListener('DOMContentLoaded', function() {
-Â  Â  const loadingScreen = document.getElementById('loading-screen');
-Â  Â  if (loadingScreen) {
-Â  Â  Â  // Tunggu 5 detik sebelum memulai transisi
-Â  Â  Â  setTimeout(() => {
-Â  Â  Â  Â  // Atur opacity menjadi 0 untuk memulai efek fade out
-Â  Â  Â  Â  loadingScreen.style.opacity = '0';
-Â  Â  Â  Â Â 
-Â  Â  Â  Â  // Setelah efek fade out selesai (500ms), sembunyikan elemen
-Â  Â  Â  Â  setTimeout(() => {
-Â  Â  Â  Â  Â  loadingScreen.style.display = 'none';
-Â  Â  Â  Â  }, 500); // Durasi ini harus sama dengan durasi transisi di CSS (duration-500)
-Â  Â  Â  }, 1000); // <-- Ini adalah jeda 5 detik
-Â  Â  }
-Â  });
-Â  Â Â 
-Â  Â  Â  // Shared
-Â  Â  Â  const rootDomain = "${serviceName}.${rootDomain}";
-Â  Â  Â  const notification = document.getElementById("notification-badge");
-Â  Â  Â  const windowContainer = document.getElementById("container-window");
-Â  Â  Â  const windowInfoContainer = document.getElementById("container-window-info");
-Â  Â  Â  const converterUrl =
-Â  Â  Â  Â  "https://script.google.com/macros/s/AKfycbwwVeHNUlnP92syOP82p1dOk_-xwBgRIxkTjLhxxZ5UXicrGOEVNc5JaSOu0Bgsx_gG/exec";
-
-
-Â  Â  Â  // Switches
-Â  Â  Â  let isDomainListFetched = false;
-
-Â  Â  Â  // Local variable
-Â  Â  Â  let rawConfig = "";
-
-Â  Â  Â  function getDomainList() {
-Â  Â  Â  Â  if (isDomainListFetched) return;
-Â  Â  Â  Â  isDomainListFetched = true;
-
-Â  Â  Â  Â  windowInfoContainer.innerText = "Fetching data...";
-
-Â  Â  Â  Â  const url = "https://" + rootDomain + "/api/v1/domains/get";
-Â  Â  Â  Â  const res = fetch(url).then(async (res) => {
-Â  Â  Â  Â  Â  const domainListContainer = document.getElementById("container-domains");
-Â  Â  Â  Â  Â  domainListContainer.innerHTML = "";
-
-Â  Â  Â  Â  Â  if (res.status == 200) {
-Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Done!";
-Â  Â  Â  Â  Â  Â  const respJson = await res.json();
-Â  Â  Â  Â  Â  Â  for (const domain of respJson) {
-Â  Â  Â  Â  Â  Â  Â  const domainElement = document.createElement("p");
-Â  Â  Â  Â  Â  Â  Â  domainElement.classList.add("w-full", "bg-amber-400", "rounded-md");
-Â  Â  Â  Â  Â  Â  Â  domainElement.innerText = domain;
-Â  Â  Â  Â  Â  Â  Â  domainListContainer.appendChild(domainElement);
-Â  Â  Â  Â  Â  Â  }
-Â  Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Failed!";
-Â  Â  Â  Â  Â  }
-Â  Â  Â  Â  });
-Â  Â  Â  }
-
-Â  Â  Â  function registerDomain() {
-Â  Â  Â  Â  const domainInputElement = document.getElementById("new-domain-input");
-Â  Â  Â  Â  const rawDomain = domainInputElement.value.toLowerCase();
-Â  Â  Â  Â  const domain = domainInputElement.value + "." + rootDomain;
-
-Â  Â  Â  Â  if (!rawDomain.match(/\\w+\\.\\w+$/) || rawDomain.endsWith(rootDomain)) {
-Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Invalid URL!";
-Â  Â  Â  Â  Â  return;
-Â  Â  Â  Â  }
-
-Â  Â  Â  Â  windowInfoContainer.innerText = "Pushing request...";
-
-Â  Â  Â  Â  const url = "https://" + rootDomain + "/api/v1/domains/put?domain=" + domain;
-Â  Â  Â  Â  const res = fetch(url).then((res) => {
-Â  Â  Â  Â  Â  if (res.status == 200) {
-Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Done!";
-Â  Â  Â  Â  Â  Â  domainInputElement.value = "";
-Â  Â  Â  Â  Â  Â  isDomainListFetched = false;
-Â  Â  Â  Â  Â  Â  getDomainList();
-Â  Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  Â  if (res.status == 409) {
-Â  Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Domain exists!";
-Â  Â  Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Error " + res.status;
-Â  Â  Â  Â  Â  Â  }
-Â  Â  Â  Â  Â  }
-Â  Â  Â  Â  });
-Â  Â  Â  }
-
-Â  Â  Â  function copyToClipboard(text) {
-Â  Â  Â  Â  toggleOutputWindow();
-Â  Â  Â  Â  rawConfig = text;
-Â  Â  Â  }
-
-Â  Â  Â  function copyToClipboardAsRaw() {
-Â  Â  Â  Â  navigator.clipboard.writeText(rawConfig);
-
-Â  Â  Â  Â  notification.classList.remove("opacity-0");
-Â  Â  Â  Â  setTimeout(() => {
-Â  Â  Â  Â  Â  notification.classList.add("opacity-0");
-Â  Â  Â  Â  }, 2000);
-Â  Â  Â  }
-
-Â  Â  Â  async function copyToClipboardAsTarget(target) {
-Â  Â  Â  Â  windowInfoContainer.innerText = "Generating config...";
-Â  Â  Â  Â  const url = "${CONVERTER_URL}";
-Â  Â  Â  Â  const res = await fetch(url, {
-Â  Â  Â  Â  Â  method: "POST",
-Â  Â  Â  Â  Â  body: JSON.stringify({
-Â  Â  Â  Â  Â  Â  url: rawConfig,
-Â  Â  Â  Â  Â  Â  format: target,
-Â  Â  Â  Â  Â  Â  template: "cf",
-Â  Â  Â  Â  Â  }),
-Â  Â  Â  Â  });
-
-Â  Â  Â  Â  if (res.status == 200) {
-Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Done!";
-Â  Â  Â  Â  Â  navigator.clipboard.writeText(await res.text());
-
-Â  Â  Â  Â  Â  notification.classList.remove("opacity-0");
-Â  Â  Â  Â  Â  setTimeout(() => {
-Â  Â  Â  Â  Â  Â  notification.classList.add("opacity-0");
-Â  Â  Â  Â  Â  }, 2000);
-Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  windowInfoContainer.innerText = "Error " + res.statusText;
-Â  Â  Â  Â  }
-Â  Â  Â  }
-
-Â  Â  Â  function navigateTo(link) {
-Â  Â  Â  Â  window.location.href = link + window.location.search;
-Â  Â  Â  }
-
-Â  Â  Â  function toggleOutputWindow() {
-Â  Â  Â  Â  windowInfoContainer.innerText = "Select output:";
-Â  Â  Â  Â  toggleWindow();
-Â  Â  Â  Â  const rootElement = document.getElementById("output-window");
-Â  Â  Â  Â  if (rootElement.classList.contains("hidden")) {
-Â  Â  Â  Â  Â  rootElement.classList.remove("hidden");
-Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  rootElement.classList.add("hidden");
-Â  Â  Â  Â  }
-Â  Â  Â  }
-
-Â  Â  Â  function toggleWildcardsWindow() {
-Â  Â  Â  Â  windowInfoContainer.innerText = "Domain list";
-Â  Â  Â  Â  toggleWindow();
-Â  Â  Â  Â  getDomainList();
-Â  Â  Â  Â  const rootElement = document.getElementById("wildcards-window");
-Â  Â  Â  Â  if (rootElement.classList.contains("hidden")) {
-Â  Â  Â  Â  Â  rootElement.classList.remove("hidden");
-Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  rootElement.classList.add("hidden");
-Â  Â  Â  Â  }
-Â  Â  Â  }
-
-Â  Â  Â  function toggleWindow() {
-Â  Â  Â  Â  if (windowContainer.classList.contains("hidden")) {
-Â  Â  Â  Â  Â  windowContainer.classList.remove("hidden");
-Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  windowContainer.classList.add("hidden");
-Â  Â  Â  Â  }
-Â  Â  Â  }
-
-Â  Â  Â  function checkRegion() {
-Â  Â  Â  Â  for (let i = 0; ; i++) {
-Â  Â  Â  Â  Â  const containerRegionCheck = document.getElementById("container-region-check-" + i);
-Â  Â  Â  Â  Â  const configSample = document.getElementById("config-sample-" + i).value.replaceAll(" ", "");
-Â  Â  Â  Â  Â  if (containerRegionCheck == undefined) break;
-
-Â  Â  Â  Â  Â  const res = fetch(
-Â  Â  Â  Â  Â  Â  "https://api.foolvpn.me/regioncheck?config=" + encodeURIComponent(configSample)
-Â  Â  Â  Â  Â  ).then(async (res) => {
-Â  Â  Â  Â  Â  Â  if (res.status == 200) {
-Â  Â  Â  Â  Â  Â  Â  containerRegionCheck.innerHTML = "<hr>";
-Â  Â  Â  Â  Â  Â  Â  for (const result of await res.json()) {
-Â  Â  Â  Â  Â  Â  Â  Â  containerRegionCheck.innerHTML += "<p>" + result.name + ": " + result.region + "</p>";
-Â  Â  Â  Â  Â  Â  Â  }
-Â  Â  Â  Â  Â  Â  }
-Â  Â  Â  Â  Â  });
-Â  Â  Â  Â  }
-Â  Â  Â  }
-
-Â  Â  Â  function checkGeoip() {
-Â  Â  Â  Â  const containerIP = document.getElementById("container-info-ip");
-Â  Â  Â  Â  const containerCountry = document.getElementById("container-info-country");
-Â  Â  Â  Â  const containerISP = document.getElementById("container-info-isp");
-Â  Â  Â  Â  const res = fetch("https://" + rootDomain + "/api/v1/myip").then(async (res) => {
-Â  Â  Â  Â  Â  if (res.status == 200) {
-Â  Â  Â  Â  Â  Â  const respJson = await res.json();
-Â  Â  Â  Â  Â  Â  containerIP.innerText = "IP: " + respJson.ip;
-Â  Â  Â  Â  Â  Â  containerCountry.innerText = "Country: " + respJson.country;
-Â  Â  Â  Â  Â  Â  containerISP.innerText = "ISP: " + respJson.asOrganization;
-Â  Â  Â  Â  Â  }
-Â  Â  Â  Â  });
-Â  Â  Â  }
-
-Â  Â  Â function updateTime() {
-Â  Â  const timeElement = document.getElementById("time-info-value");
-Â  Â  if (timeElement) {
-Â  Â  Â  Â  const now = new Date();
-Â  Â  Â  Â  const timeString = now.toLocaleTimeString('en-GB');
-Â  Â  Â  Â  timeElement.textContent = timeString;
-Â  Â  }
-}
-
-setInterval(updateTime, 1000);
-
-Â  Â  Â  window.onload = () => {
-Â  Â  Â  Â  checkGeoip();
-Â  Â  Â  Â  updateTime();
-Â  Â  Â  Â  // checkRegion();
-Â  Â  Â  Â  const observer = lozad(".lozad", {
-Â  Â  Â  Â  Â  load: function (el) {
-Â  Â  Â  Â  Â  Â  el.classList.remove("scale-95");
-Â  Â  Â  Â  Â  },
-Â  Â  Â  Â  });
-Â  Â  Â  Â  observer.observe();
-Â  Â  Â  };
-
-Â  Â  Â  window.onscroll = () => {
-Â  Â  Â  Â  const paginationContainer = document.getElementById("container-pagination");
-
-Â  Â  Â  Â  if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
-Â  Â  Â  Â  Â  paginationContainer.classList.remove("-translate-y-6");
-Â  Â  Â  Â  } else {
-Â  Â  Â  Â  Â  paginationContainer.classList.add("-translate-y-6");
-Â  Â  Â  Â  }
-Â  Â  Â  };
-Â  Â  </script>
-    <script>
-function showPopup(url) {
-  const urlTextarea = document.getElementById('urlTextarea');
-  const urlPopup = document.getElementById('urlPopup');
-  
-  urlTextarea.value = url;
-  
-  urlPopup.classList.remove('hidden');
-}
-
-document.getElementById('copyUrlBtn').addEventListener('click', () => {
-  const urlTextarea = document.getElementById('urlTextarea');
-  
-  urlTextarea.select();
-  urlTextarea.setSelectionRange(0, 99999);
-  
-  navigator.clipboard.writeText(urlTextarea.value).then(() => {
-    // Ganti alert dengan SweetAlert2 untuk notifikasi sukses
-    Swal.fire({
-  width: '270px',
-  background: 'rgba(6, 18, 67, 0.80)',
-  icon: 'success',
-  text: 'Link copied successfully!',
-  showConfirmButton: false,
-  timer: 1500,
-  customClass: {
-    htmlContainer: 'text-white font-bold'
-  }
-});
-    document.getElementById('urlPopup').classList.add('hidden');
-  }).catch(err => {
-    // Ganti alert dengan SweetAlert2 untuk notifikasi gagal
-    Swal.fire({
-    width: '270px',
-      icon: 'error',
-      title: 'Failed!',
-      text: 'Failed to copy link. Please try again..',
-      footer: 'Informasi teknis: ' + err
-    });
-    console.error('Gagal menyalin: ', err);
-  });
-});
-
-document.getElementById('closePopupBtn').addEventListener('click', () => {
-  document.getElementById('urlPopup').classList.add('hidden');
-});
-</script>
-  <script>
-Â  Â  document.getElementById('search-form').addEventListener('submit', function(e) {
-Â  Â  Â  e.preventDefault();
-Â  Â  Â  const searchTerm = document.getElementById('search-input').value;
-Â  Â  Â  const wildcard = document.getElementById('wildcard').value;
-Â  Â  Â  const configType = document.getElementById('configType').value;
-Â  Â  Â  window.location.href = \`/sub/0?search=\${searchTerm}&wildcard=\${wildcard}&configType=\${configType}\`;
-Â  Â  });
-
-Â  Â  document.getElementById('wildcard').addEventListener('change', function(e) {
-Â  Â  Â  const selectedWildcard = e.target.value;
-Â  Â  Â  const currentUrl = new URL(window.location.href);
-Â  Â  Â  currentUrl.searchParams.set('wildcard', selectedWildcard);
-Â  Â  Â  window.location.href = currentUrl.toString();
-Â  Â  });
-
-Â  Â  document.getElementById('configType').addEventListener('change', function(e) {
-Â  Â  Â  Â  const selectedType = e.target.value;
-Â  Â  Â  Â  const currentUrl = new URL(window.location.href);
-Â  Â  Â  Â  currentUrl.searchParams.set('configType', selectedType);
-Â  Â  Â  Â  window.location.href = currentUrl.toString();
-Â  Â  });
-Â  </script>
- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const proxyRows = document.querySelectorAll('.config-row');
-        const CORS_API_URL = 'https://cors.checker-ip.web.id/';
-        const CHECKER_API_URL = 'https://geovpn.vercel.app/check?ip=';
-
-        if (proxyRows.length === 0) {
-            console.warn("Tidak ada data proxy di tabel. Skrip tidak akan berjalan.");
-            return;
+        function getDomainList() {
+            if (isDomainListFetched) return;
+            isDomainListFetched = true;
+            windowInfoContainer.innerText = "Fetching data...";
+            const url = "https://" + rootDomain + "/api/v1/domains/get";
+            fetch(url).then(async (res) => {
+                const domainListContainer = document.getElementById("container-domains");
+                domainListContainer.innerHTML = "";
+                if (res.status == 200) {
+                    windowInfoContainer.innerText = "Done!";
+                    const respJson = await res.json();
+                    for (const domain of respJson) {
+                        const domainElement = document.createElement("p");
+                        domainElement.classList.add("w-full", "bg-amber-400", "rounded-md");
+                        domainElement.innerText = domain;
+                        domainListContainer.appendChild(domainElement);
+                    }
+                } else {
+                    windowInfoContainer.innerText = "Failed!";
+                }
+            });
         }
 
-        let activeCount = 0;
-        let deadCount = 0;
-        const activeCountEl = document.getElementById('active-count');
-        const deadCountEl = document.getElementById('dead-count');
+        function registerDomain() {
+            const domainInputElement = document.getElementById("new-domain-input");
+            const rawDomain = domainInputElement.value.toLowerCase();
+            const domain = domainInputElement.value + "." + rootDomain;
+            if (!rawDomain.match(/\\w+\\.\\w+$/) || rawDomain.endsWith(rootDomain)) {
+                windowInfoContainer.innerText = "Invalid URL!";
+                return;
+            }
+            windowInfoContainer.innerText = "Pushing request...";
+            const url = "https://" + rootDomain + "/api/v1/domains/put?domain=" + domain;
+            fetch(url).then((res) => {
+                if (res.status == 200) {
+                    windowInfoContainer.innerText = "Done!";
+                    domainInputElement.value = "";
+                    isDomainListFetched = false;
+                    getDomainList();
+                } else {
+                    if (res.status == 409) {
+                        windowInfoContainer.innerText = "Domain exists!";
+                    } else {
+                        windowInfoContainer.innerText = "Error " + res.status;
+                    }
+                }
+            });
+        }
 
-        const promises = Array.from(proxyRows).map(async (row) => {
-            const ipPortElement = row.querySelector('.ip-port');
-            const statusElement = row.querySelector('.proxy-status');
+        function copyToClipboard(text) {
+            toggleOutputWindow();
+            rawConfig = text;
+        }
 
-            if (!ipPortElement || !statusElement) {
-                console.error("Elemen .ip-port atau .proxy-status tidak ditemukan pada satu baris. Melewati baris ini.");
+        function copyToClipboardAsRaw() {
+            navigator.clipboard.writeText(rawConfig);
+            notification.classList.remove("opacity-0");
+            setTimeout(() => {
+                notification.classList.add("opacity-0");
+            }, 2000);
+        }
+
+        async function copyToClipboardAsTarget(target) {
+            windowInfoContainer.innerText = "Generating config...";
+            const url = "${CONVERTER_URL}";
+            const res = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    url: rawConfig,
+                    format: target,
+                    template: "cf",
+                }),
+            });
+            if (res.status == 200) {
+                windowInfoContainer.innerText = "Done!";
+                navigator.clipboard.writeText(await res.text());
+                notification.classList.remove("opacity-0");
+                setTimeout(() => {
+                    notification.classList.add("opacity-0");
+                }, 2000);
+            } else {
+                windowInfoContainer.innerText = "Error " + res.statusText;
+            }
+        }
+
+        function navigateTo(link) {
+            window.location.href = link + window.location.search;
+        }
+
+        function toggleOutputWindow() {
+            windowInfoContainer.innerText = "Select output:";
+            toggleWindow();
+            const rootElement = document.getElementById("output-window");
+            if (rootElement.classList.contains("hidden")) {
+                rootElement.classList.remove("hidden");
+            } else {
+                rootElement.classList.add("hidden");
+            }
+        }
+
+        function toggleWildcardsWindow() {
+            windowInfoContainer.innerText = "Domain list";
+            toggleWindow();
+            getDomainList();
+            const rootElement = document.getElementById("wildcards-window");
+            if (rootElement.classList.contains("hidden")) {
+                rootElement.classList.remove("hidden");
+            } else {
+                rootElement.classList.add("hidden");
+            }
+        }
+
+        function toggleWindow() {
+            if (windowContainer.classList.contains("hidden")) {
+                windowContainer.classList.remove("hidden");
+            } else {
+                windowContainer.classList.add("hidden");
+            }
+        }
+
+        function checkGeoip() {
+            const containerIP = document.getElementById("container-info-ip");
+            const containerCountry = document.getElementById("container-info-country");
+            const containerISP = document.getElementById("container-info-isp");
+            const res = fetch("https://" + rootDomain + "/api/v1/myip").then(async (res) => {
+                if (res.status == 200) {
+                    const respJson = await res.json();
+                    if(containerIP) containerIP.innerText = "IP: " + respJson.ip;
+                    if(containerCountry) containerCountry.innerText = "Country: " + respJson.country;
+                    if(containerISP) containerISP.innerText = "ISP: " + respJson.asOrganization;
+                }
+            });
+        }
+
+        function updateTime() {
+            const timeElement = document.getElementById("time-info-value");
+            if (timeElement) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-GB');
+                timeElement.textContent = timeString;
+            }
+        }
+        setInterval(updateTime, 1000);
+
+        window.onload = () => {
+            checkGeoip();
+            updateTime();
+        };
+
+        function showPopup(url) {
+            const urlTextarea = document.getElementById('urlTextarea');
+            const urlPopup = document.getElementById('urlPopup');
+            urlTextarea.value = url;
+            urlPopup.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('copyUrlBtn').addEventListener('click', () => {
+                const urlTextarea = document.getElementById('urlTextarea');
+                urlTextarea.select();
+                urlTextarea.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(urlTextarea.value).then(() => {
+                    Swal.fire({
+                        width: '270px',
+                        background: 'rgba(6, 18, 67, 0.80)',
+                        icon: 'success',
+                        text: 'Link copied successfully!',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        customClass: {
+                            htmlContainer: 'text-white font-bold'
+                        }
+                    });
+                    document.getElementById('urlPopup').classList.add('hidden');
+                }).catch(err => {
+                    Swal.fire({
+                        width: '270px',
+                        icon: 'error',
+                        title: 'Failed!',
+                        text: 'Failed to copy link. Please try again..',
+                        footer: 'Informasi teknis: ' + err
+                    });
+                    console.error('Gagal menyalin: ', err);
+                });
+            });
+
+            document.getElementById('closePopupBtn').addEventListener('click', () => {
+                document.getElementById('urlPopup').classList.add('hidden');
+            });
+
+            document.getElementById('search-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = document.getElementById('search-input').value;
+                const wildcard = document.getElementById('wildcard').value;
+                const configType = document.getElementById('configType').value;
+                window.location.href = \`/sub/0?search=\${encodeURIComponent(searchTerm)}&wildcard=\${encodeURIComponent(wildcard)}&configType=\${configType}\`;
+            });
+
+            document.getElementById('wildcard').addEventListener('change', function(e) {
+                const selectedWildcard = e.target.value;
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('wildcard', selectedWildcard);
+                window.location.href = currentUrl.toString();
+            });
+
+            document.getElementById('configType').addEventListener('change', function(e) {
+                const selectedType = e.target.value;
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('configType', selectedType);
+                window.location.href = currentUrl.toString();
+            });
+
+            const proxyRows = document.querySelectorAll('.config-row');
+            const CORS_API_URL = 'https://cors.checker-ip.web.id/';
+            const CHECKER_API_URL = 'https://geovpn.vercel.app/check?ip=';
+
+            if (proxyRows.length === 0) {
+                console.warn("Tidak ada data proxy di tabel. Skrip tidak akan berjalan.");
                 return;
             }
 
-            const ipPort = ipPortElement.textContent.trim();
-            const fullApiUrl = CORS_API_URL + '?url=' + CHECKER_API_URL + ipPort;
+            let activeCount = 0;
+            let deadCount = 0;
+            const activeCountEl = document.getElementById('active-count');
+            const deadCountEl = document.getElementById('dead-count');
 
-            // Tampilkan spinner saat memuat
-            statusElement.innerHTML = '<div class="spinner"></div>';
-
-            try {
-                const response = await fetch(fullApiUrl);
-
-                if (!response.ok) {
-                    throw new Error('HTTP error! status: ' + response.status);
+            const promises = Array.from(proxyRows).map(async (row) => {
+                const ipPortElement = row.querySelector('.ip-port');
+                const statusElement = row.querySelector('.proxy-status');
+                if (!ipPortElement || !statusElement) {
+                    console.error("Elemen .ip-port atau .proxy-status tidak ditemukan pada satu baris. Melewati baris ini.");
+                    return;
                 }
-
-                const data = await response.json();
-                const status = data.status || 'UNKNOWN';
-                let delay = data.delay || null;
-                let statusHtml;
-
-                // Hasilkan delay acak jika delay asli adalah string dengan "ms"
-                if (delay && typeof delay === 'string' && delay.includes('ms')) {
-                    const randomDelay = Math.floor(Math.random() * (400 - 100 + 1)) + 100;
-                    delay = '(' + randomDelay + 'ms)';
-                } else {
-                    delay = '';
+                const ipPort = ipPortElement.textContent.trim();
+                const fullApiUrl = CORS_API_URL + '?url=' + CHECKER_API_URL + ipPort;
+                statusElement.innerHTML = '<div class="spinner"></div>';
+                try {
+                    const response = await fetch(fullApiUrl);
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    const data = await response.json();
+                    const status = data.status || 'UNKNOWN';
+                    let delay = data.delay || null;
+                    let statusHtml;
+                    if (delay && typeof delay === 'string' && delay.includes('ms')) {
+                        const randomDelay = Math.floor(Math.random() * (400 - 100 + 1)) + 100;
+                        delay = '(' + randomDelay + 'ms)';
+                    } else {
+                        delay = '';
+                    }
+                    if (status === 'ACTIVE') {
+                        activeCount++;
+                        statusHtml =
+                            '<div class="flex flex-col items-center">' +
+                            '<i class="fas fa-check-circle active-icon-glow"></i>' +
+                            '<span class="text-xs font-normal text-amber-400 mt-1">' + delay + '</span>' +
+                            '</div>';
+                    } else if (status === 'DEAD') {
+                        deadCount++;
+                        statusHtml = '<span class="text-red-500 font-bold">DEAD</span>';
+                    } else {
+                        statusHtml = '<span class="text-cyan-500 font-bold">UNKNOWN</span>';
+                    }
+                    statusElement.innerHTML = statusHtml;
+                } catch (error) {
+                    console.error('Kesalahan saat mengambil status:', error);
+                    statusElement.innerHTML = '<span class="text-red-500 font-bold">ERROR</span>';
                 }
+            });
+            Promise.all(promises).then(() => {
+                activeCountEl.textContent = activeCount;
+                deadCountEl.textContent = deadCount;
+            });
+        });
+    `;
 
-                if (status === 'ACTIVE') {
-                    activeCount++;
-                    statusHtml =
-                        '<div class="flex flex-col items-center">' +
-                        '<i class="fas fa-check-circle active-icon-glow"></i>' +
-                        '<span class="text-xs font-normal text-amber-400 mt-1">' + delay + '</span>' +
-                        '</div>';
-                } else if (status === 'DEAD') {
-                    deadCount++;
-                    statusHtml = '<span class="text-red-500 font-bold">DEAD</span>';
-                } else {
-                    statusHtml = '<span class="text-cyan-500 font-bold">UNKNOWN</span>';
-                }
+  let html = `
+    <!DOCTYPE html>
+    <html lang="en" class="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${NAMAWEB}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icon-css@3.5/css/flag-icon.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>${STYLE}</style>
+    </head>
+    <body>
+        <div class="quantum-container">
+            <div class="quantum-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="quantum-title">
+                        <a href="${LINK_TELEGRAM}" target="_blank" rel="noopener noreferrer">${NAMAWEB}</a>
+                    </h1>
+                </div>
+                <div class="flex justify-around my-2 text-sm">
+                    <span class="font-bold text-green-500">Active: <span id="active-count">0</span></span>
+                    <span class="font-bold text-red-500">Dead: <span id="dead-count">0</span></span>
+                </div>
+                <form id="search-form" class="form-search">
+                    <input type="text" id="search-input" name="search" placeholder="Cari IP, ISP, atau Negara" class="input-search" value="${searchTerm}">
+                    <button type="submit" class="button-search">Search</button>
+                </form>
+                <div class="wildcard-dropdown">
+                    <select id="wildcard" name="wildcard">
+                        <option value="" ${!selectedWildcard ? 'selected' : ''}>No Wildcard</option>
+                        ${wildcards.map(w => `<option value="${w}" ${selectedWildcard === w ? 'selected' : ''}>${w}</option>`).join('')}
+                    </select>
+                    <select id="configType" name="configType">
+                        <option value="tls" ${selectedConfigType === 'tls' ? 'selected' : ''}>TLS</option>
+                        <option value="non-tls" ${selectedConfigType === 'non-tls' ? 'selected' : ''}>NTLS</option>
+                    </select>
+                </div>
+                <div class="w-full h-11 overflow-x-auto px-1 py-1 flex items-center space-x-1 shadow-lg bg-transparent border" style="border-width: 1px; border-style: solid; border-color: #00ff88; height: 55px; border-radius: 10px; margin-top: 0.5rem;">
+                    ${buildCountryFlag(prxList)}
+                </div>
+                <div class="table-wrapper">
+                    <table class="quantum-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No.</th>
+                                <th class="text-center">IP:Port</th>
+                                <th class="text-center">STATUS</th>
+                                <th class="text-center">ISP</th>
+                                <th class="text-center">Negara</th>
+                                <th class="text-center">Vless</th>
+                                <th class="text-center">Trojan</th>
+                                <th class="text-center">Shadowsocks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+  `;
 
-                statusElement.innerHTML = statusHtml;
+  if (prxToShow.length === 0) {
+    html += `
+      <tr>
+        <td colspan="8" class="text-center py-4">Tidak ada data yang ditemukan.</td>
+      </tr>
+    `;
+  } else {
+    prxToShow.forEach((prx, index) => {
+      const { prxIP, prxPort, country, org } = prx;
+      const displayIndex = startIndex + index + 1;
 
-            } catch (error) {
-                console.error('Kesalahan saat mengambil status:', error);
-                statusElement.innerHTML = '<span class="text-red-500 font-bold">ERROR</span>';
+      const generateConfig = (protocol) => {
+        const configs = { tls: "", ntls: "" };
+        const port = selectedConfigType === 'tls' ? 443 : 80;
+        let uri = new URL(`${protocol}://${modifiedHostName}`);
+        uri.port = port;
+        uri.searchParams.set("encryption", "none");
+        uri.searchParams.set("type", "ws");
+        uri.searchParams.set("host", hostName);
+        uri.searchParams.set("security", selectedConfigType === 'tls' ? "tls" : "none");
+        uri.searchParams.set("path", `/Free-VPN-Geo-Project/${prxIP}-${prxPort}`);
+        uri.hash = `${displayIndex} ${getFlagEmoji(country)} ${org} WS ${selectedConfigType === 'tls' ? "TLS" : "NTLS"} [${serviceName}]`;
+        if (protocol === "ss") {
+          uri.username = btoa(`none:${uuid}`);
+          uri.searchParams.set("plugin", `${atob(v2)}-plugin;${selectedConfigType === 'tls' ? "tls;" : ""}mux=0;mode=websocket;path=/Free-VPN-Geo-Project/${prxIP}-${prxPort};host=${modifiedHostName}`);
+        } else {
+          uri.username = uuid;
+        }
+        if(selectedConfigType === 'tls') configs.tls = uri.toString();
+        else configs.ntls = uri.toString();
+
+        // Also generate the other type for the button
+        let otherUri = new URL(uri.toString());
+        otherUri.port = selectedConfigType === 'tls' ? 80 : 443;
+        otherUri.searchParams.set("security", selectedConfigType === 'tls' ? "none" : "tls");
+        if (protocol !== "ss") {
+            if (selectedConfigType === 'non-tls') {
+                otherUri.searchParams.set("sni", "");
+            } else {
+                otherUri.searchParams.delete("sni");
             }
-        });
+        }
+        if(selectedConfigType === 'tls') configs.ntls = otherUri.toString();
+        else configs.tls = otherUri.toString();
 
-        Promise.all(promises).then(() => {
-            activeCountEl.textContent = activeCount;
-            deadCountEl.textContent = deadCount;
-        });
+        return configs;
+      };
+
+      const vlessConfigs = generateConfig(atob(flash));
+      const trojanConfigs = generateConfig(atob(horse));
+      const ssConfigs = generateConfig("ss");
+
+      html += `
+        <tr class="config-row text-center">
+            <td>${displayIndex}.</td>
+            <td class="ip-port">${prxIP}:${prxPort}</td>
+            <td class="proxy-status"></td>
+            <td>${org}</td>
+            <td class="text-center">
+                <span class="flag-icon flag-icon-${country.toLowerCase()}"></span>
+            </td>
+            <td><button class="copy-btn" onclick="showPopup('${selectedConfigType === 'tls' ? vlessConfigs.tls : vlessConfigs.ntls}')">VLESS</button></td>
+            <td><button class="copy-btn" onclick="showPopup('${selectedConfigType === 'tls' ? trojanConfigs.tls : trojanConfigs.ntls}')">TROJAN</button></td>
+            <td><button class="copy-btn" onclick="showPopup('${selectedConfigType === 'tls' ? ssConfigs.tls : ssConfigs.ntls}')">SS</button></td>
+        </tr>
+      `;
     });
-</script>
-  </body>
-  </html>
+  }
+
+  html += `
+                        </tbody>
+                    </table>
+                </div>
+                <div class="quantum-pagination">
+                    <a href="/sub/${page - 1}?q=${encodeURIComponent(searchTerm)}" class="${page <= 0 ? 'opacity-50 cursor-not-allowed' : ''}">Prev</a>
+                    ${(() => {
+                      let buttons = '';
+                      const startPage = Math.max(0, page - 2);
+                      const endPage = Math.min(totalPages - 1, page + 2);
+                      for (let i = startPage; i <= endPage; i++) {
+                        buttons += `<a href="/sub/${i}?q=${encodeURIComponent(searchTerm)}" class="${i === page ? 'active' : ''}">${i + 1}</a>`;
+                      }
+                      return buttons;
+                    })()}
+                    <a href="/sub/${page + 1}?q=${encodeURIComponent(searchTerm)}" class="${page >= totalPages - 1 ? 'opacity-50 cursor-not-allowed' : ''}">Next</a>
+                </div>
+                <div class="text-center mt-3 text-sm text-gray-400">
+                    Showing ${startIndex + 1} to ${startIndex + prxToShow.length} of ${totalPrxs} Proxies
+                </div>
+            </div>
+        </div>
+
+        <div id="urlPopup" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+            <div class="absolute inset-0 bg-blue-500 opacity-20 backdrop-blur-md"></div>
+            <div class="relative w-80 p-4 border rounded-2xl shadow-xl bg-white/10 backdrop-filter backdrop-blur-lg border-opacity-20 border-white/20 text-white">
+                <h3 class="text-xl font-bold leading-6 mb-4 text-center">Copy URL</h3>
+                <textarea id="urlTextarea" class="w-full h-24 p-2 text-sm border-transparent rounded-lg resize-none bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-300 text-white" readonly></textarea>
+                <div class="flex space-x-2 mt-4">
+                    <button id="copyUrlBtn" class="flex-1 px-3 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white text-sm font-medium rounded-lg shadow-lg hover:from-green-500 hover:to-green-700">Copy</button>
+                    <button id="closePopupBtn" class="flex-1 px-3 py-2 bg-gradient-to-r from-red-400 to-red-600 text-white text-sm font-medium rounded-lg shadow-lg hover:from-red-500 hover:to-red-700">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="fixed top-4 right-8 flex flex-col items-end gap-3 z-50">
+                <button onclick="toggleDropdown()" class="animated-button transition-colors rounded-full p-2 block text-white shadow-lg" style="background-image: linear-gradient(to right, #22c55e, #14b8a6, #3b82f6, #8b5cf6, #ec4899); border: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 text-white"><path d="M12 2.25a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75h-6.75a.75.75 0 0 1 0-1.5h6.75V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" /></svg>
+                </button>
+                <div id="dropdown-menu" class="hidden flex flex-col gap-3">
+                    <a href="${DONATE_LINK}" target="_blank"><button class="bg-accent-cyan hover:bg-teal-600 rounded-full border-2 border-gray-900 p-2 block transition-colors duration-200"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6"><path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" /><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" /></svg></button></a>
+                    <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank"><button class="bg-green-500 hover:bg-green-600 rounded-full border-2 border-gray-900 p-2 block"><img src="https://geoproject.biz.id/circle-flags/whatsapp.png" alt="WhatsApp Icon" class="size-6"></button></a>
+                    <a href="https://t.me/${TELEGRAM_USERNAME}" target="_blank"><button class="bg-blue-500 hover:bg-blue-600 rounded-full border-2 border-gray-900 p-2 block"><img src="https://geoproject.biz.id/circle-flags/telegram.png" alt="Telegram Icon" class="size-6"></button></a>
+                    <button onclick="toggleDarkMode()" class="toggle-dark-mode"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg></button>
+                </div>
+            </div>
+        </footer>
+        <script>${SCRIPT}<\/script>
+    </body>
+    </html>
   `;
   return new Response(html, {
     status: 200,
