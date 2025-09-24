@@ -902,7 +902,7 @@ html.light select {
       const { prxIP, prxPort, country, org } = prx;
       const displayIndex = startIndex + index + 1;
 
-      const vmessConfigLink = "vmess://" + btoa(JSON.stringify({
+      const vmessConfigLink = "vmess://" + b64EncodeUnicode(JSON.stringify({
           v: "2",
           ps: `${displayIndex} ${getFlagEmoji(country)} ${org} WS ${selectedConfigType === 'tls' ? "TLS" : "NTLS"} [${serviceName}]`,
           add: modifiedHostName,
@@ -2424,6 +2424,13 @@ function shuffleArray(array) {
 
 function reverse(s) {
   return s.split("").reverse().join("");
+}
+
+function b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1);
+    }));
 }
 
 function getFlagEmoji(isoCode) {
