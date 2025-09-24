@@ -883,6 +883,7 @@ html.light select {
                             <th class="text-center">Vless</th>
                             <th class="text-center">Trojan</th>
                             <th class="text-center">Shadowsocks</th>
+                            <th class="text-center">Vmess</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -891,7 +892,7 @@ html.light select {
   if (prxToShow.length === 0) {
     html += `
       <tr>
-        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
           Tidak ada data yang ditemukan.
         </td>
       </tr>
@@ -900,6 +901,20 @@ html.light select {
     prxToShow.forEach((prx, index) => {
       const { prxIP, prxPort, country, org } = prx;
       const displayIndex = startIndex + index + 1;
+
+      const vmessConfigLink = "vmess://" + btoa(JSON.stringify({
+          v: "2",
+          ps: `${displayIndex} ${getFlagEmoji(country)} ${org} WS ${selectedConfigType === 'tls' ? "TLS" : "NTLS"} [${serviceName}]`,
+          add: modifiedHostName,
+          port: selectedConfigType === 'tls' ? '443' : '80',
+          id: uuid,
+          aid: "0",
+          net: "ws",
+          type: "none",
+          host: hostName,
+          path: `/Free-VPN-Geo-Project/${prxIP}-${prxPort}`,
+          tls: selectedConfigType === 'tls' ? "tls" : ""
+      }));
 
       const generateConfig = (protocol) => {
         const configs = {
@@ -976,6 +991,13 @@ html.light select {
     <div class="flex flex-col gap-2">
       <button class="table-button" onclick="showPopup('${selectedConfigType === 'tls' ? ssConfigs.tls : ssConfigs.ntls}')">
         Shadowsocks
+      </button>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <div class="flex flex-col gap-2">
+      <button class="table-button" onclick="showPopup('${vmessConfigLink}')">
+        Vmess
       </button>
     </div>
   </td>
