@@ -2,7 +2,7 @@ import { connect } from "cloudflare:sockets";
 
 // Variables
 const rootDomain = "gpj2.dpdns.org"; // Ganti dengan domain utama kalian
-const serviceName = "tes"; // Ganti dengan nama workers kalian
+const serviceName = "gamang"; // Ganti dengan nama workers kalian
 const apiKey = "e1d2b64d4da5e42f24c88535f12f21bc84d06"; // Ganti dengan Global API key kalian (https://dash.cloudflare.com/profile/api-tokens)
 const apiEmail = "paoandest@gmail.com"; // Ganti dengan email yang kalian gunakan
 const accountID = "723b4d7d922c6af940791b5624a7cb05"; // Ganti dengan Account ID kalian (https://dash.cloudflare.com -> Klik domain yang kalian gunakan)
@@ -905,7 +905,7 @@ export default {
             $('#cover-spin').show();
             $.ajax({
                 type: 'GET',
-                url: \`https://apigw.kmsp-store.com/sidompul/v4/cek_kuota?msisdn=\${msisdn}&isJSON=true\`,
+                url: 'https://apigw.kmsp-store.com/sidompul/v4/cek_kuota?msisdn=' + msisdn + '&isJSON=true',
                 dataType: 'JSON',
                 contentType: 'application/x-www-form-urlencoded',
                 beforeSend: function (req) {
@@ -917,10 +917,10 @@ export default {
                     $('#cover-spin').hide();
                     $('#hasilnya').html('');
                     if (res.status) {
-                        $('#hasilnya').html(\`<div class="result-success p-4 rounded-lg mt-4 text-center font-semibold">\${res.data.hasil}</div>\`);
+                        $('#hasilnya').html('<div class="result-success p-4 rounded-lg mt-4 text-center font-semibold">' + res.data.hasil + '</div>');
                     } else {
                         console.error('Gagal Cek Kuota: ' + res.message);
-                        $('#hasilnya').html(\`<div class="result-error p-4 rounded-lg mt-4 text-center font-semibold">\${res.data.keteranganError}</div>\`);
+                        $('#hasilnya').html('<div class="result-error p-4 rounded-lg mt-4 text-center font-semibold">' + res.data.keteranganError + '</div>');
                     }
                 },
                 error: function () {
@@ -947,8 +947,8 @@ export default {
             status: 200,
             headers: { 'Content-Type': 'text/html;charset=utf-8' },
         });
-      } else if (url.pathname.startsWith("/sublink")) {
-        const sublinkHTML = `
+      } else if (url.pathname.startsWith("/linksub")) {
+        const linksubHTML = `
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -957,115 +957,330 @@ export default {
     <title>Subscription Link Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        root {
+            --color-primary: #00d4ff;
+            --color-secondary: #00bfff;
+            --color-background: #020d1a;
+            --color-card: rgba(0, 212, 255, 0.1);
+            --color-text: #e0f4f4;
+            --transition: all 0.3s ease;
+        }
+
         body {
-            background-color: #111827;
-            color: #d1d5db;
+            display: flex;
+            background: url('https://raw.githubusercontent.com/bitzblack/ip/refs/heads/main/shubham-dhage-5LQ_h5cXB6U-unsplash.jpg') no-repeat center center fixed;
+            background-size: cover;
+            justify-content: center;
+            align-items: flex-start;
+            color: var(--color-text);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow-y: auto;
         }
-        .form-container {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 0.75rem;
-            padding: 2rem;
-            max-width: 600px;
-            margin: 2rem auto;
-        }
-        .form-label {
-            color: #9ca3af;
-        }
-        .form-input, .form-select {
-            background-color: #374151;
-            border: 1px solid #4b5563;
-            color: #d1d5db;
-            border-radius: 0.375rem;
-            padding: 0.5rem 0.75rem;
+
+        .blur-background {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            perspective: 1000px;
         }
+
+        .blur-background::before {
+            content: '';
+            position: absolute;
+            top: 5%;
+            left: 10%;
+            width: 450px;
+            height: 450px;
+            background: rgba(168, 85, 247, 0.5);
+            border-radius: 50%;
+            filter: blur(200px);
+            opacity: 0.8;
+            transform: translateZ(-300px);
+        }
+
+        .blur-background::after {
+            content: '';
+            position: absolute;
+            bottom: 10%;
+            right: 15%;
+            width: 550px;
+            height: 550px;
+            background: rgba(59, 130, 246, 0.45);
+            border-radius: 50%;
+            filter: blur(220px);
+            opacity: 0.7;
+            transform: translateZ(-400px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .main-title {
+            color: #ffffff;
+            text-shadow: 0 0 5px #a855f7, 0 0 10px rgba(168, 85, 247, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .form-input, .form-select {
+            background-color: #1a2035;
+            border: 1px solid #374151;
+            color: #f8fafc;
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5), 0 1px 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(99, 102, 241, 0.5);
+        }
+
         .btn-generate {
-            background-color: #2563eb;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            background-image: linear-gradient(90deg, #a855f7, #3b82f6);
+            background-size: 200% 100%;
+            transition: all 0.4s ease-in-out;
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
+            transform: translateY(0);
         }
         .btn-generate:hover {
-            background-color: #1d4ed8;
+            background-position: right center;
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.6);
+            transform: translateY(-5px);
         }
+        .btn-generate:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 10px rgba(139, 92, 246, 0.3);
+        }
+
         .result-box {
-            background-color: #374151;
-            border: 1px solid #4b5563;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            word-wrap: break-word;
-            font-family: monospace;
+            background-color: #1e293b;
+            border: 1px solid #374151;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+            color: #c0c0c0;
+        }
+
+        .card {
+            background: var(--color-card);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: var(--transition);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            transform: perspective(1500px) rotateX(3deg) rotateY(-1deg) translateZ(10px);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
         }
     </style>
+    <style>
+.navbarconten {
+    width: 100%;
+    overflow-x: auto; /* Mengaktifkan scroll horizontal */
+    margin-bottom: 0px;
+    border: 1px solid #000; /* Border dengan warna abu-abu */
+    border-radius: 10px; /* Membuat sudut melengkung */
+    padding: 0px; /* Memberi jarak antara border dan konten */
+    background-color: rgba(0, 0, 0, 0.82); /* Warna latar belakang */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), /* Glow putih */
+              0 0 30px rgba(0, 150, 255, 0.5);   /* Glow biru */
+
+    }
+      .navbar {
+            position: fixed;
+            top: 60%;
+            left: -80px; /* Awalnya disembunyikan */
+            transform: translateY(-50%);
+            width: 80px;
+            background: ;
+            color: white;
+            padding: 10px 0;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            border-radius: 0 10px 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Saat navbar terbuka */
+        .navbar.show {
+            left: 0;
+        }
+
+        .navbar a img {
+            width: 40px;
+        }
+        
+        .navbar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+        .navbar a:hover {
+            background: ;
+        }
+        
+        /* Tombol Toggle */
+        .toggle-btn {
+            position: absolute;
+            top: 60%;
+            right: -30px; /* Posisi tombol di tengah kanan navbar */
+            transform: translateY(-50%);
+            background: ;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 10px;
+            border-radius: 0 10px 10px 0;
+            transition: right 0.3s ease-in-out;
+        }
+
+        .toggle-btn img {
+            width: 20px; /* Ukuran gambar lebih kecil */
+            height: 150px; /* Ukuran gambar lebih kecil */
+        }
+
+        /* Saat navbar terbuka, tombol ikut bergeser */
+        .navbar.show .toggle-btn {
+            right: -29px;
+        }
+        
+</style>
 </head>
 <body>
-    <div class="form-container">
-        <h1 class="text-2xl font-bold text-center mb-6">Subscription Link Generator</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-                <label for="format" class="block mb-2 form-label">Format</label>
-                <select id="format" class="form-select">
-                    <option value="v2ray">V2RAY</option>
-                    <option value="sfa">SFA</option>
-                    <option value="bfr">BFR</option>
-                    <option value="raw">RAW</option>
-                    <option value="clash">CLASH</option>
-                </select>
+    <div class="blur-background"></div>
+    <div class="container">
+    	<div class="card">
+            <h1 class="text-4xl font-extrabold text-center mb-10 main-title">
+                <i class="fas fa-satellite-dish mr-3 text-indigo-400"></i>Subs Link
+            </h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="format" class="block mb-2 text-sm font-semibold text-gray-400">Format</label>
+                    <select id="format" class="form-select p-3 rounded-lg w-full">
+                        <option value="v2ray">V2RAY</option>
+                        <option value="sfa">SFA</option>
+                        <option value="bfr">BFR</option>
+                        <option value="raw">RAW</option>
+                        <option value="clash">CLASH</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="vpn" class="block mb-2 text-sm font-semibold text-gray-400">VPN Protocol</label>
+                    <select id="vpn" class="form-select p-3 rounded-lg w-full">
+                        <option value="vless">VLESS</option>
+                        <option value="trojan">TROJAN</option>
+                        <option value="ss">SHADOWSOCKS</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tls" class="block mb-2 text-sm font-semibold text-gray-400">TLS/Port</label>
+                    <select id="tls" class="form-select p-3 rounded-lg w-full">
+                        <option value="true">True (443) - Secure</option>
+                        <option value="false">False (80) - Regular</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="wildcard" class="block mb-2 text-sm font-semibold text-gray-400">Wildcard/WC</label>
+                    <select id="wildcard" class="form-select p-3 rounded-lg w-full">
+                        <option value="false">False</option>
+                        <option value="true">True</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="bug" class="block mb-2 text-sm font-semibold text-gray-400">Bug Host <span class="text-xs italic text-gray-500">(e.g., ava.game.naver.com)</span></label>
+                    <input type="text" id="bug" class="form-input p-3 rounded-lg" placeholder="Masukkan Bug Host Anda...">
+                </div>
+                <div>
+                    <label for="country" class="block mb-2 text-sm font-semibold text-gray-400">Country (CC)</label>
+                    <select id="country" class="form-select p-3 rounded-lg w-full">
+                        <option value="">All Countries</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="limit" class="block mb-2 text-sm font-semibold text-gray-400">Limit</label>
+                    <input type="number" id="limit" class="form-input p-3 rounded-lg" value="10" min="1">
+                </div>
             </div>
-            <div>
-                <label for="vpn" class="block mb-2 form-label">VPN Protocol</label>
-                <select id="vpn" class="form-select">
-                    <option value="vless">VLESS</option>
-                    <option value="trojan">TROJAN</option>
-                    <option value="ss">SHADOWSOCKS</option>
-                </select>
-            </div>
-            <div>
-                <label for="tls" class="block mb-2 form-label">TLS/Port</label>
-                <select id="tls" class="form-select">
-                    <option value="true">True (443)</option>
-                    <option value="false">False (80)</option>
-                </select>
-            </div>
-            <div>
-                <label for="wildcard" class="block mb-2 form-label">Wildcard/WC</label>
-                <select id="wildcard" class="form-select">
-                    <option value="false">False</option>
-                    <option value="true">True</option>
-                </select>
-            </div>
-            <div class="md:col-span-2">
-                <label for="bug" class="block mb-2 form-label">Bug Host</label>
-                <input type="text" id="bug" class="form-input" placeholder="e.g., ava.game.naver.com">
-            </div>
-            <div>
-                <label for="country" class="block mb-2 form-label">Country (CC)</label>
-                <select id="country" class="form-select">
-                    <option value="">All Countries</option>
-                </select>
-            </div>
-            <div>
-                <label for="limit" class="block mb-2 form-label">Limit</label>
-                <input type="number" id="limit" class="form-input" value="10">
-            </div>
-        </div>
 
-        <div class="text-center mt-6">
-            <button id="generate-btn" class="btn-generate">Generate Sublink</button>
-        </div>
+            <div class="text-center mt-10">
+                <button id="generate-btn" class="btn-generate w-full md:w-auto px-10 py-3 rounded-xl uppercase tracking-wider">
+                    <i class="fas fa-rocket mr-2"></i> GENERATE
+                </button>
+            </div>
 
-        <div class="mt-6">
-            <label class="block mb-2 form-label">Generated Link:</label>
-            <div id="result" class="result-box text-gray-400">Your link will appear here...</div>
-        </div>
+            <div class="mt-10">
+                <label class="block mb-3 text-sm font-semibold text-gray-400">Generated Link:</label>
+                <div id="result" class="result-box p-4 text-sm break-all">Your link will appear here...</div>
+                <div class="text-right mt-3">
+                    <button id="copy-btn" class="text-sm text-indigo-300 hover:text-indigo-200 font-semibold transition duration-200" style="display: none;">
+                        <i class="fas fa-copy mr-1"></i> Copy Link
+                    </button>
+                </div>
+            </div>
+    	</div>
     </div>
+    
+<div class="navbar" id="navbar">
+    <div class="toggle-btn" id="menu-btn" onclick="toggleNavbar()">
+        <img src="https://geoproject.biz.id/social/buka.png" alt="Toggle Menu">
+    </div>
+    <div class="navbarconten text-center">
+        <span>
+            <a href="/linksub" target="_self" rel="noopener noreferrer">
+                <img src="https://geoproject.biz.id/social/linksub.png" alt="menu" width="40" class="mt-1">
+            </a>
+        </span>
+        <!-- <span>-->
+        <span>
+            <a href="/checker" target="_self" rel="noopener noreferrer">
+                <img src="https://geoproject.biz.id/social/vpn.png" alt="menu" width="40" class="mt-1">
+            </a>
+        </span> 
+        <span>
+            <a href="https://t.me/VLTRSSbot" target="_blank" rel="noopener noreferrer">
+                <img src="https://geoproject.biz.id/social/bot.png" alt="menu" width="40" class="mt-1">
+            </a>
+        </span>
+        <span>
+            <a href="/sub" target="_self" rel="noopener noreferrer">
+                <img src="https://geoproject.biz.id/social/home.png" alt="menu" width="40" class="mt-1">
+            </a>
+        </span>
+    </div>
+</div>
+<script>
+    function toggleNavbar() {
+        const navbar = document.getElementById("navbar");
+        const menuBtn = document.getElementById("menu-btn").querySelector('img');
 
+        if (navbar.classList.contains("show")) {
+            navbar.classList.remove("show");
+            menuBtn.src = "https://geoproject.biz.id/social/buka.png";
+        } else {
+            navbar.classList.add("show");
+            menuBtn.src = "https://geoproject.biz.id/social/tutup.png";
+        }
+    }
+</script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const countrySelect = document.getElementById('country');
@@ -1106,7 +1321,7 @@ export default {
                 if (wc) params.set('wc', wc);
                 if (cc) params.set('cc', cc);
 
-                const link = `${window.location.protocol}//${window.location.host}/api/v1/sub?${params.toString()}`;
+                const link = window.location.protocol + '//' + window.location.host + '/api/v1/sub?' + params.toString();
                 
                 document.getElementById('result').textContent = link;
             });
@@ -1114,7 +1329,7 @@ export default {
     </script>
 </body>
 </html>`;
-        return new Response(sublinkHTML, { headers: { 'Content-Type': 'text/html;charset=utf-8' } });
+        return new Response(linksubHTML, { headers: { 'Content-Type': 'text/html;charset=utf-8' } });
       } else if (url.pathname.startsWith("/convert")) {
         const targetUrl = "https://jaka9m.github.io/web";
 		const requestUrl = new URL(request.url);
@@ -2129,6 +2344,82 @@ let baseHTML = `
         }
     }
     </style>
+    <style>
+.navbarconten {
+    width: 100%;
+    overflow-x: auto; /* Mengaktifkan scroll horizontal */
+    margin-bottom: 0px;
+    border: 1px solid #000; /* Border dengan warna abu-abu */
+    border-radius: 10px; /* Membuat sudut melengkung */
+    padding: 0px; /* Memberi jarak antara border dan konten */
+    background-color: rgba(0, 0, 0, 0.82); /* Warna latar belakang */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), /* Glow putih */
+              0 0 30px rgba(0, 150, 255, 0.5);   /* Glow biru */
+
+    }
+      .navbar {
+            position: fixed;
+            top: 60%;
+            left: -80px; /* Awalnya disembunyikan */
+            transform: translateY(-50%);
+            width: 80px;
+            background: ;
+            color: white;
+            padding: 10px 0;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            border-radius: 0 10px 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Saat navbar terbuka */
+        .navbar.show {
+            left: 0;
+        }
+
+        .navbar a img {
+            width: 40px;
+        }
+        
+        .navbar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+        .navbar a:hover {
+            background: ;
+        }
+        
+        /* Tombol Toggle */
+        .toggle-btn {
+            position: absolute;
+            top: 60%;
+            right: -30px; /* Posisi tombol di tengah kanan navbar */
+            transform: translateY(-50%);
+            background: ;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 10px;
+            border-radius: 0 10px 10px 0;
+            transition: right 0.3s ease-in-out;
+        }
+
+        .toggle-btn img {
+            width: 20px; /* Ukuran gambar lebih kecil */
+            height: 150px; /* Ukuran gambar lebih kecil */
+        }
+
+        /* Saat navbar terbuka, tombol ikut bergeser */
+        .navbar.show .toggle-btn {
+            right: -29px;
+        }
+        
+</style>
     <script>
         tailwind.config = {
             darkMode: 'selector',
@@ -2149,7 +2440,136 @@ let baseHTML = `
             },
         };
     </script>
+    <style>
+/* Reset Dasar dan Variabel */
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+:root {
+    --primary: #6366f1; --primary-dark: #4f46e5; --success:#10b981; --warning:#f59e0b;
+    --danger:#ef4444; --dark:#1e293b; --darker:#0f172a; --light:#f8fafc;
+}
+body { background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%); color:var(--light); min-height:100vh; padding:20px; line-height:1.2; /* Kerapatan teks (Setengah Enter) */ }
+.container { max-width:1200px; margin:0 auto; }
+.header { text-align:center; margin-bottom:40px; padding:30px 20px; background: rgba(255,255,255,0.05); border-radius:20px; backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.1); }
+.header h1 { font-size:2.8rem; margin-bottom:10px; background: linear-gradient(90deg,#00dbde,#fc00ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:800; }
+.header p { font-size:1.2rem; opacity:0.9; max-width:600px; margin:0 auto; }
+.badge { display:inline-block; background:var(--primary); color:white; padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:600; margin-left:10px; }
+
+/* Popup Overlay Styles */
+.popup-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    backdrop-filter: blur(10px); background: rgba(0, 0, 0, 0.85);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.popup-banner {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 40px; border-radius: 20px; text-align: center;
+    border: 2px solid #00dbde; box-shadow: 0 0 50px rgba(0,219,222,0.5);
+    max-width: 500px; width: 90%; position: relative;
+    animation: glow 2s infinite alternate;
+    background: #1e1e2f; color: #ffffff;
+    max-width: 420px; padding: 30px 25px; border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 15px #00dbde;
+    animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes glow {
+    from { box-shadow: 0 0 30px rgba(0,219,222,0.5); }
+    to { box-shadow: 0 0 60px rgba(0,219,222,0.8); }
+}
+@keyframes bounceIn {
+    from { opacity: 0; transform: scale(0.7) translateY(-50px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.popup-title {
+    font-size: 2em; font-weight: 900;
+    background: linear-gradient(45deg, #00dbde, #fc00ff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;
+    text-shadow: 0 0 5px rgba(0, 219, 222, 0.5);
+}
+.popup-subtitle {
+    font-size: 1.1em; font-weight: 600; color: #f7b731;
+    margin-bottom: 20px; text-shadow: 0 0 3px rgba(247, 183, 49, 0.3);
+}
+.popup-subtitle strong { font-weight: 900; color: #fff; }
+.popup-close {
+    position: absolute; top: 15px; right: 20px; background: none; border: none;
+    color: #00dbde; font-size: 1.5rem; cursor: pointer; transition: color 0.3s;
+}
+.popup-close:hover { color: #fc00ff; }
+.popup-content p {
+    margin-bottom: 8px; /* Dibuat lebih rapat */
+    line-height: 1.4; /* Kerapatan teks yang lebih kecil */
+    font-size: 0.95em; color: #e0e0e0;
+}
+.popup-content strong { color: #00dbde; font-weight: 700; }
+.features-title {
+    margin-top: 15px; margin-bottom: 10px; color: #fc00ff;
+    font-weight: 700; text-transform: uppercase; font-size: 1.05em;
+}
+.features-list {
+    list-style: none; padding: 0; margin-bottom: 25px;
+    text-align: left; display: inline-block;
+}
+.features-list li {
+    margin: 4px 0; /* Dibuat lebih rapat */
+    font-size: 0.95em; color: #cccccc;
+    line-height: 1.2; /* Kerapatan teks yang lebih kecil */
+}
+.features-list li i { color: #4CAF50; margin-right: 8px; font-size: 1.1em; }
+.cta-button {
+    background: linear-gradient(90deg, #fc00ff 0%, #00dbde 100%);
+    color: #1e1e2f; border: none; padding: 14px 30px; margin-bottom: 15px;
+    border-radius: 50px; font-size: 1em; font-weight: 500; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.3s; width: 100%;
+    text-transform: uppercase; letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(252, 0, 255, 0.5);
+}
+.cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 219, 222, 0.8), 0 5px 15px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #00dbde 0%, #fc00ff 100%);
+}
+.sound-control {
+    margin-top: 20px; padding: 10px 20px;
+    background: linear-gradient(90deg, #00dbde, #fc00ff);
+    border: none; border-radius: 10px; color: white;
+    cursor: pointer; font-weight: 600; transition: transform 0.3s;
+}
+.sound-control:hover { transform: scale(1.05); }
+</style>
 </head>
+<body>
+<div class="popup-overlay" id="popupBanner">
+    <div class="popup-banner">
+        <button class="popup-close" id="closePopup">&times;</button>
+        <div class="popup-title">Geo Project</div>
+        <div class="popup-subtitle">YOUR ULTRA-FAST UPGRADE IS HERE!</div>
+        <div class="popup-content">
+            <p>Welcome to Free VLESS Cloudflare</p>
+            <p>Built for Speed, Secured for You. Experience seamless, lightning-fast connections.</p>
+        </div>
+        <ul class="features-list">
+            <li><i class="fas fa-check-circle"></i> Sub Converter</li>
+            <li><i class="fas fa-check-circle"></i> Real-time Monitoring</li>
+            <li><i class="fas fa-check-circle"></i> Generate Sub link</li>
+            <li><i class="fas fa-check-circle"></i> Automated Wildcard Bug Support</li>
+            <li><i class="fas fa-check-circle"></i> Automated Wildcard Bug Support</li>
+            <li><i class="fas fa-check-circle"></i> Integrated Balance & Data Check (XL/Axis)</li>
+            <li><i class="fas fa-check-circle"></i> Next-Level High-Speed</li>
+        </ul>
+        <button class="cta-button">CLAIM YOUR FREE ACCESS NOW!</button>
+        <button class="sound-control" id="toggleSound">
+            <i class="fas fa-volume-mute"></i> Play Background Sound
+        </button>
+    </div>
+</div>
+
+<audio id="backgroundSound" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mpeg">
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+Maaf, browser Anda tidak mendukung elemen audio.
+</audio>
+
 <body
     class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white bg-fixed transition-colors duration-300"
 >
@@ -2394,7 +2814,106 @@ let baseHTML = `
         </div>
     </div>
 </footer>
+<div class="navbar" id="navbar">
+    <div class="toggle-btn" id="menu-btn" onclick="toggleNavbar()">
+        <img src="https://geoproject.biz.id/social/buka.png" alt="Toggle Menu">
+    </div>
+    <div class="navbarconten text-center">
+        <span>
+            <a href="/linksub" target="_self" rel="noopener noreferrer">
+                <img src="https://geoproject.biz.id/social/linksub.png" alt="menu" width="40" class="mt-1">
+            </a>
+        </span>
+        
+        <span>
+            <a href="/kuota">
+                <button class="bg-teal-500 hover:bg-teal-600 rounded-full border-1 border-gray-900 p-2 block transition-colors duration-200" title="Cek Kuota">
+                    <img src="https://raw.githubusercontent.com/jaka9m/vless/refs/heads/main/sidompul.jpg" alt="Cek Kuota Icon" class="footer-icon-img">
+                </button>
+            </a>
+        </span>
+        
+        <span>
+            <a href="https://t.me/VLTRSSbot" target="_blank" rel="noopener noreferrer">
+                <img src="https://geoproject.biz.id/social/bot.png" alt="menu" width="40" class="mt-1">
+            </a>
+        </span>
+        
+        <span>
+            <a href="/sub" target="_self" rel="noopener noreferrer">
+                <img src="https://geoproject.biz.id/social/home.png" alt="menu" width="40" class="mt-1">
+            </a>
+        </span>
+    </div>
+</div>
+<script>
+    // --- Bagian JavaScript (Diperbaiki) ---
+    // 1. Dapatkan elemen-elemen
+    const backgroundSound = document.getElementById('backgroundSound');
+    const popupBanner = document.getElementById('popupBanner');
+    const closePopup = document.getElementById('closePopup');
+    const toggleSound = document.getElementById('toggleSound');
+    let isSoundPlaying = false; // Status suara saat ini
 
+    // Atur volume default
+    backgroundSound.volume = 0.3; 
+
+    // 2. Tampilkan popup saat halaman dimuat
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            popupBanner.style.display = 'flex';
+        }, 500);
+    });
+
+    // 3. Fungsi utama untuk memutar/menghentikan suara
+    function toggleBackgroundSound() {
+        if (isSoundPlaying) {
+            backgroundSound.pause();
+            toggleSound.innerHTML = '<i class="fas fa-volume-mute"></i> Play Background Sound';
+            isSoundPlaying = false;
+        } else {
+            // Coba memutar. Ini akan berhasil karena ada interaksi klik.
+            backgroundSound.play().then(() => {
+                toggleSound.innerHTML = '<i class="fas fa-volume-up"></i> Stop Background Sound';
+                isSoundPlaying = true;
+            }).catch(e => {
+                // Memberikan peringatan jika browser masih memblokir
+                console.error('Audio play failed:', e);
+                alert('Gagal memutar suara. Browser mungkin memblokir pemutaran otomatis.');
+                isSoundPlaying = false;
+            });
+        }
+    }
+
+    // 4. Listener untuk tombol Toggle Sound
+    // Ini adalah satu-satunya cara musik bisa dimulai!
+    toggleSound.addEventListener('click', function() {
+        toggleBackgroundSound();
+    });
+
+    // 5. Listener untuk tombol Close Popup (HANYA MENUTUP)
+    // Logika autoplay otomatis yang menyebabkan masalah telah dihapus di sini.
+    closePopup.addEventListener('click', function() {
+        // HANYA menutup popup.
+        popupBanner.style.display = 'none';
+    });
+    // --- Akhir Bagian JavaScript ---
+</script>
+
+<script>
+    function toggleNavbar() {
+        const navbar = document.getElementById("navbar");
+        const menuBtn = document.getElementById("menu-btn").querySelector('img');
+
+        if (navbar.classList.contains("show")) {
+            navbar.classList.remove("show");
+            menuBtn.src = "https://geoproject.biz.id/social/buka.png";
+        } else {
+            navbar.classList.add("show");
+            menuBtn.src = "https://geoproject.biz.id/social/tutup.png";
+        }
+    }
+</script>
 <script>
     function toggleDropdown() {
         const dropdownMenu = document.getElementById('dropdown-menu');
@@ -2756,9 +3275,7 @@ function checkProxy() {
                             const colo = jsonResp.colo || "N/A";
 
                             // MODIFIKASI: Menampilkan Active berkedip dan Delay/Colo KUNING
-                            pingElement.innerHTML = 
-                                '<span class="blink-text">Active</span><br>' +
-                                '<span class="text-xs font-normal text-yellow-400">' + delay + ' (' + colo + ')</span>';
+                            pingElement.innerHTML = '<span class="blink-text">Active</span><br><span class="text-xs font-normal text-yellow-400">' + delay + ' (' + colo + ')</span>';
                             
                             // Tambahkan kelas untuk warna hijau pada elemen utama (untuk Active)
                             pingElement.classList.add("text-green-600");
