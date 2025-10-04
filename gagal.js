@@ -29,6 +29,77 @@ const wildcards = [
    'ads.ruangguru.com',
    'api.midtrans.com',
 ];
+
+// CloudflareApi Class
+class CloudflareApi {
+  constructor() {
+    this.bearer = `Bearer ${apiKey}`;
+    this.accountID = accountID;
+    this.zoneID = zoneID;
+    this.apiEmail = apiEmail;
+    this.apiKey = apiKey;
+
+    this.headers = {
+      Authorization: this.bearer,
+      "X-Auth-Email": this.apiEmail,
+      "X-Auth-Key": this.apiKey,
+      "Content-Type": "application/json",
+    };
+  }
+
+  async getDomainList() {
+    const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountID}/workers/domains`;
+    const res = await fetch(url, {
+      headers: this.headers,
+    });
+
+    if (res.status == 200) {
+      const respJson = await res.json();
+      return respJson.result.filter((data) => data.service == serviceName);
+    }
+    return [];
+  }
+
+  async registerDomain(domain) {
+    domain = domain.toLowerCase();
+    const registeredDomains = await this.getDomainList();
+
+    if (!domain.endsWith(rootDomain)) return 400;
+    if (registeredDomains.some(d => d.hostname === domain)) return 409;
+
+    // This check seems specific and should be kept.
+    // try {
+    // 	const domainTest = await fetch(`https://${domain.replaceAll("." + APP_DOMAIN, "")}`);
+    // 	if (domainTest.status == 530) return 530;
+    // } catch (e) {
+    // 	return 400;
+    // }
+
+    const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountID}/workers/domains`;
+    const res = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify({
+        environment: "production",
+        hostname: domain,
+        service: serviceName,
+        zone_id: this.zoneID,
+      }),
+      headers: this.headers,
+    });
+
+    return res.status;
+  }
+
+  async deleteDomain(domainId) {
+    const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountID}/workers/domains/${domainId}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: this.headers,
+    });
+    return res.status;
+  }
+}
+
 // Global Variables
 let cachedProxyList = [];
 let proxyIP = "";
@@ -82,7 +153,48 @@ export default {
   async fetch(request, env, ctx) {
     try {
       const url = new URL(request.url);
-      const myurl = "geovpn.vercel.app"; 
+
+      // API for wildcard management
+      if (url.pathname.startsWith('/api/v1/domains')) {
+        const cfApi = new CloudflareApi();
+
+        if (request.method === 'GET') {
+          const domains = await cfApi.getDomainList();
+          return new Response(JSON.stringify(domains), {
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+
+        if (request.method === 'POST') {
+          try {
+            const { domain } = await request.json();
+            if (!domain) {
+              return new Response('Domain is required', { status: 400 });
+            }
+            const status = await cfApi.registerDomain(domain);
+            return new Response(null, { status });
+          } catch (e) {
+            return new Response('Invalid JSON', { status: 400 });
+          }
+        }
+
+        if (request.method === 'DELETE') {
+          try {
+            const { id } = await request.json();
+            if (!id) {
+              return new Response('Domain ID is required', { status: 400 });
+            }
+            const status = await cfApi.deleteDomain(id);
+            return new Response(null, { status });
+          } catch (e) {
+            return new Response('Invalid JSON', { status: 400 });
+          }
+        }
+
+        return new Response('Method Not Allowed', { status: 405 });
+      }
+
+      const myurl = "geovpn.vercel.app";
       const upgradeHeader = request.headers.get("Upgrade");
       const CHECK_API_BASE = `https://${myurl}`;
       const CHECK_API = `${CHECK_API_BASE}/check?ip=`;
@@ -3399,6 +3511,9 @@ function buildCountryFlag() {
             style="border-width: 2px; border-style: solid; border-color: #008080; height: 55px; border-radius: 10px;">
             ${buildCountryFlag()}
         </div>
+        <button onclick="toggleWildcardsWindow()" class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center">
+            Manage Wildcards
+        </button>
         <div class="mt-3">
         </div>
         <div class="table-wrapper">
@@ -3646,6 +3761,120 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
         });
 
         document.getElementById('search-button').addEventListener('click', executeSearch);
+    </script>
+
+    <div id="wildcards-window" class="fixed hidden z-30 top-0 right-0 w-full h-full flex justify-center items-center">
+        <div class="w-[75%] max-w-md h-auto flex flex-col gap-2 p-4 rounded-lg 
+                    bg-blue-500 bg-opacity-20 backdrop-blur-md 
+                    border border-blue-300"> 
+            
+            <div class="flex w-full h-full gap-2 justify-between">
+                <input id="new-domain-input" type="text" placeholder="Input wildcard" class="w-full h-full px-4 py-2 rounded-md focus:outline-0 bg-gray-700 text-white w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"/>
+                <button onclick="registerDomain()" class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                        <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="container-domains" class="w-full h-32 rounded-md flex flex-col gap-1 overflow-y-scroll scrollbar-hide p-2 bg-gray-900 w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"></div>
+        
+            <div class="flex w-full h-full gap-2 justify-between">
+                <input id="delete-domain-input" type="number" placeholder="Input Nomor" class="w-full h-full px-4 py-2 rounded-md focus:outline-0 bg-gray-700 text-white w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"/>
+                <button onclick="deleteDomainByNumber()" class="p-2 rounded-full bg-red-600 hover:bg-red-700 flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <button onclick="toggleWildcardsWindow()" class="mt-1 p-3 rounded-lg bg-red-500 hover:bg-red-600 text-xs text-white font-semibold transition-colors duration-300 flex items-center justify-center gap-1 px-6 py-2 rounded-lg disabled:opacity-50 text-base font-semibold btn-gradient hover:opacity-80 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/>
+                </svg>
+                Close
+            </button>
+        </div>
+    </div>
+    <script>
+        let domains = [];
+        const wildcardsWindow = document.getElementById('wildcards-window');
+        const domainsContainer = document.getElementById('container-domains');
+        
+        async function loadDomains() {
+            try {
+                const response = await fetch('/api/v1/domains');
+                if (response.ok) {
+                    domains = await response.json();
+                    domainsContainer.innerHTML = domains.map((d, i) => \`<div>\${i + 1}. \${d.hostname}</div>\`).join('');
+                } else {
+                    console.error('Failed to load domains');
+                }
+            } catch (error) {
+                console.error('Error loading domains:', error);
+            }
+        }
+
+        function toggleWildcardsWindow() {
+            if (wildcardsWindow.classList.contains('hidden')) {
+                loadDomains();
+                wildcardsWindow.classList.remove('hidden');
+            } else {
+                wildcardsWindow.classList.add('hidden');
+            }
+        }
+
+        async function registerDomain() {
+            const input = document.getElementById('new-domain-input');
+            const domain = input.value.trim();
+            if (!domain) return;
+
+            try {
+                const response = await fetch('/api/v1/domains', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domain }),
+                });
+                if (response.ok) {
+                    input.value = '';
+                    loadDomains();
+                } else {
+                    alert('Failed to register domain: ' + await response.text());
+                }
+            } catch (error) {
+                console.error('Error registering domain:', error);
+                alert('An error occurred while registering the domain.');
+            }
+        }
+
+        async function deleteDomainByNumber() {
+            const input = document.getElementById('delete-domain-input');
+            const number = parseInt(input.value, 10);
+            if (isNaN(number) || number < 1 || number > domains.length) {
+                alert('Invalid number');
+                return;
+            }
+
+            const domainToDelete = domains[number - 1];
+
+            try {
+                const response = await fetch('/api/v1/domains', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: domainToDelete.id }),
+                });
+
+                if (response.ok) {
+                    input.value = '';
+                    loadDomains();
+                } else {
+                    alert('Failed to delete domain: ' + await response.text());
+                }
+            } catch (error) {
+                console.error('Error deleting domain:', error);
+                alert('An error occurred while deleting the domain.');
+            }
+        }
     </script>
 </body>
 </html>
