@@ -29,354 +29,6 @@ const wildcards = [
    'ads.ruangguru.com',
    'api.midtrans.com',
 ];
-
-const CUSTOM_CSS = `
-    :root {
-      --primary-color: #008080; /* Teal */
-      --secondary-color: #39ff14; /* Neon Green */
-      --background-color: #0d1117; /* Dark Gray */
-      --card-background-color: #161b22; /* Lighter Gray */
-      --text-color: #c9d1d9; /* Light Gray */
-      --header-color: #ffffff; /* White */
-      --border-color: #30363d;
-      --button-text-color: #0d1117;
-      --font-family: 'Space Grotesk', sans-serif;
-      --header-font-family: 'Rajdhani', sans-serif;
-    }
-
-    body {
-        background-color: var(--background-color);
-        color: var(--text-color);
-        font-family: var(--font-family);
-        margin: 0;
-        padding: 20px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    header h1 {
-        font-family: var(--header-font-family);
-        font-size: 2.5rem;
-        color: var(--header-color);
-        text-shadow: 0 0 10px var(--primary-color);
-    }
-
-    .quantum-title {
-        font-family: var(--header-font-family);
-        font-size: 3rem;
-        color: var(--header-color);
-        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
-    }
-
-    .container {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background-color: var(--card-background-color);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    }
-    
-    .quantum-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: var(--card-background-color);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    }
-    
-    .search-quantum {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-
-    #search-bar, #ipInput {
-        width: 90%;
-        max-width: 500px;
-        height: 45px;
-        padding: 0 15px;
-        border: 1px solid var(--border-color);
-        border-radius: 5px;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        font-size: 1rem;
-        box-sizing: border-box;
-    }
-
-    #search-button img {
-        transition: transform 0.2s ease;
-    }
-
-    #search-button:hover img {
-        transform: scale(1.1);
-    }
-    
-    .wildcard-dropdown {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    select, .form-control {
-        height: 45px;
-        padding: 0 10px;
-        border: 1px solid var(--border-color);
-        border-radius: 5px;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        width: 100%;
-    }
-
-    .table-wrapper {
-        overflow-x: auto;
-    }
-
-    .quantum-table, #resultTable {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    .quantum-table th, .quantum-table td, #resultTable th, #resultTable td {
-        padding: 12px 15px;
-        border: 1px solid var(--border-color);
-    }
-
-    .quantum-table th, #resultTable th {
-        font-family: var(--header-font-family);
-        color: var(--header-color);
-        background-color: #1f242c;
-    }
-
-    .quantum-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .quantum-pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 1.5rem;
-    }
-
-    .pagination-arrow, .pagination-number {
-        padding: 8px 12px;
-        margin: 0 4px;
-        border: 1px solid var(--border-color);
-        border-radius: 5px;
-        text-decoration: none;
-        color: var(--text-color);
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .pagination-number.active, .pagination-arrow:hover, .pagination-number:hover {
-        background-color: var(--primary-color);
-        color: var(--button-text-color);
-    }
-    
-    .popupnav {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-
-    .popup-content {
-        background: var(--card-background-color);
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        border: 1px solid var(--primary-color);
-    }
-
-    .menu {
-      display: block;
-      margin: 10px 0;
-    }
-
-    .menu a {
-      color: var(--text-color);
-      text-decoration: none;
-    }
-
-    .navbar {
-        position: fixed;
-        left: -200px; /* Initially hidden */
-        top: 50%;
-        transform: translateY(-50%);
-        width: 60px;
-        background-color: rgba(13, 17, 23, 0.8);
-        border: 1px solid var(--primary-color);
-        border-radius: 0 10px 10px 0;
-        transition: left 0.3s ease-in-out;
-        z-index: 999;
-        padding: 10px 0;
-    }
-
-    .navbar.show {
-        left: 0;
-    }
-
-    .toggle-btn {
-        position: absolute;
-        right: -40px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-    }
-    
-    .toggle-btn img {
-        width: 40px;
-    }
-
-    .navbarconten {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .footer {
-        text-align: center;
-        margin-top: 2rem;
-        color: var(--text-color);
-    }
-    
-    .quantum-title1 p {
-        font-size: 1rem;
-    }
-    
-    .title {
-        font-family: var(--header-font-family);
-        font-size: 2.5rem;
-        color: var(--header-color);
-        text-align: center;
-        margin-bottom: 2rem;
-        text-shadow: 0 0 10px var(--primary-color);
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-    }
-
-    .btn {
-        width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: 5px;
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        color: var(--button-text-color);
-        font-size: 1.1rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 128, 128, 0.4);
-    }
-    
-    .result {
-        margin-top: 2rem;
-        text-align: center;
-    }
-
-    #generated-link {
-        word-break: break-all;
-        background-color: var(--background-color);
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid var(--border-color);
-    }
-
-    .copy-btns {
-        margin-top: 1rem;
-        display: flex;
-        gap: 1rem;
-    }
-
-    .copy-btn {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid var(--primary-color);
-        border-radius: 5px;
-        background-color: transparent;
-        color: var(--primary-color);
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .copy-btn:hover {
-        background-color: var(--primary-color);
-        color: var(--button-text-color);
-    }
-    
-    #matrix {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-    }
-    
-    #map {
-        height: 400px;
-        width: 100%;
-        margin-top: 2rem;
-        border-radius: 5px;
-        border: 1px solid var(--border-color);
-    }
-
-    footer h2 {
-        font-size: 1rem;
-        font-weight: normal;
-    }
-    
-    @keyframes slideInLeft {
-        from { transform: translateX(-100%); }
-        to { transform: translateX(0); }
-    }
-
-    @keyframes slideOutRightToLeft {
-        from { transform: translateX(0); }
-        to { transform: translateX(-100%); }
-    }
-    .swal-popup-extra-small-text {
-        font-size: 0.7rem !important;
-    }
-    .swal-title-extra-small-text {
-        font-size: 1rem !important;
-    }
-    .swal-content-extra-small-text {
-        font-size: 0.8rem !important;
-    }
-`;
-
 // Global Variables
 let cachedProxyList = [];
 let proxyIP = "";
@@ -694,8 +346,8 @@ function mamangenerateHTML() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proxy Checker</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-  <style>${CUSTOM_CSS}</style>
   
+</head>
 <body>
 <header>
   <h1>Proxy Checker</h1>
@@ -758,12 +410,12 @@ function mamangenerateHTML() {
 
 <div class="container">
     <div class="input-container">
-            <input type="text" id="ipInput" class="form-control" placeholder="Input IP:Port (192.168.1.1:443)">
+            <input type="text" id="ipInput" placeholder="Input IP:Port (192.168.1.1:443)">
         </div>
-        <button class="btn" onclick="checkProxy()">Check</button>
+        <button class="copy-btn" onclick="checkProxy()">Check</button>
 
     <p id="loading" style="display: none; text-align: center;">Loading...</p>
-    <table id="resultTable" class="quantum-table">
+    <table id="resultTable">
       <thead>
         <tr>
           <th>Key</th>
@@ -1001,60 +653,8 @@ async function handleSubRequest(hostnem) {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
       <title>Geo-VPN | VPN Tunnel | CloudFlare</title>
-      <style>${CUSTOM_CSS}</style>
       
-      <!-- SEO Meta Tags -->
-      <meta name="description" content="Akun Vless Gratis. Geo-VPN offers free Vless accounts with Cloudflare and Trojan support. Secure and fast VPN tunnel services.">
-      <meta name="keywords" content="Geo-VPN, Free Vless, Vless CF, Trojan CF, Cloudflare, VPN Tunnel, Akun Vless Gratis">
-      <meta name="author" content="Geo-VPN">
-      <meta name="robots" content="index, follow"> 
-      <meta name="robots" content="noarchive"> 
-      <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1"> 
       
-      <!-- Social Media Meta Tags -->
-      <meta property="og:title" content="Geo-VPN | Free Vless & Trojan Accounts">
-      <meta property="og:description" content="Geo-VPN provides free Vless accounts and VPN tunnels via Cloudflare. Secure, fast, and easy setup.">
-      <meta property="og:image" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:url" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:type" content="website">
-      <meta property="og:site_name" content="Geo-VPN">
-      <meta property="og:locale" content="en_US">
-      
-      <!-- Twitter Card Meta Tags -->
-      <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="Geo-VPN | Free Vless & Trojan Accounts">
-      <meta name="twitter:description" content="Get free Vless accounts and fast VPN services via Cloudflare with Geo-VPN. Privacy and security guaranteed.">
-      <meta name="twitter:image" content="https://geoproject.biz.id/circle-flags/bote.png"> 
-      <meta name="twitter:site" content="@sampiiiiu">
-      <meta name="twitter:creator" content="@sampiiiiu">
-      <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css">
-      <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.1/css/all.css">
-      
-      <!-- Telegram Meta Tags -->
-      <meta property="og:image:type" content="image/jpeg"> 
-      <meta property="og:image:secure_url" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:audio" content="URL-to-audio-if-any"> 
-      <meta property="og:video" content="URL-to-video-if-any"> 
-      
-      <!-- Additional Meta Tags -->
-      <meta name="theme-color" content="#000000"> 
-      <meta name="format-detection" content="telephone=no"> 
-      <meta name="generator" content="Geo-VPN">
-      <meta name="google-site-verification" content="google-site-verification-code">
-      
-     <!-- Open Graph Tags for Rich Links -->
-      <meta property="og:image:width" content="1200">
-      <meta property="og:image:height" content="630">
-      <meta property="og:image:alt" content="Geo-VPN Image Preview">
-      
-      <!-- Favicon and Icon links -->
-      <link rel="icon" href="https://geoproject.biz.id/circle-flags/bote.png">
-      <link rel="apple-touch-icon" href="https://geoproject.biz.id/circle-flags/bote.png">
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-      
-    
 </head>
 <body>
 <!-- Navbar -->
@@ -1098,8 +698,8 @@ async function handleSubRequest(hostnem) {
 </div>
 <!-- Tombol Toggle -->
 
-    <div class="quantum-container">
-        
+    <div class="container">
+        <div class="card">
             <h1 class="title">Sub Link </h1>
             <form id="subLinkForm">
                 <div class="form-group">
@@ -1346,11 +946,11 @@ async function handleSubRequest(hostnem) {
             <div id="result" class="result" style="display: none;">
                 <p id="generated-link"></p>
                 <div class="copy-btns">
-                    <button id="copyLink" class="btn">Copy Link</button>
-                    <button id="openLink" class="btn">Buka Link</button>
+                    <button id="copyLink" class="copy-btn">Copy Link</button>
+                    <button id="openLink" class="copy-btn">Buka Link</button>
                 </div>
             </div>
-        
+        </div>
     </div>
     
     <script>
@@ -1476,481 +1076,430 @@ return html
 }
 
 async function handleWebRequest(request) {
-  const apiUrl = proxyListURL;
+    const apiUrl = proxyListURL;
 
-  const fetchConfigs = async () => {
-    try {
-      const response = await fetch(apiUrl);
-      const text = await response.text();
-      
-      let pathCounters = {};
-
-      const configs = text.trim().split('\n').map((line) => {
-        const [ip, port, countryCode, isp] = line.split(',');
+    const fetchConfigs = async () => {
+      try {
+        const response = await fetch(apiUrl);
+        const text = await response.text();
         
-        if (!pathCounters[countryCode]) {
-          pathCounters[countryCode] = 1;
-        }
-        
-        const path = `/${countryCode}${pathCounters[countryCode]}`;
-        pathCounters[countryCode]++;
+        let pathCounters = {};
 
-        return { ip, port, countryCode, isp, path };
+        const configs = text.trim().split('\n').map((line) => {
+          const [ip, port, countryCode, isp] = line.split(',');
+          
+          if (!pathCounters[countryCode]) {
+            pathCounters[countryCode] = 1;
+          }
+          
+          const path = `/${countryCode}${pathCounters[countryCode]}`;
+          pathCounters[countryCode]++;
+
+          return { ip, port, countryCode, isp, path };
+        });
+
+        return configs;
+      } catch (error) {
+        console.error('Error fetching configurations:', error);
+        return [];
+      }
+    };
+
+    const generateUUIDv4 = () => {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
       });
-
-      return configs;
-    } catch (error) {
-      console.error('Error fetching configurations:', error);
-      return [];
-    }
-  };
-
-  const generateUUIDv4 = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  };
+    };
 
 function buildCountryFlag() {
-const flagList = cachedProxyList.map((proxy) => proxy.country);
-const uniqueFlags = new Set(flagList);
+  const flagList = cachedProxyList.map((proxy) => proxy.country);
+  const uniqueFlags = new Set(flagList);
 
-let flagElement = "";
-for (const flag of uniqueFlags) {
-  if (flag && flag !== "Unknown") {
-    try {
-      flagElement += `<a href="/web?page=${page}&search=${flag}" class="py-1">
-    <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}" 
-    style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
+  let flagElement = "";
+  for (const flag of uniqueFlags) {
+    if (flag && flag !== "Unknown") {
+      try {
+        flagElement += `<a href="/web?page=${page}&search=${flag}" class="py-1">
+      <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}" 
+      style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
 </span>
 </a>`;
-    } catch (err) {
-      console.error(`Error generating flag for country: ${flag}`, err);
+      } catch (err) {
+        console.error(`Error generating flag for country: ${flag}`, err);
+      }
     }
   }
+
+  return flagElement;
 }
 
-return flagElement;
-}
+    const getFlagEmoji = (countryCode) => {
+      if (!countryCode) return '🏳️';
+      return countryCode
+        .toUpperCase()
+        .split('')
+        .map((char) => String.fromCodePoint(0x1f1e6 - 65 + char.charCodeAt(0)))
+        .join('');
+    };
 
-  const getFlagEmoji = (countryCode) => {
-    if (!countryCode) return '🏳️';
-    return countryCode
-      .toUpperCase()
-      .split('')
-      .map((char) => String.fromCodePoint(0x1f1e6 - 65 + char.charCodeAt(0)))
+    const url = new URL(request.url);
+    const hostName = url.hostname;
+    const page = parseInt(url.searchParams.get('page')) || 1;
+    const searchQuery = url.searchParams.get('search') || '';
+    const selectedWildcard = url.searchParams.get('wildcard') || '';
+    const selectedConfigType = url.searchParams.get('configType') || 'tls'; // Ambil nilai 'configType' atau gunakan default 'tls'
+    const configsPerPage = 30;
+
+    const configs = await fetchConfigs();
+    const totalConfigs = configs.length;
+
+    let filteredConfigs = configs;
+    if (searchQuery.includes(':')) {
+        // Search by IP:PORT format
+        filteredConfigs = configs.filter((config) => 
+            `${config.ip}:${config.port}`.includes(searchQuery)
+        );
+    } else if (searchQuery.length === 2) {
+        // Search by country code (if it's two characters)
+        filteredConfigs = configs.filter((config) =>
+            config.countryCode.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    } else if (searchQuery.length > 2) {
+        // Search by IP, ISP, or country code
+        filteredConfigs = configs.filter((config) =>
+            config.ip.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (`${config.ip}:${config.port}`).includes(searchQuery.toLowerCase()) ||
+            config.isp.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }
+     
+    const totalFilteredConfigs = filteredConfigs.length;
+    const totalPages = Math.ceil(totalFilteredConfigs / configsPerPage);
+    const startIndex = (page - 1) * configsPerPage;
+    const endIndex = Math.min(startIndex + configsPerPage, totalFilteredConfigs);
+    const visibleConfigs = filteredConfigs.slice(startIndex, endIndex);
+
+    const configType = url.searchParams.get('configType') || 'tls';
+
+    const tableRows = visibleConfigs
+      .map((config) => {
+        const uuid = generateUUIDv4();
+        const wildcard = selectedWildcard || hostName;
+        const modifiedHostName = selectedWildcard ? `${selectedWildcard}.${hostName}` : hostName;
+        const url = new URL(request.url);
+       const BASE_URL = `https://${url.hostname}`; 
+       const CHECK_API = `${BASE_URL}/geo-ip?ip=`; 
+        const ipPort = `${config.ip}:${config.port}`;
+        const healthCheckUrl = `${CHECK_API}${ipPort}`;
+        const path2 = encodeURIComponent(`/${config.ip}=${config.port}`);
+        const subP = `/Free-VPN-CF-Geo-Project`;
+        
+        const vlessTLSSimple = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
+        const vlessTLSRibet = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
+        
+        const trojanTLSSimple = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        const trojanTLSRibet = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        
+        const ssTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        const ssTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        
+        
+        
+        
+        const vlessNTLSSimple = `vless://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        const vlessNTLSRibet = `vless://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        
+        const trojanNTLSSimple = `trojan://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        const trojanNTLSRibet = `trojan://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        
+        const ssNTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+        const ssNTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+
+
+
+        if (configType === 'tls') {
+            return `
+                <tr class="config-row">
+    <td class="ip-cell">${config.ip}:${config.port}</td>
+    <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
+    <td class="px-1 py-1 text-center">
+        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+              style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
+        </span>
+    </td>
+    <td class="country-cell">${config.countryCode} | ${config.isp}</td>
+    <td class="path-cell">${config.path}</td>
+    <td class="button-cell">
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+            onclick="showOptions('VLess', '${vlessTLSRibet}', '${vlessTLSSimple}')">
+            VLESS
+        </button>
+    </td>
+    <td class="button-cell">
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+            onclick="showOptions('Trojan', '${trojanTLSRibet}', '${trojanTLSSimple}')">
+            TROJAN
+        </button>
+    </td>
+    <td class="button-cell">
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+            onclick="showOptions('SS', '${ssTLSRibet}', '${ssTLSSimple}')">
+            Shadowsocks
+        </button>
+    </td>
+</tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script>
+    function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
+        Swal.fire({
+            width: '270px',
+            html: \`
+                <div class="px-1 py-1 text-center">
+                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+                style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
+                </span>
+                </div>
+                <div class="mt-3">
+                <div class="h-px bg-[#4682b4] shadow-sm"></div>
+                <div class="text-xs">IP : ${config.ip}</div>
+                <div class="text-xs">ISP : ${config.isp}</div>
+                <div class="text-xs">Country : ${config.countryCode}</div>
+                <div class="h-px bg-[#4682b4] shadow-sm"></div>
+                <div class="mt-3">
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
+                <div class="mt-3">
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
+                <div class="mt-3">
+                    <button class="close-btn" onclick="Swal.close()">Close</button>
+                </div>
+            \`,
+            showCloseButton: false,
+            showConfirmButton: false,
+            background: 'rgba(6, 18, 67, 0.70)',
+            color: 'white',
+            customClass: {
+                popup: 'rounded-popup',
+                closeButton: 'close-btn'
+            },
+            position: 'center', 
+            showClass: {
+                popup: 'animate__animated animate__fadeInLeft' 
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutRight' 
+            },
+            didOpen: () => {
+                const popup = document.querySelector('.swal2-popup');
+                popup.style.animationDuration = '0.3s'; 
+            },
+            didClose: () => {
+                const popup = document.querySelector('.swal2-popup');
+                popup.style.animationDuration = '0.3s'; 
+            }
+        });
+    }
+</script>
+
+<script>
+          fetch('${healthCheckUrl}')
+            .then(response => response.json())
+            .then(data => {
+              const statusElement = document.getElementById('status-${ipPort}');
+              const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
+
+      // Ambil data status dan delay
+            const status = data.status || 'UNKNOWN';
+            let delay = parseFloat(data.delay) || 'N/A';
+
+            console.log("Status:", status);
+            console.log("Raw delay:", data.delay);
+            console.log("Parsed delay:", delay);
+
+            const divisor = 4; 
+
+            if (!isNaN(delay)) {
+                delay = Math.round(delay / divisor);
+                console.log("Processed delay:", delay);  // Debugging log
+            }
+
+            if (status === 'ACTIVE') {
+                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
+                statusElement.style.color = '#00FF00';
+                statusElement.style.fontSize = '13px';
+                statusElement.style.fontWeight = 'bold';
+            } else if (status === 'DEAD') {
+                statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
+                statusElement.style.color = '#FF3333';
+                statusElement.style.fontSize = '13px';
+                statusElement.style.fontWeight = 'bold';
+            }
+        })
+        .catch(error => {
+              const statusElement = document.getElementById('status-${ipPort}');
+              statusElement.textContent = 'Error';
+              statusElement.style.color = 'cyan';
+            });
+        </script>
+
+            
+`;
+        } else {
+            return `
+                <tr class="config-row">
+    <td class="ip-cell">${config.ip}:${config.port}</td>
+    <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
+    <td class="px-1 py-1 text-center">
+        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+              style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
+        </span>
+    </td>
+    <td class="country-cell">${config.countryCode} | ${config.isp}</td>
+    <td class="path-cell">${config.path}</td>
+    <td class="button-cell">
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+            onclick="showOptions('VLess', '${vlessNTLSRibet}', '${vlessNTLSSimple}')">
+            VLESS
+        </button>
+    </td>
+    <td class="button-cell">
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+            onclick="showOptions('Trojan', '${trojanNTLSRibet}', '${trojanNTLSSimple}')">
+            TROJAN
+        </button>
+    </td>
+    <td class="button-cell">
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+            onclick="showOptions('SS', '${ssNTLSRibet}', '${ssNTLSSimple}')">
+            Shadowsocks
+        </button>
+    </td>
+</tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script>
+    function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
+        Swal.fire({
+            width: '270px',
+            html: \`
+                <div class="px-1 py-1 text-center">
+                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+                style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
+                </span>
+                </div>
+                <div class="mt-3">
+                <div class="h-px bg-[#4682b4] shadow-sm"></div>
+                <div class="text-xs">IP : ${config.ip}</div>
+                <div class="text-xs">ISP : ${config.isp}</div>
+                <div class="text-xs">Country : ${config.countryCode}</div>
+                <div class="h-px bg-[#4682b4] shadow-sm"></div>
+                <div class="mt-3">
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
+                <div class="mt-3">
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
+                <div class="mt-3">
+                    <button class="close-btn" onclick="Swal.close()">Close</button>
+                </div>
+            \`,
+            showCloseButton: false,
+            showConfirmButton: false,
+            background: 'rgba(6, 18, 67, 0.70)',
+            color: 'white',
+            customClass: {
+                popup: 'rounded-popup',
+                closeButton: 'close-btn'
+            },
+            position: 'center', 
+            showClass: {
+                popup: 'animate__animated animate__fadeInLeft' 
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutRight' 
+            },
+            didOpen: () => {
+                const popup = document.querySelector('.swal2-popup');
+                popup.style.animationDuration = '0.3s'; 
+            },
+            didClose: () => {
+                const popup = document.querySelector('.swal2-popup');
+                popup.style.animationDuration = '0.3s'; 
+            }
+        });
+    }
+</script>
+
+<script>
+          fetch('${healthCheckUrl}')
+            .then(response => response.json())
+            .then(data => {
+              const statusElement = document.getElementById('status-${ipPort}');
+              const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
+
+      // Ambil data status dan delay
+            const status = data.status || 'UNKNOWN';
+            let delay = parseFloat(data.delay) || 'N/A';
+
+            console.log("Status:", status);
+            console.log("Raw delay:", data.delay);
+            console.log("Parsed delay:", delay);
+
+            const divisor = 4; 
+
+            if (!isNaN(delay)) {
+                delay = Math.round(delay / divisor);
+                console.log("Processed delay:", delay);  // Debugging log
+            }
+
+            if (status === 'ACTIVE') {
+                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
+                statusElement.style.color = '#00FF00';
+                statusElement.style.fontSize = '13px';
+                statusElement.style.fontWeight = 'bold';
+            } else if (status === 'DEAD') {
+                statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
+                statusElement.style.color = '#FF3333';
+                statusElement.style.fontSize = '13px';
+                statusElement.style.fontWeight = 'bold';
+            }
+        })
+        .catch(error => {
+              const statusElement = document.getElementById('status-${ipPort}');
+              statusElement.textContent = 'Error';
+              statusElement.style.color = 'cyan';
+            });
+        </script>
+
+`;
+        }
+      })
       .join('');
-  };
 
-  const url = new URL(request.url);
-  const hostName = url.hostname;
-  const page = parseInt(url.searchParams.get('page')) || 1;
-  const searchQuery = url.searchParams.get('search') || '';
-  const selectedWildcard = url.searchParams.get('wildcard') || '';
-  const selectedConfigType = url.searchParams.get('configType') || 'tls'; // Ambil nilai 'configType' atau gunakan default 'tls'
-  const configsPerPage = 30;
+    const paginationButtons = [];
+    const pageRange = 2;
 
-  const configs = await fetchConfigs();
-  const totalConfigs = configs.length;
-
-  let filteredConfigs = configs;
-  if (searchQuery.includes(':')) {
-      // Search by IP:PORT format
-      filteredConfigs = configs.filter((config) => 
-          `${config.ip}:${config.port}`.includes(searchQuery)
+    for (let i = Math.max(1, page - pageRange); i <= Math.min(totalPages, page + pageRange); i++) {
+      paginationButtons.push(
+        `<a href="?page=${i}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-number ${i === page ? 'active' : ''}">${i}</a>`
       );
-  } else if (searchQuery.length === 2) {
-      // Search by country code (if it's two characters)
-      filteredConfigs = configs.filter((config) =>
-          config.countryCode.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-  } else if (searchQuery.length > 2) {
-      // Search by IP, ISP, or country code
-      filteredConfigs = configs.filter((config) =>
-          config.ip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (`${config.ip}:${config.port}`).includes(searchQuery.toLowerCase()) ||
-          config.isp.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-  }
-   
-  const totalFilteredConfigs = filteredConfigs.length;
-  const totalPages = Math.ceil(totalFilteredConfigs / configsPerPage);
-  const startIndex = (page - 1) * configsPerPage;
-  const endIndex = Math.min(startIndex + configsPerPage, totalFilteredConfigs);
-  const visibleConfigs = filteredConfigs.slice(startIndex, endIndex);
+    }
 
-  const configType = url.searchParams.get('configType') || 'tls';
+    const prevPage = page > 1
+      ? `<a href="?page=${page - 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">◁</a>`
+      : '';
 
-  const tableRows = visibleConfigs
-    .map((config) => {
-      const uuid = generateUUIDv4();
-      const wildcard = selectedWildcard || hostName;
-      const modifiedHostName = selectedWildcard ? `${selectedWildcard}.${hostName}` : hostName;
-      const url = new URL(request.url);
-     const BASE_URL = `https://${url.hostname}`; 
-     const CHECK_API = `${BASE_URL}/geo-ip?ip=`; 
-      const ipPort = `${config.ip}:${config.port}`;
-      const healthCheckUrl = `${CHECK_API}${ipPort}`;
-      const path2 = encodeURIComponent(`/${config.ip}=${config.port}`);
-      const subP = `/Free-VPN-CF-Geo-Project`;
-      
-      const vlessTLSSimple = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
-      const vlessTLSRibet = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
-      
-      const trojanTLSSimple = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      const trojanTLSRibet = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      
-      const ssTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      const ssTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      
-      
-      
-      
-      const vlessNTLSSimple = `vless://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      const vlessNTLSRibet = `vless://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      
-      const trojanNTLSSimple = `trojan://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      const trojanNTLSRibet = `trojan://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      
-      const ssNTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-      const ssNTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-
-
-
-      if (configType === 'tls') {
-          return `
-              <tr class="config-row">
-  <td class="ip-cell">${config.ip}:${config.port}</td>
-  <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
-  <td class="px-1 py-1 text-center">
-      <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-            style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
-      </span>
-  </td>
-  <td class="country-cell">${config.countryCode} | ${config.isp}</td>
-  <td class="path-cell">${config.path}</td>
-  <td class="button-cell">
-        <button class="btn" 
-          onclick="showOptions('VLess', '${vlessTLSRibet}', '${vlessTLSSimple}')">
-          VLESS
-      </button>
-  </td>
-  <td class="button-cell">
-        <button class="btn" 
-          onclick="showOptions('Trojan', '${trojanTLSRibet}', '${trojanTLSSimple}')">
-          TROJAN
-      </button>
-  </td>
-  <td class="button-cell">
-        <button class="btn" 
-          onclick="showOptions('SS', '${ssTLSRibet}', '${ssTLSSimple}')">
-          Shadowsocks
-      </button>
-  </td>
-</tr>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<script>
-  function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
-      Swal.fire({
-          width: '270px',
-          html: \`
-              <div class="px-1 py-1 text-center">
-              <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-              style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
-              </span>
-              </div>
-              <div class="mt-3">
-              <div class="h-px bg-[#4682b4] shadow-sm"></div>
-              <div class="text-xs">IP : ${config.ip}</div>
-              <div class="text-xs">ISP : ${config.isp}</div>
-              <div class="text-xs">Country : ${config.countryCode}</div>
-              <div class="h-px bg-[#4682b4] shadow-sm"></div>
-              <div class="mt-3">
-              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
-              <div class="mt-3">
-              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
-              <div class="mt-3">
-                  <button class="close-btn" onclick="Swal.close()">Close</button>
-              </div>
-          \`,
-          showCloseButton: false,
-          showConfirmButton: false,
-          background: 'rgba(6, 18, 67, 0.70)',
-          color: 'white',
-          customClass: {
-              popup: 'rounded-popup',
-              closeButton: 'close-btn'
-          },
-          position: 'center', 
-          showClass: {
-              popup: 'animate__animated animate__fadeInLeft' 
-          },
-          hideClass: {
-              popup: 'animate__animated animate__fadeOutRight' 
-          },
-          didOpen: () => {
-              const popup = document.querySelector('.swal2-popup');
-              popup.style.animationDuration = '0.3s'; 
-          },
-          didClose: () => {
-              const popup = document.querySelector('.swal2-popup');
-              popup.style.animationDuration = '0.3s'; 
-          }
-      });
-  }
-</script>
-
-<script>
-        fetch('${healthCheckUrl}')
-          .then(response => response.json())
-          .then(data => {
-            const statusElement = document.getElementById('status-${ipPort}');
-            const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
-
-    // Ambil data status dan delay
-          const status = data.status || 'UNKNOWN';
-          let delay = parseFloat(data.delay) || 'N/A';
-
-          console.log("Status:", status);
-          console.log("Raw delay:", data.delay);
-          console.log("Parsed delay:", delay);
-
-          const divisor = 4; 
-
-          if (!isNaN(delay)) {
-              delay = Math.round(delay / divisor);
-              console.log("Processed delay:", delay);  // Debugging log
-          }
-
-          if (status === 'ACTIVE') {
-              statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
-              statusElement.style.color = '#00FF00';
-              statusElement.style.fontSize = '13px';
-              statusElement.style.fontWeight = 'bold';
-          } else if (status === 'DEAD') {
-              statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
-              statusElement.style.color = '#FF3333';
-              statusElement.style.fontSize = '13px';
-              statusElement.style.fontWeight = 'bold';
-          }
-      })
-      .catch(error => {
-            const statusElement = document.getElementById('status-${ipPort}');
-            statusElement.textContent = 'Error';
-            statusElement.style.color = 'cyan';
-          });
-      </script>
-
-          
-`;
-      } else {
-          return `
-              <tr class="config-row">
-  <td class="ip-cell">${config.ip}:${config.port}</td>
-  <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
-  <td class="px-1 py-1 text-center">
-      <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-            style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
-      </span>
-  </td>
-  <td class="country-cell">${config.countryCode} | ${config.isp}</td>
-  <td class="path-cell">${config.path}</td>
-  <td class="button-cell">
-        <button class="btn" 
-          onclick="showOptions('VLess', '${vlessNTLSRibet}', '${vlessNTLSSimple}')">
-          VLESS
-      </button>
-  </td>
-  <td class="button-cell">
-        <button class="btn" 
-          onclick="showOptions('Trojan', '${trojanNTLSRibet}', '${trojanNTLSSimple}')">
-          TROJAN
-      </button>
-  </td>
-  <td class="button-cell">
-        <button class="btn" 
-          onclick="showOptions('SS', '${ssNTLSRibet}', '${ssNTLSSimple}')">
-          Shadowsocks
-      </button>
-  </td>
-</tr>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<script>
-  function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
-      Swal.fire({
-          width: '270px',
-          html: \`
-              <div class="px-1 py-1 text-center">
-              <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-              style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
-              </span>
-              </div>
-              <div class="mt-3">
-              <div class="h-px bg-[#4682b4] shadow-sm"></div>
-              <div class="text-xs">IP : ${config.ip}</div>
-              <div class="text-xs">ISP : ${config.isp}</div>
-              <div class="text-xs">Country : ${config.countryCode}</div>
-              <div class="h-px bg-[#4682b4] shadow-sm"></div>
-              <div class="mt-3">
-              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
-              <div class="mt-3">
-              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
-              <div class="mt-3">
-                  <button class="close-btn" onclick="Swal.close()">Close</button>
-              </div>
-          \`,
-          showCloseButton: false,
-          showConfirmButton: false,
-          background: 'rgba(6, 18, 67, 0.70)',
-          color: 'white',
-          customClass: {
-              popup: 'rounded-popup',
-              closeButton: 'close-btn'
-          },
-          position: 'center', 
-          showClass: {
-              popup: 'animate__animated animate__fadeInLeft' 
-          },
-          hideClass: {
-              popup: 'animate__animated animate__fadeOutRight' 
-          },
-          didOpen: () => {
-              const popup = document.querySelector('.swal2-popup');
-              popup.style.animationDuration = '0.3s'; 
-          },
-          didClose: () => {
-              const popup = document.querySelector('.swal2-popup');
-              popup.style.animationDuration = '0.3s'; 
-          }
-      });
-  }
-</script>
-
-<script>
-        fetch('${healthCheckUrl}')
-          .then(response => response.json())
-          .then(data => {
-            const statusElement = document.getElementById('status-${ipPort}');
-            const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
-
-    // Ambil data status dan delay
-          const status = data.status || 'UNKNOWN';
-          let delay = parseFloat(data.delay) || 'N/A';
-
-          console.log("Status:", status);
-          console.log("Raw delay:", data.delay);
-          console.log("Parsed delay:", delay);
-
-          const divisor = 4; 
-
-          if (!isNaN(delay)) {
-              delay = Math.round(delay / divisor);
-              console.log("Processed delay:", delay);  // Debugging log
-          }
-
-          if (status === 'ACTIVE') {
-              statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
-              statusElement.style.color = '#00FF00';
-              statusElement.style.fontSize = '13px';
-              statusElement.style.fontWeight = 'bold';
-          } else if (status === 'DEAD') {
-              statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
-              statusElement.style.color = '#FF3333';
-              statusElement.style.fontSize = '13px';
-              statusElement.style.fontWeight = 'bold';
-          }
-      })
-      .catch(error => {
-            const statusElement = document.getElementById('status-${ipPort}');
-            statusElement.textContent = 'Error';
-            statusElement.style.color = 'cyan';
-          });
-      </script>
-
-`;
-      }
-    })
-    .join('');
-
-  const paginationButtons = [];
-  const pageRange = 2;
-
-  for (let i = Math.max(1, page - pageRange); i <= Math.min(totalPages, page + pageRange); i++) {
-    paginationButtons.push(
-      `<a href="?page=${i}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-number ${i === page ? 'active' : ''}">${i}</a>`
-    );
-  }
-
-  const prevPage = page > 1
-    ? `<a href="?page=${page - 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">◁</a>`
-    : '';
-
-  const nextPage = page < totalPages
-    ? `<a href="?page=${page + 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">▷</a>`
-    : '';
+    const nextPage = page < totalPages
+      ? `<a href="?page=${page + 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">▷</a>`
+      : '';
 
   return new Response(`
+
 <html>
       <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
       <title>Geo-VPN | VPN Tunnel | CloudFlare</title>
-      <style>${CUSTOM_CSS}</style>
       
-      <!-- SEO Meta Tags -->
-      <meta name="description" content="Akun Vless Gratis. Geo-VPN offers free Vless accounts with Cloudflare and Trojan support. Secure and fast VPN tunnel services.">
-      <meta name="keywords" content="Geo-VPN, Free Vless, Vless CF, Trojan CF, Cloudflare, VPN Tunnel, Akun Vless Gratis">
-      <meta name="author" content="Geo-VPN">
-      <meta name="robots" content="index, follow"> 
-      <meta name="robots" content="noarchive"> 
-      <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1"> 
       
-      <!-- Social Media Meta Tags -->
-      <meta property="og:title" content="Geo-VPN | Free Vless & Trojan Accounts">
-      <meta property="og:description" content="Geo-VPN provides free Vless accounts and VPN tunnels via Cloudflare. Secure, fast, and easy setup.">
-      <meta property="og:image" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:url" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:type" content="website">
-      <meta property="og:site_name" content="Geo-VPN">
-      <meta property="og:locale" content="en_US">
-      
-      <!-- Twitter Card Meta Tags -->
-      <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="Geo-VPN | Free Vless & Trojan Accounts">
-      <meta name="twitter:description" content="Get free Vless accounts and fast VPN services via Cloudflare with Geo-VPN. Privacy and security guaranteed.">
-      <meta name="twitter:image" content="https://geoproject.biz.id/circle-flags/bote.png"> 
-      <meta name="twitter:site" content="@sampiiiiu">
-      <meta name="twitter:creator" content="@sampiiiiu">
-      <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css">
-      <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.1/css/all.css">
-      
-      <!-- Telegram Meta Tags -->
-      <meta property="og:image:type" content="image/jpeg"> 
-      <meta property="og:image:secure_url" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:audio" content="URL-to-audio-if-any"> 
-      <meta property="og:video" content="URL-to-video-if-any"> 
-      
-      <!-- Additional Meta Tags -->
-      <meta name="theme-color" content="#000000"> 
-      <meta name="format-detection" content="telephone=no"> 
-      <meta name="generator" content="Geo-VPN">
-      <meta name="google-site-verification" content="google-site-verification-code">
-      
-     <!-- Open Graph Tags for Rich Links -->
-      <meta property="og:image:width" content="1200">
-      <meta property="og:image:height" content="630">
-      <meta property="og:image:alt" content="Geo-VPN Image Preview">
-      
-      <!-- Favicon and Icon links -->
-      <link rel="icon" href="https://geoproject.biz.id/circle-flags/bote.png">
-      <link rel="apple-touch-icon" href="https://geoproject.biz.id/circle-flags/bote.png">
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-      
-    
 </head>
 <body>
     <header>
