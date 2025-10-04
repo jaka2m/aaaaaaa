@@ -9,7 +9,7 @@ const whatsappku = 'https://geoproject.biz.id/circle-flags/whatsapp.png'
 const ope = 'https://geoproject.biz.id/circle-flags/options.png'
 // Variables
 const rootDomain = "gpj2.dpdns.org"; // Ganti dengan domain utama kalian
-const serviceName = "gamang"; // Ganti dengan nama workers kalian
+const serviceName = "tes"; // Ganti dengan nama workers kalian
 const apiKey = "e1d2b64d4da5e42f24c88535f12f21bc84d06"; // Ganti dengan Global API key kalian (https://dash.cloudflare.com/profile/api-tokens)
 const apiEmail = "paoandest@gmail.com"; // Ganti dengan email yang kalian gunakan
 const accountID = "723b4d7d922c6af940791b5624a7cb05"; // Ganti dengan Account ID kalian (https://dash.cloudflare.com -> Klik domain yang kalian gunakan)
