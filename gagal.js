@@ -1,5 +1,12 @@
 import { connect } from "cloudflare:sockets";
 
+const rootDomain = "gpj2.dpdns.org"; // Ganti dengan domain utama kalian
+const serviceName = "gamang"; // Ganti dengan nama workers kalian
+const apiKey = "e1d2b64d4da5e42f24c88535f12f21bc84d06"; // Ganti dengan Global API key kalian (https://dash.cloudflare.com/profile/api-tokens)
+const apiEmail = "paoandest@gmail.com"; // Ganti dengan email yang kalian gunakan
+const accountID = "723b4d7d922c6af940791b5624a7cb05"; // Ganti dengan Account ID kalian (https://dash.cloudflare.com -> Klik domain yang kalian gunakan)
+const zoneID = "143d6f80528eae02e7a909f85e5320ab"; // Ganti dengan Zone ID kalian (https://dash.cloudflare.com -> Klik domain yang kalian gunakan)
+const ownerPassword = ".";
 const proxyListURL = 'https://raw.githubusercontent.com/jaka2m/botak/refs/heads/main/cek/proxyList.txt';
 const namaWeb = 'GEO PROJECT'
 const telegrambot = 'https://t.me/VLTRSSbot'
@@ -7,6 +14,12 @@ const channelku = 'https://t.me/testikuy_mang'
 const telegramku = 'https://geoproject.biz.id/circle-flags/telegram.png'
 const whatsappku = 'https://geoproject.biz.id/circle-flags/whatsapp.png'
 const ope = 'https://geoproject.biz.id/circle-flags/options.png'
+const CORS_HEADER_OPTIONS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+  "Access-Control-Max-Age": "86400",
+};
+
 const wildcards = [
   'ava.game.naver.com',
   'business.blibli.com',
@@ -21,6 +34,354 @@ const wildcards = [
    'ads.ruangguru.com',
    'api.midtrans.com',
 ];
+
+const CUSTOM_CSS = `
+    :root {
+      --primary-color: #008080; /* Teal */
+      --secondary-color: #39ff14; /* Neon Green */
+      --background-color: #0d1117; /* Dark Gray */
+      --card-background-color: #161b22; /* Lighter Gray */
+      --text-color: #c9d1d9; /* Light Gray */
+      --header-color: #ffffff; /* White */
+      --border-color: #30363d;
+      --button-text-color: #0d1117;
+      --font-family: 'Space Grotesk', sans-serif;
+      --header-font-family: 'Rajdhani', sans-serif;
+    }
+
+    body {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 20px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    header h1 {
+        font-family: var(--header-font-family);
+        font-size: 2.5rem;
+        color: var(--header-color);
+        text-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .quantum-title {
+        font-family: var(--header-font-family);
+        font-size: 3rem;
+        color: var(--header-color);
+        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: var(--card-background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .quantum-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: var(--card-background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .search-quantum {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    #search-bar, #ipInput {
+        width: 90%;
+        max-width: 500px;
+        height: 45px;
+        padding: 0 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    #search-button img {
+        transition: transform 0.2s ease;
+    }
+
+    #search-button:hover img {
+        transform: scale(1.1);
+    }
+    
+    .wildcard-dropdown {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    select, .form-control {
+        height: 45px;
+        padding: 0 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        width: 100%;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .quantum-table, #resultTable {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .quantum-table th, .quantum-table td, #resultTable th, #resultTable td {
+        padding: 12px 15px;
+        border: 1px solid var(--border-color);
+    }
+
+    .quantum-table th, #resultTable th {
+        font-family: var(--header-font-family);
+        color: var(--header-color);
+        background-color: #1f242c;
+    }
+
+    .quantum-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .quantum-pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+
+    .pagination-arrow, .pagination-number {
+        padding: 8px 12px;
+        margin: 0 4px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        text-decoration: none;
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .pagination-number.active, .pagination-arrow:hover, .pagination-number:hover {
+        background-color: var(--primary-color);
+        color: var(--button-text-color);
+    }
+    
+    .popupnav {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .popup-content {
+        background: var(--card-background-color);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid var(--primary-color);
+    }
+
+    .menu {
+      display: block;
+      margin: 10px 0;
+    }
+
+    .menu a {
+      color: var(--text-color);
+      text-decoration: none;
+    }
+
+    .navbar {
+        position: fixed;
+        left: -200px; /* Initially hidden */
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        background-color: rgba(13, 17, 23, 0.8);
+        border: 1px solid var(--primary-color);
+        border-radius: 0 10px 10px 0;
+        transition: left 0.3s ease-in-out;
+        z-index: 999;
+        padding: 10px 0;
+    }
+
+    .navbar.show {
+        left: 0;
+    }
+
+    .toggle-btn {
+        position: absolute;
+        right: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+    
+    .toggle-btn img {
+        width: 40px;
+    }
+
+    .navbarconten {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 2rem;
+        color: var(--text-color);
+    }
+    
+    .quantum-title1 p {
+        font-size: 1rem;
+    }
+    
+    .title {
+        font-family: var(--header-font-family);
+        font-size: 2.5rem;
+        color: var(--header-color);
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        color: var(--button-text-color);
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 128, 128, 0.4);
+    }
+    
+    .result {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    #generated-link {
+        word-break: break-all;
+        background-color: var(--background-color);
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid var(--border-color);
+    }
+
+    .copy-btns {
+        margin-top: 1rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .copy-btn {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid var(--primary-color);
+        border-radius: 5px;
+        background-color: transparent;
+        color: var(--primary-color);
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .copy-btn:hover {
+        background-color: var(--primary-color);
+        color: var(--button-text-color);
+    }
+    
+    #matrix {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+    
+    #map {
+        height: 400px;
+        width: 100%;
+        margin-top: 2rem;
+        border-radius: 5px;
+        border: 1px solid var(--border-color);
+    }
+
+    footer h2 {
+        font-size: 1rem;
+        font-weight: normal;
+    }
+    
+    @keyframes slideInLeft {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(0); }
+    }
+
+    @keyframes slideOutRightToLeft {
+        from { transform: translateX(0); }
+        to { transform: translateX(-100%); }
+    }
+    .swal-popup-extra-small-text {
+        font-size: 0.7rem !important;
+    }
+    .swal-title-extra-small-text {
+        font-size: 1rem !important;
+    }
+    .swal-content-extra-small-text {
+        font-size: 0.8rem !important;
+    }
+`;
+
 // Global Variables
 let cachedProxyList = [];
 let proxyIP = "";
@@ -338,6 +699,7 @@ function mamangenerateHTML() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proxy Checker</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>${CUSTOM_CSS}</style>
   
 <body>
 <header>
@@ -401,12 +763,12 @@ function mamangenerateHTML() {
 
 <div class="container">
     <div class="input-container">
-            <input type="text" id="ipInput" placeholder="Input IP:Port (192.168.1.1:443)">
+            <input type="text" id="ipInput" class="form-control" placeholder="Input IP:Port (192.168.1.1:443)">
         </div>
-        <button class="copy-btn" onclick="checkProxy()">Check</button>
+        <button class="btn" onclick="checkProxy()">Check</button>
 
     <p id="loading" style="display: none; text-align: center;">Loading...</p>
-    <table id="resultTable">
+    <table id="resultTable" class="quantum-table">
       <thead>
         <tr>
           <th>Key</th>
@@ -644,6 +1006,7 @@ async function handleSubRequest(hostnem) {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
       <title>Geo-VPN | VPN Tunnel | CloudFlare</title>
+      <style>${CUSTOM_CSS}</style>
       
       <!-- SEO Meta Tags -->
       <meta name="description" content="Akun Vless Gratis. Geo-VPN offers free Vless accounts with Cloudflare and Trojan support. Secure and fast VPN tunnel services.">
@@ -740,8 +1103,8 @@ async function handleSubRequest(hostnem) {
 </div>
 <!-- Tombol Toggle -->
 
-    <div class="container">
-        <div class="card">
+    <div class="quantum-container">
+        
             <h1 class="title">Sub Link </h1>
             <form id="subLinkForm">
                 <div class="form-group">
@@ -988,13 +1351,342 @@ async function handleSubRequest(hostnem) {
             <div id="result" class="result" style="display: none;">
                 <p id="generated-link"></p>
                 <div class="copy-btns">
-                    <button id="copyLink" class="copy-btn">Copy Link</button>
-                    <button id="openLink" class="copy-btn">Buka Link</button>
+                    <button id="copyLink" class="btn">Copy Link</button>
+                    <button id="openLink" class="btn">Buka Link</button>
                 </div>
             </div>
-        </div>
+        
     </div>
+    <script>
+  
+      // Shared
+      const rootDomain = "PLACEHOLDER_ROOT_DOMAIN";
+      const notification = document.getElementById("notification-badge");
+      const windowContainer = document.getElementById("container-window");
+      const windowInfoContainer = document.getElementById("container-window-info");
+
+
+      // Switches
+      let isDomainListFetched = false;
+
+      // Local variable
+      let rawConfig = "";
+      let wildcardDomains = [];
+
+      function getDomainList() {
+        if (isDomainListFetched) return;
+        isDomainListFetched = true;
+
+        windowInfoContainer.innerText = "Fetching data...";
+
+        const url = "https://" + rootDomain + "/api/v1/domains/get";
+        fetch(url).then(async (res) => {
+          const domainListContainer = document.getElementById("container-domains");
+          domainListContainer.innerHTML = "";
+
+          if (res.status == 200) {
+            windowInfoContainer.innerText = "Done!";
+            const respJson = await res.json();
+            wildcardDomains = respJson; // Simpan daftar domain
+            respJson.forEach((domain, index) => {
+              const domainContainer = document.createElement("div");
+              domainContainer.className = "flex items-center justify-between w-full rounded-md p-2 text-white";
+
+              const domainText = document.createElement("span");
+              domainText.innerText = (index + 1) + ". " + domain.hostname;
+              domainContainer.appendChild(domainText);
+
+              domainListContainer.appendChild(domainContainer);
+            });
+          } else {
+            windowInfoContainer.innerText = "Failed!";
+          }
+        });
+      }
+
+      function deleteDomainByNumber() {
+        const inputElement = document.getElementById("delete-domain-input");
+        const number = parseInt(inputElement.value, 10);
+
+        if (isNaN(number) || number < 1 || number > wildcardDomains.length) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Masukkan nomor urut yang valid.',
+            icon: 'error',
+            width: '300px',
+            timer: 1500,
+            showConfirmButton: false
+          });
+          return;
+        }
+
+        const domainToDelete = wildcardDomains[number - 1];
+        deleteDomain(domainToDelete.id, domainToDelete.hostname);
+        inputElement.value = "";
+      }
+
+      function deleteDomain(domainId, domainName) {
+        Swal.fire({
+          title: 'Masukkan Password',
+          text: "Untuk menghapus domain: " + domainName,
+          input: 'password',
+          inputPlaceholder: 'Password...',
+          inputAttributes: {
+            autocapitalize: 'off'
+          },
+          showCancelButton: true,
+          confirmButtonText: 'Hapus',
+          cancelButtonText: 'Batal',
+          width: '300px',
+          showLoaderOnConfirm: true,
+          preConfirm: (password) => {
+            if (!password) {
+              Swal.showValidationMessage('Password tidak boleh kosong');
+              return false;
+            }
+            const url = "https://" + rootDomain + "/api/v1/domains/delete?id=" + domainId + "&password=" + encodeURIComponent(password);
+            return fetch(url, { method: 'DELETE' })
+              .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error("Password salah!");
+                    }
+                    throw new Error("Gagal! Status: " + response.status);
+                }
+                return response.json().catch(() => ({}));
+              })
+              .catch(error => {
+                Swal.showValidationMessage(error.message);
+                return false;
+              });
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          if (result.isConfirmed) {
+             Swal.fire({
+                title: 'Berhasil!',
+                text: 'Domain telah dihapus.',
+                icon: 'success',
+                width: '300px',
+                timer: 1500,
+                showConfirmButton: false
+             });
+            isDomainListFetched = false;
+            getDomainList();
+          }
+        });
+      }
+
+      function registerDomain() {
+        const domainInputElement = document.getElementById("new-domain-input");
+        const rawDomain = domainInputElement.value.toLowerCase();
+        const domain = domainInputElement.value + "." + rootDomain;
+
+        if (!rawDomain.match(/\\w+\\.\\w+$/) || rawDomain.endsWith(rootDomain)) {
+          windowInfoContainer.innerText = "Invalid URL!";
+          return;
+        }
+
+        windowInfoContainer.innerText = "Pushing request...";
+
+        const url = "https://" + rootDomain + "/api/v1/domains/put?domain=" + domain;
+        const res = fetch(url).then((res) => {
+          if (res.status == 200) {
+            windowInfoContainer.innerText = "Done!";
+            domainInputElement.value = "";
+            isDomainListFetched = false;
+            getDomainList();
+          } else {
+            if (res.status == 409) {
+              windowInfoContainer.innerText = "Domain exists!";
+            } else {
+              windowInfoContainer.innerText = "Error " + res.status;
+            }
+          }
+        });
+      }
+
+      
+      function applyFilters() {
+          const protocol = document.getElementById('protocol-select').value;
+          const country = document.getElementById('country-select').value;
+          const host = document.getElementById('host-select').value;
+          const port = document.getElementById('port-select').value;
+
+          const url = new URL(window.location.href);
+          url.searchParams.set('vpn', protocol);
+          url.searchParams.set('cc', country);
+          url.searchParams.set('host', host);
+          url.searchParams.set('port', port);
+          window.location.href = url.toString();
+      }
+
+      function searchProxy() {
+    const searchBar = document.getElementById("search-bar");
+    // Gunakan .trim() untuk memastikan input yang berisi spasi kosong juga dianggap kosong
+    const searchValue = searchBar.value.trim(); 
     
+    // --- KONDISI BARU: Cek jika input kosong ---
+    if (searchValue === "") {
+        // Alihkan pengguna ke /sub jika input kosong
+        window.location.href = "/sub";
+        return; // Hentikan eksekusi fungsi selanjutnya
+    }
+    // --- Akhir Kondisi Baru ---
+
+    const url = new URL(window.location.href);
+
+    if (searchValue.length === 2) {
+        // Logika untuk kode negara (cc)
+        url.searchParams.set("cc", searchValue);
+        url.searchParams.delete("search");
+    } else {
+        // Logika untuk pencarian umum
+        url.searchParams.set("search", searchValue);
+        url.searchParams.delete("cc");
+    }
+    
+    // Alihkan ke URL baru dengan parameter pencarian
+    window.location.href = url.toString();
+}
+
+      function toggleOutputWindow() {
+        windowInfoContainer.innerText = "Select output:";
+        toggleWindow();
+        const rootElement = document.getElementById("output-window");
+        if (rootElement.classList.contains("hidden")) {
+          rootElement.classList.remove("hidden");
+        } else {
+          rootElement.classList.add("hidden");
+        }
+      }
+
+      function toggleWildcardsWindow() {
+        windowInfoContainer.innerText = "Domain list";
+        toggleWindow();
+        getDomainList();
+        const rootElement = document.getElementById("wildcards-window");
+        if (rootElement.classList.contains("hidden")) {
+          rootElement.classList.remove("hidden");
+        } else {
+          rootElement.classList.add("hidden");
+        }
+      }
+
+      function toggleWindow() {
+        if (windowContainer.classList.contains("hidden")) {
+          windowContainer.classList.remove("hidden");
+        } else {
+          windowContainer.classList.add("hidden");
+        }
+      }
+
+      function toggleDarkMode() {
+        const rootElement = document.getElementById("html");
+        if (rootElement.classList.contains("dark")) {
+          rootElement.classList.remove("dark");
+          localStorage.setItem('theme', 'light');
+        } else {
+          rootElement.classList.add("dark");
+          localStorage.setItem('theme', 'dark');
+        }
+      }
+  
+
+      function checkRegion() {
+        for (let i = 0; ; i++) {
+          const containerRegionCheck = document.getElementById("container-region-check-" + i);
+          const configSample = document.getElementById("config-sample-" + i).value.replaceAll(" ", "");
+          if (containerRegionCheck == undefined) break;
+
+          const res = fetch(
+            "https://api.foolvpn.me/regioncheck?config=" + encodeURIComponent(configSample)
+          ).then(async (res) => {
+            if (res.status == 200) {
+              containerRegionCheck.innerHTML = "<hr>";
+              for (const result of await res.json()) {
+                containerRegionCheck.innerHTML += "<p>" + result.name + ": " + result.region + "</p>";
+              }
+            }
+          });
+        }
+      }
+
+      function checkGeoip() {
+        const containerIP = document.getElementById("container-info-ip");
+        const containerCountry = document.getElementById("container-info-country");
+        const containerISP = document.getElementById("container-info-isp");
+        const res = fetch("https://" + rootDomain + "/api/v1/myip").then(async (res) => {
+          if (res.status == 200) {
+            const respJson = await res.json();
+            containerIP.innerText = "IP: " + respJson.ip;
+            containerCountry.innerText = "Country: " + respJson.country;
+            containerISP.innerText = "ISP: " + respJson.asOrganization;
+          }
+        });
+      }
+
+     function updateTime() {
+    const timeElement = document.getElementById("time-info-value");
+    if (timeElement) {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-GB');
+        timeElement.textContent = timeString;
+    }
+}
+
+setInterval(updateTime, 1000);
+
+      function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+      }
+
+      function checkStats() {
+        const requestsContainer = document.querySelector("#container-info-requests span");
+        const bandwidthContainer = document.querySelector("#container-info-bandwidth span");
+        if (!requestsContainer || !bandwidthContainer) return;
+
+        fetch("https://" + rootDomain + "/api/v1/stats")
+            .then(response => response.json())
+            .then(data => {
+                requestsContainer.textContent = data.requests.toLocaleString();
+                bandwidthContainer.textContent = formatBytes(data.bandwidth);
+            })
+            .catch(error => {
+                console.error('Error fetching stats:', error);
+                requestsContainer.textContent = "N/A";
+                bandwidthContainer.textContent = "N/A";
+            });
+      }
+
+      window.onload = () => {
+        checkGeoip();
+        updateTime();
+        checkStats();
+        // checkRegion();
+        const observer = lozad(".lozad", {
+          load: function (el) {
+            el.classList.remove("scale-95");
+          },
+        });
+        observer.observe();
+      };
+
+      window.onscroll = () => {
+        const paginationContainer = document.getElementById("container-pagination");
+
+        if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
+          paginationContainer.classList.remove("-translate-y-6");
+        } else {
+          paginationContainer.classList.add("-translate-y-6");
+        }
+      };
+    </script>
     <script>
     function toggleNavbar() {
         const navbar = document.getElementById("navbar");
@@ -1117,429 +1809,477 @@ async function handleSubRequest(hostnem) {
 return html
 }
 
+
 async function handleWebRequest(request) {
-    const apiUrl = proxyListURL;
+  const apiUrl = proxyListURL;
 
-    const fetchConfigs = async () => {
-      try {
-        const response = await fetch(apiUrl);
-        const text = await response.text();
+  const fetchConfigs = async () => {
+    try {
+      const response = await fetch(apiUrl);
+      const text = await response.text();
+      
+      let pathCounters = {};
+
+      const configs = text.trim().split('\n').map((line) => {
+        const [ip, port, countryCode, isp] = line.split(',');
         
-        let pathCounters = {};
+        if (!pathCounters[countryCode]) {
+          pathCounters[countryCode] = 1;
+        }
+        
+        const path = `/${countryCode}${pathCounters[countryCode]}`;
+        pathCounters[countryCode]++;
 
-        const configs = text.trim().split('\n').map((line) => {
-          const [ip, port, countryCode, isp] = line.split(',');
-          
-          if (!pathCounters[countryCode]) {
-            pathCounters[countryCode] = 1;
-          }
-          
-          const path = `/${countryCode}${pathCounters[countryCode]}`;
-          pathCounters[countryCode]++;
-
-          return { ip, port, countryCode, isp, path };
-        });
-
-        return configs;
-      } catch (error) {
-        console.error('Error fetching configurations:', error);
-        return [];
-      }
-    };
-
-    const generateUUIDv4 = () => {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
+        return { ip, port, countryCode, isp, path };
       });
-    };
+
+      return configs;
+    } catch (error) {
+      console.error('Error fetching configurations:', error);
+      return [];
+    }
+  };
+
+  const generateUUIDv4 = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  };
 
 function buildCountryFlag() {
-  const flagList = cachedProxyList.map((proxy) => proxy.country);
-  const uniqueFlags = new Set(flagList);
+const flagList = cachedProxyList.map((proxy) => proxy.country);
+const uniqueFlags = new Set(flagList);
 
-  let flagElement = "";
-  for (const flag of uniqueFlags) {
-    if (flag && flag !== "Unknown") {
-      try {
-        flagElement += `<a href="/web?page=${page}&search=${flag}" class="py-1">
-      <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}" 
-      style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
+let flagElement = "";
+for (const flag of uniqueFlags) {
+  if (flag && flag !== "Unknown") {
+    try {
+      flagElement += `<a href="/web?page=${page}&search=${flag}" class="py-1">
+    <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}" 
+    style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
 </span>
 </a>`;
-      } catch (err) {
-        console.error(`Error generating flag for country: ${flag}`, err);
-      }
+    } catch (err) {
+      console.error(`Error generating flag for country: ${flag}`, err);
     }
   }
-
-  return flagElement;
 }
 
-    const getFlagEmoji = (countryCode) => {
-      if (!countryCode) return '🏳️';
-      return countryCode
-        .toUpperCase()
-        .split('')
-        .map((char) => String.fromCodePoint(0x1f1e6 - 65 + char.charCodeAt(0)))
-        .join('');
-    };
+return flagElement;
+}
 
-    const url = new URL(request.url);
-    const hostName = url.hostname;
-    const page = parseInt(url.searchParams.get('page')) || 1;
-    const searchQuery = url.searchParams.get('search') || '';
-    const selectedWildcard = url.searchParams.get('wildcard') || '';
-    const selectedConfigType = url.searchParams.get('configType') || 'tls'; // Ambil nilai 'configType' atau gunakan default 'tls'
-    const configsPerPage = 30;
-
-    const configs = await fetchConfigs();
-    const totalConfigs = configs.length;
-
-    let filteredConfigs = configs;
-    if (searchQuery.includes(':')) {
-        // Search by IP:PORT format
-        filteredConfigs = configs.filter((config) => 
-            `${config.ip}:${config.port}`.includes(searchQuery)
-        );
-    } else if (searchQuery.length === 2) {
-        // Search by country code (if it's two characters)
-        filteredConfigs = configs.filter((config) =>
-            config.countryCode.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    } else if (searchQuery.length > 2) {
-        // Search by IP, ISP, or country code
-        filteredConfigs = configs.filter((config) =>
-            config.ip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (`${config.ip}:${config.port}`).includes(searchQuery.toLowerCase()) ||
-            config.isp.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }
-     
-    const totalFilteredConfigs = filteredConfigs.length;
-    const totalPages = Math.ceil(totalFilteredConfigs / configsPerPage);
-    const startIndex = (page - 1) * configsPerPage;
-    const endIndex = Math.min(startIndex + configsPerPage, totalFilteredConfigs);
-    const visibleConfigs = filteredConfigs.slice(startIndex, endIndex);
-
-    const configType = url.searchParams.get('configType') || 'tls';
-
-    const tableRows = visibleConfigs
-      .map((config) => {
-        const uuid = generateUUIDv4();
-        const wildcard = selectedWildcard || hostName;
-        const modifiedHostName = selectedWildcard ? `${selectedWildcard}.${hostName}` : hostName;
-        const url = new URL(request.url);
-       const BASE_URL = `https://${url.hostname}`; 
-       const CHECK_API = `${BASE_URL}/geo-ip?ip=`; 
-        const ipPort = `${config.ip}:${config.port}`;
-        const healthCheckUrl = `${CHECK_API}${ipPort}`;
-        const path2 = encodeURIComponent(`/${config.ip}=${config.port}`);
-        const subP = `/Free-VPN-CF-Geo-Project`;
-        
-        const vlessTLSSimple = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
-        const vlessTLSRibet = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
-        
-        const trojanTLSSimple = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        const trojanTLSRibet = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        
-        const ssTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        const ssTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        
-        
-        
-        
-        const vlessNTLSSimple = `vless://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        const vlessNTLSRibet = `vless://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        
-        const trojanNTLSSimple = `trojan://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        const trojanNTLSRibet = `trojan://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        
-        const ssNTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-        const ssNTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
-
-
-
-        if (configType === 'tls') {
-            return `
-                <tr class="config-row">
-    <td class="ip-cell">${config.ip}:${config.port}</td>
-    <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
-    <td class="px-1 py-1 text-center">
-        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-              style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
-        </span>
-    </td>
-    <td class="country-cell">${config.countryCode} | ${config.isp}</td>
-    <td class="path-cell">${config.path}</td>
-    <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('VLess', '${vlessTLSRibet}', '${vlessTLSSimple}')">
-            VLESS
-        </button>
-    </td>
-    <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('Trojan', '${trojanTLSRibet}', '${trojanTLSSimple}')">
-            TROJAN
-        </button>
-    </td>
-    <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('SS', '${ssTLSRibet}', '${ssTLSSimple}')">
-            Shadowsocks
-        </button>
-    </td>
-</tr>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<script>
-    function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
-        Swal.fire({
-            width: '270px',
-            html: \`
-                <div class="px-1 py-1 text-center">
-                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-                style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
-                </span>
-                </div>
-                <div class="mt-3">
-                <div class="h-px bg-[#4682b4] shadow-sm"></div>
-                <div class="text-xs">IP : ${config.ip}</div>
-                <div class="text-xs">ISP : ${config.isp}</div>
-                <div class="text-xs">Country : ${config.countryCode}</div>
-                <div class="h-px bg-[#4682b4] shadow-sm"></div>
-                <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
-                <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
-                <div class="mt-3">
-                    <button class="close-btn" onclick="Swal.close()">Close</button>
-                </div>
-            \`,
-            showCloseButton: false,
-            showConfirmButton: false,
-            background: 'rgba(6, 18, 67, 0.70)',
-            color: 'white',
-            customClass: {
-                popup: 'rounded-popup',
-                closeButton: 'close-btn'
-            },
-            position: 'center', 
-            showClass: {
-                popup: 'animate__animated animate__fadeInLeft' 
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutRight' 
-            },
-            didOpen: () => {
-                const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
-            },
-            didClose: () => {
-                const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
-            }
-        });
-    }
-</script>
-
-<script>
-          fetch('${healthCheckUrl}')
-            .then(response => response.json())
-            .then(data => {
-              const statusElement = document.getElementById('status-${ipPort}');
-              const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
-
-      // Ambil data status dan delay
-            const status = data.status || 'UNKNOWN';
-            let delay = parseFloat(data.delay) || 'N/A';
-
-            console.log("Status:", status);
-            console.log("Raw delay:", data.delay);
-            console.log("Parsed delay:", delay);
-
-            const divisor = 4; 
-
-            if (!isNaN(delay)) {
-                delay = Math.round(delay / divisor);
-                console.log("Processed delay:", delay);  // Debugging log
-            }
-
-            if (status === 'ACTIVE') {
-                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
-                statusElement.style.color = '#00FF00';
-                statusElement.style.fontSize = '13px';
-                statusElement.style.fontWeight = 'bold';
-            } else if (status === 'DEAD') {
-                statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
-                statusElement.style.color = '#FF3333';
-                statusElement.style.fontSize = '13px';
-                statusElement.style.fontWeight = 'bold';
-            }
-        })
-        .catch(error => {
-              const statusElement = document.getElementById('status-${ipPort}');
-              statusElement.textContent = 'Error';
-              statusElement.style.color = 'cyan';
-            });
-        </script>
-
-            
-`;
-        } else {
-            return `
-                <tr class="config-row">
-    <td class="ip-cell">${config.ip}:${config.port}</td>
-    <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
-    <td class="px-1 py-1 text-center">
-        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-              style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
-        </span>
-    </td>
-    <td class="country-cell">${config.countryCode} | ${config.isp}</td>
-    <td class="path-cell">${config.path}</td>
-    <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('VLess', '${vlessNTLSRibet}', '${vlessNTLSSimple}')">
-            VLESS
-        </button>
-    </td>
-    <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('Trojan', '${trojanNTLSRibet}', '${trojanNTLSSimple}')">
-            TROJAN
-        </button>
-    </td>
-    <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('SS', '${ssNTLSRibet}', '${ssNTLSSimple}')">
-            Shadowsocks
-        </button>
-    </td>
-</tr>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<script>
-    function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
-        Swal.fire({
-            width: '270px',
-            html: \`
-                <div class="px-1 py-1 text-center">
-                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
-                style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
-                </span>
-                </div>
-                <div class="mt-3">
-                <div class="h-px bg-[#4682b4] shadow-sm"></div>
-                <div class="text-xs">IP : ${config.ip}</div>
-                <div class="text-xs">ISP : ${config.isp}</div>
-                <div class="text-xs">Country : ${config.countryCode}</div>
-                <div class="h-px bg-[#4682b4] shadow-sm"></div>
-                <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
-                <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
-                <div class="mt-3">
-                    <button class="close-btn" onclick="Swal.close()">Close</button>
-                </div>
-            \`,
-            showCloseButton: false,
-            showConfirmButton: false,
-            background: 'rgba(6, 18, 67, 0.70)',
-            color: 'white',
-            customClass: {
-                popup: 'rounded-popup',
-                closeButton: 'close-btn'
-            },
-            position: 'center', 
-            showClass: {
-                popup: 'animate__animated animate__fadeInLeft' 
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutRight' 
-            },
-            didOpen: () => {
-                const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
-            },
-            didClose: () => {
-                const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
-            }
-        });
-    }
-</script>
-
-<script>
-          fetch('${healthCheckUrl}')
-            .then(response => response.json())
-            .then(data => {
-              const statusElement = document.getElementById('status-${ipPort}');
-              const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
-
-      // Ambil data status dan delay
-            const status = data.status || 'UNKNOWN';
-            let delay = parseFloat(data.delay) || 'N/A';
-
-            console.log("Status:", status);
-            console.log("Raw delay:", data.delay);
-            console.log("Parsed delay:", delay);
-
-            const divisor = 4; 
-
-            if (!isNaN(delay)) {
-                delay = Math.round(delay / divisor);
-                console.log("Processed delay:", delay);  // Debugging log
-            }
-
-            if (status === 'ACTIVE') {
-                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
-                statusElement.style.color = '#00FF00';
-                statusElement.style.fontSize = '13px';
-                statusElement.style.fontWeight = 'bold';
-            } else if (status === 'DEAD') {
-                statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
-                statusElement.style.color = '#FF3333';
-                statusElement.style.fontSize = '13px';
-                statusElement.style.fontWeight = 'bold';
-            }
-        })
-        .catch(error => {
-              const statusElement = document.getElementById('status-${ipPort}');
-              statusElement.textContent = 'Error';
-              statusElement.style.color = 'cyan';
-            });
-        </script>
-
-`;
-        }
-      })
+  const getFlagEmoji = (countryCode) => {
+    if (!countryCode) return '🏳️';
+    return countryCode
+      .toUpperCase()
+      .split('')
+      .map((char) => String.fromCodePoint(0x1f1e6 - 65 + char.charCodeAt(0)))
       .join('');
+  };
 
-    const paginationButtons = [];
-    const pageRange = 2;
+  const url = new URL(request.url);
+  const hostName = url.hostname;
+  const page = parseInt(url.searchParams.get('page')) || 1;
+  const searchQuery = url.searchParams.get('search') || '';
+  const selectedWildcard = url.searchParams.get('wildcard') || '';
+  const selectedConfigType = url.searchParams.get('configType') || 'tls'; // Ambil nilai 'configType' atau gunakan default 'tls'
+  const configsPerPage = 30;
 
-    for (let i = Math.max(1, page - pageRange); i <= Math.min(totalPages, page + pageRange); i++) {
-      paginationButtons.push(
-        `<a href="?page=${i}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-number ${i === page ? 'active' : ''}">${i}</a>`
+  const configs = await fetchConfigs();
+  const totalConfigs = configs.length;
+
+  let filteredConfigs = configs;
+  if (searchQuery.includes(':')) {
+      // Search by IP:PORT format
+      filteredConfigs = configs.filter((config) => 
+          `${config.ip}:${config.port}`.includes(searchQuery)
       );
-    }
+  } else if (searchQuery.length === 2) {
+      // Search by country code (if it's two characters)
+      filteredConfigs = configs.filter((config) =>
+          config.countryCode.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+  } else if (searchQuery.length > 2) {
+      // Search by IP, ISP, or country code
+      filteredConfigs = configs.filter((config) =>
+          config.ip.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (`${config.ip}:${config.port}`).includes(searchQuery.toLowerCase()) ||
+          config.isp.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+  }
+   
+  const totalFilteredConfigs = filteredConfigs.length;
+  const totalPages = Math.ceil(totalFilteredConfigs / configsPerPage);
+  const startIndex = (page - 1) * configsPerPage;
+  const endIndex = Math.min(startIndex + configsPerPage, totalFilteredConfigs);
+  const visibleConfigs = filteredConfigs.slice(startIndex, endIndex);
 
-    const prevPage = page > 1
-      ? `<a href="?page=${page - 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">◁</a>`
-      : '';
+  const configType = url.searchParams.get('configType') || 'tls';
 
-    const nextPage = page < totalPages
-      ? `<a href="?page=${page + 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">▷</a>`
-      : '';
+  const tableRows = visibleConfigs
+    .map((config) => {
+      const uuid = generateUUIDv4();
+      const wildcard = selectedWildcard || hostName;
+      const modifiedHostName = selectedWildcard ? `${selectedWildcard}.${hostName}` : hostName;
+      const url = new URL(request.url);
+     const BASE_URL = `https://${url.hostname}`; 
+     const CHECK_API = `${BASE_URL}/geo-ip?ip=`; 
+      const ipPort = `${config.ip}:${config.port}`;
+      const healthCheckUrl = `${CHECK_API}${ipPort}`;
+      const path2 = encodeURIComponent(`/${config.ip}=${config.port}`);
+      const subP = `/Free-VPN-CF-Geo-Project`;
+      
+      const vlessTLSSimple = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
+      const vlessTLSRibet = `vless://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g, '%20')}${getFlagEmoji(config.countryCode)}`;
+      
+      const trojanTLSSimple = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      const trojanTLSRibet = `trojan://${uuid}@${wildcard}:443?encryption=none&security=tls&sni=${modifiedHostName}&fp=randomized&type=ws&host=${modifiedHostName}&path=${subP}${path2}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      
+      const ssTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      const ssTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:443?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=tls&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      
+      
+      
+      
+      const vlessNTLSSimple = `vless://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      const vlessNTLSRibet = `vless://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      
+      const trojanNTLSSimple = `trojan://${uuid}@${wildcard}:80?path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      const trojanNTLSRibet = `trojan://${uuid}@${wildcard}:80?path=${subP}${path2}&security=none&encryption=none&host=${modifiedHostName}&fp=randomized&type=ws&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      
+      const ssNTLSSimple = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${encodeURIComponent(subP + config.path.toUpperCase())}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+      const ssNTLSRibet = `ss://${btoa(`none:${uuid}`)}%3D@${wildcard}:80?encryption=none&type=ws&host=${modifiedHostName}&path=${subP}${path2}&security=none&sni=${modifiedHostName}#(${config.countryCode})%20${config.isp.replace(/\s/g,'%20')}${getFlagEmoji(config.countryCode)}`;
+
+
+
+      if (configType === 'tls') {
+          return `
+              <tr class="config-row">
+  <td class="ip-cell">${config.ip}:${config.port}</td>
+  <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
+  <td class="px-1 py-1 text-center">
+      <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+            style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
+      </span>
+  </td>
+  <td class="country-cell">${config.countryCode} | ${config.isp}</td>
+  <td class="path-cell">${config.path}</td>
+  <td class="button-cell">
+        <button class="btn" 
+          onclick="showOptions('VLess', '${vlessTLSRibet}', '${vlessTLSSimple}')">
+          VLESS
+      </button>
+  </td>
+  <td class="button-cell">
+        <button class="btn" 
+          onclick="showOptions('Trojan', '${trojanTLSRibet}', '${trojanTLSSimple}')">
+          TROJAN
+      </button>
+  </td>
+  <td class="button-cell">
+        <button class="btn" 
+          onclick="showOptions('SS', '${ssTLSRibet}', '${ssTLSSimple}')">
+          Shadowsocks
+      </button>
+  </td>
+</tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script>
+  function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
+      Swal.fire({
+          width: '270px',
+          html: \`
+              <div class="px-1 py-1 text-center">
+              <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+              style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
+              </span>
+              </div>
+              <div class="mt-3">
+              <div class="h-px bg-[#4682b4] shadow-sm"></div>
+              <div class="text-xs">IP : ${config.ip}</div>
+              <div class="text-xs">ISP : ${config.isp}</div>
+              <div class="text-xs">Country : ${config.countryCode}</div>
+              <div class="h-px bg-[#4682b4] shadow-sm"></div>
+              <div class="mt-3">
+              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
+              <div class="mt-3">
+              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
+              <div class="mt-3">
+                  <button class="close-btn" onclick="Swal.close()">Close</button>
+              </div>
+          \`,
+          showCloseButton: false,
+          showConfirmButton: false,
+          background: 'rgba(6, 18, 67, 0.70)',
+          color: 'white',
+          customClass: {
+              popup: 'rounded-popup',
+              closeButton: 'close-btn'
+          },
+          position: 'center', 
+          showClass: {
+              popup: 'animate__animated animate__fadeInLeft' 
+          },
+          hideClass: {
+              popup: 'animate__animated animate__fadeOutRight' 
+          },
+          didOpen: () => {
+              const popup = document.querySelector('.swal2-popup');
+              popup.style.animationDuration = '0.3s'; 
+          },
+          didClose: () => {
+              const popup = document.querySelector('.swal2-popup');
+              popup.style.animationDuration = '0.3s'; 
+          }
+      });
+  }
+</script>
+
+<script>
+        fetch('${healthCheckUrl}')
+          .then(response => response.json())
+          .then(data => {
+            const statusElement = document.getElementById('status-${ipPort}');
+            const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
+
+    // Ambil data status dan delay
+          const status = data.status || 'UNKNOWN';
+          let delay = parseFloat(data.delay) || 'N/A';
+
+          console.log("Status:", status);
+          console.log("Raw delay:", data.delay);
+          console.log("Parsed delay:", delay);
+
+          const divisor = 4; 
+
+          if (!isNaN(delay)) {
+              delay = Math.round(delay / divisor);
+              console.log("Processed delay:", delay);  // Debugging log
+          }
+
+          if (status === 'ACTIVE') {
+              statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
+              statusElement.style.color = '#00FF00';
+              statusElement.style.fontSize = '13px';
+              statusElement.style.fontWeight = 'bold';
+          } else if (status === 'DEAD') {
+              statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
+              statusElement.style.color = '#FF3333';
+              statusElement.style.fontSize = '13px';
+              statusElement.style.fontWeight = 'bold';
+          }
+      })
+      .catch(error => {
+            const statusElement = document.getElementById('status-${ipPort}');
+            statusElement.textContent = 'Error';
+            statusElement.style.color = 'cyan';
+          });
+      </script>
+
+          
+`;
+      } else {
+          return `
+              <tr class="config-row">
+  <td class="ip-cell">${config.ip}:${config.port}</td>
+  <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
+  <td class="px-1 py-1 text-center">
+      <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+            style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
+      </span>
+  </td>
+  <td class="country-cell">${config.countryCode} | ${config.isp}</td>
+  <td class="path-cell">${config.path}</td>
+  <td class="button-cell">
+        <button class="btn" 
+          onclick="showOptions('VLess', '${vlessNTLSRibet}', '${vlessNTLSSimple}')">
+          VLESS
+      </button>
+  </td>
+  <td class="button-cell">
+        <button class="btn" 
+          onclick="showOptions('Trojan', '${trojanNTLSRibet}', '${trojanNTLSSimple}')">
+          TROJAN
+      </button>
+  </td>
+  <td class="button-cell">
+        <button class="btn" 
+          onclick="showOptions('SS', '${ssNTLSRibet}', '${ssNTLSSimple}')">
+          Shadowsocks
+      </button>
+  </td>
+  
+  <td>
+  <div class="flex justify-center">
+                    <button onclick="toggleOutputWindow()" class="mt-1 p-3 rounded-lg bg-red-500 hover:bg-red-600 text-xs text-white font-semibold transition-colors duration-300 flex items-center justify-center gap-1 px-6 py-2 rounded-lg disabled:opacity-50 text-base font-semibold btn-gradient hover:opacity-80 transition-opacity">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="size-3">
+                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+                        </svg>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="wildcards-window" class="fixed hidden z-30 top-0 right-0 w-full h-full flex justify-center items-center">
+    <div class="w-[75%] max-w-md h-auto flex flex-col gap-2 p-4 rounded-lg 
+                 bg-blue-500 bg-opacity-20 backdrop-blur-md 
+                 border border-blue-300"> 
+        
+        <div class="flex w-full h-full gap-2 justify-between">
+            <input id="new-domain-input" type="text" placeholder="Input wildcard" class="w-full h-full px-4 py-2 rounded-md focus:outline-0 bg-gray-700 text-white w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"/>
+            <button onclick="registerDomain()" class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div id="container-domains" class="w-full h-32 rounded-md flex flex-col gap-1 overflow-y-scroll scrollbar-hide p-2 bg-gray-900 w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"></div>
+    
+            <div class="flex w-full h-full gap-2 justify-between">
+                <input id="delete-domain-input" type="number" placeholder="Input Nomor" class="w-full h-full px-4 py-2 rounded-md focus:outline-0 bg-gray-700 text-white w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"/>
+                <button onclick="deleteDomainByNumber()" class="p-2 rounded-full bg-red-600 hover:bg-red-700 flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <button onclick="toggleWildcardsWindow()" class="mt-1 p-3 rounded-lg bg-red-500 hover:bg-red-600 text-xs text-white font-semibold transition-colors duration-300 flex items-center justify-center gap-1 px-6 py-2 rounded-lg disabled:opacity-50 text-base font-semibold btn-gradient hover:opacity-80 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/>
+                </svg>
+                Close
+            </button>
+        </div>
+    </div>
+    </td>
+</tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script>
+  function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
+      Swal.fire({
+          width: '270px',
+          html: \`
+              <div class="px-1 py-1 text-center">
+              <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+              style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
+              </span>
+              </div>
+              <div class="mt-3">
+              <div class="h-px bg-[#4682b4] shadow-sm"></div>
+              <div class="text-xs">IP : ${config.ip}</div>
+              <div class="text-xs">ISP : ${config.isp}</div>
+              <div class="text-xs">Country : ${config.countryCode}</div>
+              <div class="h-px bg-[#4682b4] shadow-sm"></div>
+              <div class="mt-3">
+              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
+              <div class="mt-3">
+              <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
+              <div class="mt-3">
+                  <button class="close-btn" onclick="Swal.close()">Close</button>
+              </div>
+          \`,
+          showCloseButton: false,
+          showConfirmButton: false,
+          background: 'rgba(6, 18, 67, 0.70)',
+          color: 'white',
+          customClass: {
+              popup: 'rounded-popup',
+              closeButton: 'close-btn'
+          },
+          position: 'center', 
+          showClass: {
+              popup: 'animate__animated animate__fadeInLeft' 
+          },
+          hideClass: {
+              popup: 'animate__animated animate__fadeOutRight' 
+          },
+          didOpen: () => {
+              const popup = document.querySelector('.swal2-popup');
+              popup.style.animationDuration = '0.3s'; 
+          },
+          didClose: () => {
+              const popup = document.querySelector('.swal2-popup');
+              popup.style.animationDuration = '0.3s'; 
+          }
+      });
+  }
+</script>
+
+<script>
+        fetch('${healthCheckUrl}')
+          .then(response => response.json())
+          .then(data => {
+            const statusElement = document.getElementById('status-${ipPort}');
+            const spinner = document.getElementById('ping-' + data.proxy + ':' + data.port);
+
+    // Ambil data status dan delay
+          const status = data.status || 'UNKNOWN';
+          let delay = parseFloat(data.delay) || 'N/A';
+
+          console.log("Status:", status);
+          console.log("Raw delay:", data.delay);
+          console.log("Parsed delay:", delay);
+
+          const divisor = 4; 
+
+          if (!isNaN(delay)) {
+              delay = Math.round(delay / divisor);
+              console.log("Processed delay:", delay);  // Debugging log
+          }
+
+          if (status === 'ACTIVE') {
+              statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
+              statusElement.style.color = '#00FF00';
+              statusElement.style.fontSize = '13px';
+              statusElement.style.fontWeight = 'bold';
+          } else if (status === 'DEAD') {
+              statusElement.innerHTML = '<strong><i class="fas fa-times-circle"></i> DEAD</strong>';
+              statusElement.style.color = '#FF3333';
+              statusElement.style.fontSize = '13px';
+              statusElement.style.fontWeight = 'bold';
+          }
+      })
+      .catch(error => {
+            const statusElement = document.getElementById('status-${ipPort}');
+            statusElement.textContent = 'Error';
+            statusElement.style.color = 'cyan';
+          });
+      </script>
+
+`;
+      }
+    })
+    .join('');
+
+  const paginationButtons = [];
+  const pageRange = 2;
+
+  for (let i = Math.max(1, page - pageRange); i <= Math.min(totalPages, page + pageRange); i++) {
+    paginationButtons.push(
+      `<a href="?page=${i}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-number ${i === page ? 'active' : ''}">${i}</a>`
+    );
+  }
+
+  const prevPage = page > 1
+    ? `<a href="?page=${page - 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">◁</a>`
+    : '';
+
+  const nextPage = page < totalPages
+    ? `<a href="?page=${page + 1}&wildcard=${encodeURIComponent(selectedWildcard)}&configType=${encodeURIComponent(selectedConfigType)}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}" class="pagination-arrow">▷</a>`
+    : '';
 
   return new Response(`
-
 <html>
       <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
       <title>Geo-VPN | VPN Tunnel | CloudFlare</title>
+      <style>${CUSTOM_CSS}</style>
       
       <!-- SEO Meta Tags -->
       <meta name="description" content="Akun Vless Gratis. Geo-VPN offers free Vless accounts with Cloudflare and Trojan support. Secure and fast VPN tunnel services.">
@@ -2349,6 +3089,223 @@ function base64ToArrayBuffer(base64Str) {
     return { earlyData: arryBuffer.buffer, error: null };
   } catch (error) {
     return { error };
+  }
+}
+
+const cloudflareApi = new CloudflareApi();
+        const wildcardDomains = await cloudflareApi.getDomainList();
+
+        const result = getAllConfig(request, hostname, prxList, pageIndex, selectedProtocol, selectedPort, wildcardDomains, rootDomain);
+        return new Response(result, {
+          status: 200,
+          headers: { "Content-Type": "text/html;charset=utf-8" },
+        });
+      } else if (url.pathname.startsWith("/check")) {
+        const target = url.searchParams.get("target").split(":");
+        const result = await checkPrxHealth(target[0], target[1] || "443");
+
+        return new Response(JSON.stringify(result), {
+          status: 200,
+          headers: {
+            ...CORS_HEADER_OPTIONS,
+            "Content-Type": "application/json",
+          },
+        });
+      } else if (url.pathname.startsWith("/api/v1")) {
+        const apiPath = url.pathname.replace("/api/v1", "");
+
+        if (apiPath.startsWith("/domains")) {
+          if (!isApiReady) {
+            return new Response("Api not ready", {
+              status: 500,
+            });
+          }
+
+          const wildcardApiPath = apiPath.replace("/domains", "");
+          const cloudflareApi = new CloudflareApi();
+
+          if (wildcardApiPath == "/get") {
+            const domains = await cloudflareApi.getDomainList();
+            return new Response(JSON.stringify(domains), {
+              headers: {
+                ...CORS_HEADER_OPTIONS,
+              },
+            });
+          } else if (wildcardApiPath == "/put") {
+            const domain = url.searchParams.get("domain");
+            const register = await cloudflareApi.registerDomain(domain);
+
+            return new Response(register.toString(), {
+              status: register,
+              headers: {
+                ...CORS_HEADER_OPTIONS,
+              },
+            });
+          } else if (wildcardApiPath.startsWith("/delete")) {
+            const domainId = url.searchParams.get("id");
+            const password = url.searchParams.get("password");
+
+            if (password !== ownerPassword) {
+              return new Response("Unauthorized", {
+                status: 401,
+                headers: { ...CORS_HEADER_OPTIONS },
+              });
+            }
+
+            if (!domainId) {
+              return new Response("Domain ID is required", {
+                status: 400,
+                headers: { ...CORS_HEADER_OPTIONS },
+              });
+            }
+
+            const result = await cloudflareApi.deleteDomain(domainId);
+            return new Response(result.toString(), {
+              status: result,
+              headers: { ...CORS_HEADER_OPTIONS },
+            });
+          }
+        } else if (apiPath.startsWith("/myip")) {
+          return new Response(
+            JSON.stringify({
+              ip:
+                request.headers.get("cf-connecting-ipv6") ||
+                request.headers.get("cf-connecting-ip") ||
+                request.headers.get("x-real-ip"),
+              colo: request.headers.get("cf-ray")?.split("-")[1],
+              ...request.cf,
+            }),
+            {
+              headers: {
+                ...CORS_HEADER_OPTIONS,
+              },
+            }
+          );
+          
+// CloudflareApi Class
+class CloudflareApi {
+  constructor() {
+    this.bearer = `Bearer ${apiKey}`;
+    this.accountID = accountID;
+    this.zoneID = zoneID;
+    this.apiEmail = apiEmail;
+    this.apiKey = apiKey;
+
+    this.headers = {
+      Authorization: this.bearer,
+      "X-Auth-Email": this.apiEmail,
+      "X-Auth-Key": this.apiKey,
+    };
+  }
+
+  async getDomainList() {
+    const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountID}/workers/domains`;
+    const res = await fetch(url, {
+      headers: {
+        ...this.headers,
+      },
+    });
+
+    if (res.status == 200) {
+      const respJson = await res.json();
+
+      return respJson.result
+        .filter((data) => data.service == serviceName)
+        .map((data) => ({ id: data.id, hostname: data.hostname }));
+    }
+
+    return [];
+  }
+
+  async registerDomain(domain) {
+    domain = domain.toLowerCase();
+    const registeredDomains = await this.getDomainList();
+
+    if (!domain.endsWith(rootDomain)) return 400;
+    if (registeredDomains.includes(domain)) return 409;
+
+    try {
+      const domainTest = await fetch(`https://${domain.replaceAll("." + APP_DOMAIN, "")}`);
+      if (domainTest.status == 530) return domainTest.status;
+
+      const badWordsListRes = await fetch(BAD_WORDS_LIST);
+      if (badWordsListRes.status == 200) {
+        const badWordsList = (await badWordsListRes.text()).split("\n");
+        for (const badWord of badWordsList) {
+          if (domain.includes(badWord.toLowerCase())) {
+            return 403;
+          }
+        }
+      } else {
+        return 403;
+      }
+    } catch (e) {
+      return 400;
+    }
+
+    const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountID}/workers/domains`;
+    const res = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify({
+        environment: "production",
+        hostname: domain,
+        service: serviceName,
+        zone_id: this.zoneID,
+      }),
+      headers: {
+        ...this.headers,
+      },
+    });
+
+    return res.status;
+  }
+
+  async deleteDomain(domainId) {
+    const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountID}/workers/domains/${domainId}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        ...this.headers,
+      },
+    });
+
+    return res.status;
+  }
+
+  async getStats() {
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const query = `
+    query {
+      viewer {
+        accounts(filter: {accountTag: "${this.accountID}"}) {
+          httpRequests1dGroups(limit: 1, filter: {date_gt: "${yesterday}"}) {
+            sum {
+              requests
+              bytes
+            }
+          }
+        }
+      }
+    }`;
+
+    const res = await fetch("https://api.cloudflare.com/client/v4/graphql", {
+        method: 'POST',
+        headers: {
+            ...this.headers,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+    });
+
+    if (res.status === 200) {
+        const respJson = await res.json();
+        const data = respJson.data.viewer.accounts[0].httpRequests1dGroups[0].sum;
+        return {
+            requests: data.requests,
+            bandwidth: data.bytes,
+        };
+    }
+    return null;
   }
 }
 
@@ -4147,6 +5104,7 @@ async function generateV2rayngSub(type, bug, geo81, tls, country = null, limit =
 
   return base64Conf;
 }
+
 async function generateV2raySub(type, bug, geo81, tls, country = null, limit = null) {
   const proxyListResponse = await fetch(proxyListURL);
   const proxyList = await proxyListResponse.text();
@@ -4218,19 +5176,6 @@ function generateUUIDv4() {
   return [
     randomValues[0].toString(16).padStart(2, '0'),
     randomValues[1].toString(16).padStart(2, '0'),
-    randomValues[2].toString(16).padStart(2, '0'),
-    randomValues[3].toString(16).padStart(2, '0'),
-    randomValues[4].toString(16).padStart(2, '0'),
-    randomValues[5].toString(16).padStart(2, '0'),
-    randomValues[6].toString(16).padStart(2, '0'),
-    randomValues[7].toString(16).padStart(2, '0'),
-    randomValues[8].toString(16).padStart(2, '0'),
-    randomValues[9].toString(16).padStart(2, '0'),
-    randomValues[10].toString(16).padStart(2, '0'),
-    randomValues[11].toString(16).padStart(2, '0'),
-    randomValues[12].toString(16).padStart(2, '0'),
-    randomValues[13].toString(16).padStart(2, '0'),
-    randomValues[14].toString(16).padStart(2, '0'),
-    randomValues[15].toString(16).padStart(2, '0'),
+   
   ].join('').replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '$1-$2-$3-$4-$5');
 }
