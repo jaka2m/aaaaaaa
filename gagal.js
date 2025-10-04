@@ -15,20 +15,8 @@ const apiEmail = "paoandest@gmail.com"; // Ganti dengan email yang kalian gunaka
 const accountID = "723b4d7d922c6af940791b5624a7cb05"; // Ganti dengan Account ID kalian (https://dash.cloudflare.com -> Klik domain yang kalian gunakan)
 const zoneID = "143d6f80528eae02e7a909f85e5320ab"; // Ganti dengan Zone ID kalian (https://dash.cloudflare.com -> Klik domain yang kalian gunakan)
 const ownerPassword = ".";
-const wildcards = [
-  'ava.game.naver.com',
-  'business.blibli.com',
-   'graph.instagram.com',
-   'quiz.int.vidio.com',
-   'live.iflix.com',
-   'support.zoom.us',
-   'blog.webex.com',
-   'investors.spotify.com',
-   'cache.netflix.com',
-   'zaintest.vuclip.com',
-   'ads.ruangguru.com',
-   'api.midtrans.com',
-];
+
+const wildcards = [];
 
 // CloudflareApi Class
 class CloudflareApi {
@@ -62,25 +50,26 @@ class CloudflareApi {
 
   async registerDomain(domain) {
     domain = domain.toLowerCase();
+    const suffix = `.${serviceName}.${rootDomain}`;
+    let fullDomain = domain;
+
+    // If the user-provided domain doesn't already end with the suffix, append it.
+    if (!domain.endsWith(suffix)) {
+      fullDomain = domain + suffix;
+    }
+
     const registeredDomains = await this.getDomainList();
 
-    if (!domain.endsWith(rootDomain)) return 400;
-    if (registeredDomains.some(d => d.hostname === domain)) return 409;
-
-    // This check seems specific and should be kept.
-    // try {
-    // 	const domainTest = await fetch(`https://${domain.replaceAll("." + APP_DOMAIN, "")}`);
-    // 	if (domainTest.status == 530) return 530;
-    // } catch (e) {
-    // 	return 400;
-    // }
+    if (registeredDomains.some(d => d.hostname === fullDomain)) {
+      return 409; // Conflict
+    }
 
     const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountID}/workers/domains`;
     const res = await fetch(url, {
       method: "PUT",
       body: JSON.stringify({
         environment: "production",
-        hostname: domain,
+        hostname: fullDomain,
         service: serviceName,
         zone_id: this.zoneID,
       }),
@@ -1916,6 +1905,18 @@ return html
 }
 
 async function handleWebRequest(request) {
+    const cfApi = new CloudflareApi();
+    const dynamicDomains = await cfApi.getDomainList();
+    const suffixToRemove = `.${serviceName}.${rootDomain}`;
+    // Pastikan untuk menangani domain yang mungkin tidak memiliki akhiran yang diharapkan
+    const dynamicWildcards = dynamicDomains.map(d => 
+        d.hostname.endsWith(suffixToRemove) 
+            ? d.hostname.slice(0, -suffixToRemove.length) 
+            : d.hostname
+    );
+    
+    // Gabungkan wildcard statis dan dinamis, lalu hapus duplikat
+    const allWildcards = [...new Set([...wildcards, ...dynamicWildcards])];
     const apiUrl = proxyListURL;
 
     const fetchConfigs = async () => {
@@ -3500,7 +3501,7 @@ function buildCountryFlag() {
 </div>
   <select id="wildcard" name="wildcard" onchange="onWildcardChange(event)" style="width: 90px; height: 45px;">
     <option value="" ${!selectedWildcard ? 'selected' : ''}>No Wildcard</option>
-    ${wildcards.map(w => `<option value="${w}" ${selectedWildcard === w ? 'selected' : ''}>${w}</option>`).join('')}
+    ${allWildcards.map(w => `<option value="${w}" ${selectedWildcard === w ? 'selected' : ''}>${w}</option>`).join('')}
   </select>
   <select id="configType" name="configType" onchange="onConfigTypeChange(event)" style="width: 60px; height: 45px;">
     <option value="tls" ${selectedConfigType === 'tls' ? 'selected' : ''}>TLS</option>
@@ -3764,38 +3765,54 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
     </script>
 
     <div id="wildcards-window" class="fixed hidden z-30 top-0 right-0 w-full h-full flex justify-center items-center">
-        <div class="w-[75%] max-w-md h-auto flex flex-col gap-2 p-4 rounded-lg 
-                    bg-blue-500 bg-opacity-20 backdrop-blur-md 
-                    border border-blue-300"> 
-            
-            <div class="flex w-full h-full gap-2 justify-between">
-                <input id="new-domain-input" type="text" placeholder="Input wildcard" class="w-full h-full px-4 py-2 rounded-md focus:outline-0 bg-gray-700 text-white w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"/>
-                <button onclick="registerDomain()" class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                        <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
+  <div class="w-[75%] max-w-md h-auto flex flex-col gap-2 p-4 rounded-lg 
+              bg-blue-500 bg-opacity-20 backdrop-blur-md 
+              border border-blue-300 text-white"> 
+      
+      <!-- Input add domain -->
+      <div class="flex w-full h-full gap-2 justify-between">
+          <input id="new-domain-input" 
+                 type="text" 
+                 placeholder="Input wildcard" 
+                 class="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <button onclick="registerDomain()" 
+                  class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                  <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+              </svg>
+          </button>
+      </div>
 
-            <div id="container-domains" class="w-full h-32 rounded-md flex flex-col gap-1 overflow-y-scroll scrollbar-hide p-2 bg-gray-900 w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"></div>
-        
-            <div class="flex w-full h-full gap-2 justify-between">
-                <input id="delete-domain-input" type="number" placeholder="Input Nomor" class="w-full h-full px-4 py-2 rounded-md focus:outline-0 bg-gray-700 text-white w-full px-4 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full px-3 py-2 rounded-lg input-dark text-base focus:ring-2"/>
-                <button onclick="deleteDomainByNumber()" class="p-2 rounded-full bg-red-600 hover:bg-red-700 flex justify-center items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
+      <!-- Container list domain -->
+      <div id="container-domains" 
+           class="w-full h-32 rounded-md flex flex-col gap-1 overflow-y-scroll scrollbar-hide p-2 bg-gray-900 text-white">
+      </div>
+  
+      <!-- Input delete domain -->
+      <div class="flex w-full h-full gap-2 justify-between">
+          <input id="delete-domain-input" 
+                 type="number" 
+                 placeholder="Input Nomor" 
+                 class="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <button onclick="deleteDomainByNumber()" 
+                  class="p-2 rounded-full bg-red-600 hover:bg-red-700 flex justify-center items-center text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                  <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+              </svg>
+          </button>
+      </div>
 
-            <button onclick="toggleWildcardsWindow()" class="mt-1 p-3 rounded-lg bg-red-500 hover:bg-red-600 text-xs text-white font-semibold transition-colors duration-300 flex items-center justify-center gap-1 px-6 py-2 rounded-lg disabled:opacity-50 text-base font-semibold btn-gradient hover:opacity-80 transition-opacity">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/>
-                </svg>
-                Close
-            </button>
-        </div>
-    </div>
+      <!-- Close button -->
+      <button onclick="toggleWildcardsWindow()" 
+              class="mt-1 p-3 rounded-lg bg-red-500 hover:bg-red-600 text-xs font-semibold transition-colors duration-300 flex items-center justify-center gap-1 px-6 py-2 text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/>
+          </svg>
+          Close
+      </button>
+  </div>
+</div>
+
     <script>
         let domains = [];
         const wildcardsWindow = document.getElementById('wildcards-window');
