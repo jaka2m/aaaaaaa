@@ -2063,7 +2063,7 @@ function buildCountryFlag() {
         if (configType === 'tls') {
             return `
                 <tr class="config-row">
-    <td class="ip-cell">${config.ip}:${config.port}</td>
+    <td class="ip-cell" style="word-break: break-all;">${config.ip}:${config.port}</td>
     <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
     <td class="px-1 py-1 text-center">
         <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
@@ -2074,44 +2074,44 @@ function buildCountryFlag() {
     <td class="path-cell">${config.path}</td>
     <td class="button-cell">
         <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('VLess', '${vlessTLSRibet}', '${vlessTLSSimple}')">
+            onclick='showOptions("VLess", "${vlessTLSRibet}", "${vlessTLSSimple}", ${JSON.stringify(config)})'>
             VLESS
         </button>
     </td>
     <td class="button-cell">
         <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('Trojan', '${trojanTLSRibet}', '${trojanTLSSimple}')">
+            onclick='showOptions("Trojan", "${trojanTLSRibet}", "${trojanTLSSimple}", ${JSON.stringify(config)})'>
             TROJAN
         </button>
     </td>
     <td class="button-cell">
         <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('SS', '${ssTLSRibet}', '${ssTLSSimple}')">
-            Shadowsocks
+            onclick='showOptions("SS", "${ssTLSRibet}", "${ssTLSSimple}", ${JSON.stringify(config)})'>
+            SHADOWSOCKS
         </button>
     </td>
 </tr>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <script>
-    function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
+    function showOptions(type, ribet, simple, config) {
         Swal.fire({
             width: '270px',
             html: \`
                 <div class="px-1 py-1 text-center">
-                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+                <span class="flag-circle flag-icon flag-icon-\${config.countryCode.toLowerCase()}" 
                 style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
                 </span>
                 </div>
                 <div class="mt-3">
                 <div class="h-px bg-[#4682b4] shadow-sm"></div>
-                <div class="text-xs">IP : ${config.ip}</div>
-                <div class="text-xs">ISP : ${config.isp}</div>
-                <div class="text-xs">Country : ${config.countryCode}</div>
+                <div class="text-xs">IP : \${config.ip}</div>
+                <div class="text-xs">ISP : \${config.isp}</div>
+                <div class="text-xs">Country : \${config.countryCode}</div>
                 <div class="h-px bg-[#4682b4] shadow-sm"></div>
                 <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${simple}')">COPY PATH COUNTRY</button>
                 <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${ribet}')">COPY PATH IP PORT</button>
                 <div class="mt-3">
                     <button class="close-btn" onclick="Swal.close()">Close</button>
                 </div>
@@ -2189,7 +2189,7 @@ function buildCountryFlag() {
         } else {
             return `
                 <tr class="config-row">
-    <td class="ip-cell">${config.ip}:${config.port}</td>
+    <td class="ip-cell" style="word-break: break-all;">${config.ip}:${config.port}</td>
     <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
     <td class="px-1 py-1 text-center">
         <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
@@ -2200,44 +2200,44 @@ function buildCountryFlag() {
     <td class="path-cell">${config.path}</td>
     <td class="button-cell">
         <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('VLess', '${vlessNTLSRibet}', '${vlessNTLSSimple}')">
+            onclick='showOptions("VLess", "${vlessNTLSRibet}", "${vlessNTLSSimple}", ${JSON.stringify(config)})'>
             VLESS
         </button>
     </td>
     <td class="button-cell">
         <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('Trojan', '${trojanNTLSRibet}', '${trojanNTLSSimple}')">
+            onclick='showOptions("Trojan", "${trojanNTLSRibet}", "${trojanNTLSSimple}", ${JSON.stringify(config)})'>
             TROJAN
         </button>
     </td>
     <td class="button-cell">
         <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
-            onclick="showOptions('SS', '${ssNTLSRibet}', '${ssNTLSSimple}')">
-            Shadowsocks
+            onclick='showOptions("SS", "${ssNTLSRibet}", "${ssNTLSSimple}", ${JSON.stringify(config)})'>
+            SHADOWSOCKS
         </button>
     </td>
 </tr>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <script>
-    function showOptions(type, vlessTLSRibet, vlessTLSSimple, config) {
+    function showOptions(type, ribet, simple, config) {
         Swal.fire({
             width: '270px',
             html: \`
                 <div class="px-1 py-1 text-center">
-                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+                <span class="flag-circle flag-icon flag-icon-\${config.countryCode.toLowerCase()}" 
                 style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
                 </span>
                 </div>
                 <div class="mt-3">
                 <div class="h-px bg-[#4682b4] shadow-sm"></div>
-                <div class="text-xs">IP : ${config.ip}</div>
-                <div class="text-xs">ISP : ${config.isp}</div>
-                <div class="text-xs">Country : ${config.countryCode}</div>
+                <div class="text-xs">IP : \${config.ip}</div>
+                <div class="text-xs">ISP : \${config.isp}</div>
+                <div class="text-xs">Country : \${config.countryCode}</div>
                 <div class="h-px bg-[#4682b4] shadow-sm"></div>
                 <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSSimple}')">COPY PATH COUNTRY</button>
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${simple}')">COPY PATH COUNTRY</button>
                 <div class="mt-3">
-                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${vlessTLSRibet}')">COPY PATH IP PORT</button>
+                <button class="bg-[#2ecc71] bg-opacity-80 py-2 px-3 text-xs rounded-md" onclick="copy('\${ribet}')">COPY PATH IP PORT</button>
                 <div class="mt-3">
                     <button class="close-btn" onclick="Swal.close()">Close</button>
                 </div>
@@ -2876,49 +2876,6 @@ select:focus {
     background: rgba(0, 255, 255, 0.1);
 }
 
-.quantum-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 0px solid rgba(26, 4, 83, 0.81);
-    border-radius: 10px;
-    overflow: hidden;
-    width: 100%;
-}
-
-.quantum-table th {
-    /* Background transparan CYAN */
-    background-color: rgba(0, 255, 255, 0.1);
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    text-align: center;
-}
-
-#total-proxy {
-    margin: 20px 0;
-    text-align: center;
-}
-
-.quantum-table td {
-    padding: 10px;
-    text-align: center;
-    /* Background transparan CYAN */
-    background-color: rgba(0, 255, 255, 0.03);
-    color: #fff;
-    border-bottom: 1px solid #ddd;
-    transition: background-color 0.3s ease;
-}
-
-.quantum-table tr {
-    transition: all 0.3s ease;
-}
-
-.quantum-table tr:hover td {
-    /* Background transparan CYAN saat hover */
-    background-color: rgba(0, 255, 255, 0.08);
-    color: #fff;
-    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1);
-}
 
 .copy-btn {
     padding: 0.8rem 1.5rem;
@@ -3063,12 +3020,6 @@ select:focus {
         overflow-y: auto;
         /* Background transparan CYAN */
         background: rgba(0, 255, 255, 0.02);
-    }
-
-    .quantum-table th,
-    .quantum-table td {
-        padding: 0.8rem 0.5rem;
-        font-size: 0.9rem;
     }
 
     .copy-btn {
@@ -3593,66 +3544,7 @@ select:focus {
 
         /* --- Tabel Data --- */
 
-        .table-wrapper {
-            overflow-x: auto; 
-            margin-top: 1.5rem;
-            /* Tambahkan efek card pada wrapper tabel */
-            background: var(--color-card);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1); 
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 212, 255, 0.2); 
-            padding: 10px;
-        }
-
-        .quantum-table {
-            width: 100%;
-            min-width: 900px; /* Lebar minimum untuk scroll horizontal */
-            border-collapse: separate;
-            border-spacing: 0 10px; 
-            table-layout: fixed; 
-        }
-
-        .quantum-table thead th {
-            background: var(--color-table-header);
-            color: var(--color-primary);
-            padding: 1rem 0.5rem;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border: none;
-            position: sticky; 
-            top: 0;
-            z-index: 10;
-        }
-
-        .quantum-table tbody tr {
-            background: rgba(0, 212, 255, 0.05); /* Latar baris transparan */
-            transition: background 0.2s ease, box-shadow 0.2s ease;
-            border-radius: 8px; 
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.08);
-        }
-
-        .quantum-table tbody tr:hover {
-            background: rgba(0, 212, 255, 0.15);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .quantum-table td {
-            padding: 0.75rem 0.5rem;
-            text-align: center;
-            vertical-align: middle;
-            border: none;
-            font-size: 0.85rem;
-            border-left: 1px solid rgba(0, 212, 255, 0.1);
-        }
-        .quantum-table td:first-child { border-left: none; }
-
-        .flag-circle { 
-            border: 2px solid var(--color-primary) !important; 
-            box-shadow: 0 0 5px var(--color-primary);
-        }
-
+        
         .loading-icon {
             color: var(--color-primary);
             font-size: 1.2rem;
@@ -3684,13 +3576,133 @@ select:focus {
             height: 55px;
             padding: 5px;
         }
-    </style>
+        
+        .quantum-table {
+    /* Menghapus width: 100% yang berulang */
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 0px solid rgba(26, 4, 83, 0.81);
+    border-radius: 10px;
+    overflow: hidden;
+    /* width: 100%; - Dihapus karena didefinisikan ulang di bagian bawah */
+}
+
+.quantum-table th {
+    /* Background transparan CYAN */
+    background-color: rgba(0, 255, 255, 0.1);
+    color: white;
+    font-weight: bold;
+    /* padding: 10px; - Dihapus karena didefinisikan ulang di bagian bawah */
+    text-align: center;
+}
+
+#total-proxy {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.quantum-table td {
+    /* padding: 10px; - Dihapus karena didefinisikan ulang di bagian bawah */
+    text-align: center;
+    /* Background transparan CYAN */
+    background-color: rgba(0, 255, 255, 0.03);
+    color: #fff;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.quantum-table tr {
+    transition: all 0.3s ease;
+}
+
+.quantum-table tr:hover td {
+    /* Background transparan CYAN saat hover */
+    background-color: rgba(0, 255, 255, 0.08);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1);
+}
+
+.quantum-table th,
+.quantum-table td {
+    padding: 0.8rem 0.5rem;
+    font-size: 0.9rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+    /* Tambahkan efek card pada wrapper tabel */
+    background: var(--color-card);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    padding: 10px;
+}
+
+.quantum-table {
+    width: 100%;
+    min-width: 900px; /* Lebar minimum untuk scroll horizontal */
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    table-layout: fixed; /* Penting untuk mengatur lebar kolom */
+}
+
+.quantum-table thead th {
+    background: var(--color-table-header);
+    color: var(--color-primary);
+    padding: 1rem 0.5rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.quantum-table tbody tr {
+    background: rgba(0, 212, 255, 0.05); /* Latar baris transparan */
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.08);
+}
+
+.quantum-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.15);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.quantum-table td {
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    font-size: 0.85rem;
+    border-left: 1px solid rgba(0, 212, 255, 0.1);
+}
+.quantum-table td:first-child { border-left: none; }
+
+.flag-circle {
+    border: 2px solid var(--color-primary) !important;
+    box-shadow: 0 0 5px var(--color-primary);
+}
+
+.quantum-table .col-1 { width: 12%; } /* Kolom 1 (contoh untuk ikon/checkbox) */
+.quantum-table .col-2 { width: 25%; } /* Kolom 2 (contoh untuk Nama/Deskripsi) */
+.quantum-table .col-3 { width: 15%; } /* Kolom 3 (contoh untuk Lokasi/Status) */
+.quantum-table .col-4 { width: 25%; } /* Kolom 4 (contoh untuk Kecepatan/Ping) */
+.quantum-table .col-5 { width: 20%; } /* Kolom 5 (contoh untuk Waktu Pembaruan) */
+.quantum-table .col-6 { width: 20%; } /* Kolom 6 (contoh untuk Aksi/Tombol) */
+.quantum-table .col-7 { width: 35%; } /* Kolom 6 (contoh untuk Aksi/Tombol) */
+</style>
 </head>
 <body>
     <header>
         <h1 class="quantum-title">${namaWeb}</h1>
     </header>
-
+<div class="mt-20">
+        </div>
     <div class="quantum-container">
         <div class="search-quantum" style="display: flex; align-items: center; flex-direction: column;">
             <div style="display: flex; width: 90%; align-items: center; gap: 10px;">
@@ -3726,21 +3738,19 @@ select:focus {
             style="border-width: 2px; border-style: solid; border-color: #008080; height: 55px; border-radius: 10px;">
             ${buildCountryFlag()}
         </div>
-        <div class="mt-1">
-        </div>
         <div class="table-wrapper">
             <table class="quantum-table">
                 <thead>
                     <tr>
-                        <th>IP:PORT</th>
-                        <th>STATUS IP</th>
-                        <th>COUNTRY</th>
-                        <th>ISP</th>
-                        <th>PATH</th>
-                        <th>VLESS</th>
-                        <th>TROJAN</th>
-                        <th>SHADOWSOCKS</th>
-                    </tr>
+    <th class="col-7">IP:PORT</th>
+    <th class="col-6">STATUS IP</th>
+    <th class="col-6">COUNTRY</th>
+    <th class="col-7">ISP</th>
+    <th class="col-1">PATH</th>
+    <th class="col-6">VLESS</th>
+    <th class="col-6">TROJAN</th>
+    <th class="col-7">SHADOWSOCKS</th>
+    </tr>
                 </thead>
                 <tbody>
                     ${tableRows}
