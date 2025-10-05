@@ -2025,7 +2025,8 @@ function buildCountryFlag() {
     const configType = url.searchParams.get('configType') || 'tls';
 
     const tableRows = visibleConfigs
-      .map((config) => {
+      .map((config, index) => {
+        const rowNumber = startIndex + index + 1;
         const uuid = generateUUIDv4();
         const wildcard = selectedWildcard || hostName;
         const modifiedHostName = selectedWildcard ? `${selectedWildcard}.${hostName}` : hostName;
@@ -2062,29 +2063,38 @@ function buildCountryFlag() {
 
         if (configType === 'tls') {
             return `
-                <tr class="config-row">
-    <td class="ip-cell" style="word-break: break-all;">${config.ip}:${config.port}</td>
-    <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
-    <td class="px-1 py-1 text-center">
+     <tr class="config-row">
+    <td data-label="NO">${rowNumber}.</td>
+    
+    <td class="ip-cell" data-label="IP:PORT" style="word-break: break-all;">${config.ip}:${config.port}</td>
+    
+    <td class="proxy-status" id="status-${ipPort}" data-label="STATUS IP"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
+    
+    <td class="px-1 py-1 text-center" data-label="BENDERA">
         <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
               style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
         </span>
     </td>
-    <td class="country-cell">${config.countryCode} | ${config.isp}</td>
-    <td class="path-cell">${config.path}</td>
-    <td class="button-cell">
+    
+    <td class="country-cell" data-label="NEGARA | ISP">${config.countryCode} | ${config.isp}</td>
+    
+    <td class="path-cell" data-label="PATH">${config.path}</td>
+    
+    <td class="button-cell" data-label="VLESS">
         <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
             onclick='showOptions("VLess", "${vlessTLSRibet}", "${vlessTLSSimple}", ${JSON.stringify(config)})'>
             VLESS
         </button>
     </td>
-    <td class="button-cell">
+    
+    <td class="button-cell" data-label="TROJAN">
         <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
             onclick='showOptions("Trojan", "${trojanTLSRibet}", "${trojanTLSSimple}", ${JSON.stringify(config)})'>
             TROJAN
         </button>
     </td>
-    <td class="button-cell">
+    
+    <td class="button-cell" data-label="SHADOWSOCKS">
         <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
             onclick='showOptions("SS", "${ssTLSRibet}", "${ssTLSSimple}", ${JSON.stringify(config)})'>
             SHADOWSOCKS
@@ -2189,6 +2199,7 @@ function buildCountryFlag() {
         } else {
             return `
                 <tr class="config-row">
+    <td>${rowNumber}.</td>
     <td class="ip-cell" style="word-break: break-all;">${config.ip}:${config.port}</td>
     <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
     <td class="px-1 py-1 text-center">
@@ -3364,30 +3375,20 @@ select:focus {
 
 /* Progress Bar (Loading) */
 .popup-progress {
-    width: 100%;
-    height: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 5px;
-    overflow: hidden;
-    margin: 20px 0;
-}
-
-/* Progress Bar Fill - Gradien CYAN */
-.popup-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #00FFFF, #00BFFF);
-    width: 0%;
-    transition: width 0.3s ease;
-}
-
-@keyframes errorAnim {
-    0% {
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .popup-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
 
 /* NAV BAR SECTION */
 .navbarconten {
@@ -3688,13 +3689,33 @@ select:focus {
     box-shadow: 0 0 5px var(--color-primary);
 }
 
-.quantum-table .col-1 { width: 12%; } /* Kolom 1 (contoh untuk ikon/checkbox) */
-.quantum-table .col-2 { width: 25%; } /* Kolom 2 (contoh untuk Nama/Deskripsi) */
-.quantum-table .col-3 { width: 15%; } /* Kolom 3 (contoh untuk Lokasi/Status) */
-.quantum-table .col-4 { width: 25%; } /* Kolom 4 (contoh untuk Kecepatan/Ping) */
-.quantum-table .col-5 { width: 20%; } /* Kolom 5 (contoh untuk Waktu Pembaruan) */
-.quantum-table .col-6 { width: 20%; } /* Kolom 6 (contoh untuk Aksi/Tombol) */
-.quantum-table .col-7 { width: 35%; } /* Kolom 6 (contoh untuk Aksi/Tombol) */
+.quantum-table .col-10 { width: 4%; }
+.quantum-table .col-11 { width: 5%; }
+.quantum-table .col-12 { width: 6%; }
+.quantum-table .col-13 { width: 7%; }
+.quantum-table .col-14 { width: 8%; }
+.quantum-table .col-15 { width: 9%; }
+.quantum-table .col-16 { width: 10%; }
+.quantum-table .col-17 { width: 12%; }
+.quantum-table .col-18 { width: 14%; }
+.quantum-table .col-19 { width: 16%; }
+.quantum-table .col-20 { width: 18%; }
+.quantum-table .col-21 { width: 20%; }
+.quantum-table .col-22 { width: 22%; }
+.quantum-table .col-23 { width: 24%; }
+.quantum-table .col-24 { width: 26%; }
+.quantum-table .col-25 { width: 28%; }
+.quantum-table .col-26 { width: 30%; }
+.quantum-table .col-27 { width: 32%; }
+.quantum-table .col-28 { width: 34%; }
+.quantum-table .col-29 { width: 36%; }
+.quantum-table .col-30 { width: 38%; }
+.quantum-table .col-31 { width: 40%; }
+.quantum-table .col-32 { width: 42%; }
+.quantum-table .col-33 { width: 44%; }
+.quantum-table .col-34 { width: 46%; }
+.quantum-table .col-35 { width: 48%; }
+.quantum-table .col-36 { width: 50%; } /* Kolom Lebar Maksimum */
 </style>
 </head>
 <body>
@@ -3742,14 +3763,15 @@ select:focus {
             <table class="quantum-table">
                 <thead>
                     <tr>
-    <th class="col-7">IP:PORT</th>
-    <th class="col-6">STATUS IP</th>
-    <th class="col-6">COUNTRY</th>
-    <th class="col-7">ISP</th>
-    <th class="col-1">PATH</th>
-    <th class="col-6">VLESS</th>
-    <th class="col-6">TROJAN</th>
-    <th class="col-7">SHADOWSOCKS</th>
+    <th class="col-15">No.</th>
+    <th class="col-22">IP:PORT</th>
+    <th class="col-18">STATUS IP</th>
+    <th class="col-17">COUNTRY</th>
+    <th class="col-19">ISP</th>
+    <th class="col-17">PATH</th>
+    <th class="col-18">VLESS</th>
+    <th class="col-18">TROJAN</th>
+    <th class="col-22">SHADOWSOCKS</th>
     </tr>
                 </thead>
                 <tbody>
