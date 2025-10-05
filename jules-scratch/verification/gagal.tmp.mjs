@@ -1,4 +1,4 @@
-import { connect } from "cloudflare:sockets";
+// import { connect } from "cloudflare:sockets";
 
 const proxyListURL =
   "https://raw.githubusercontent.com/jaka2m/botak/refs/heads/main/cek/proxyList.txt";
@@ -223,7 +223,7 @@ export default {
       ctx.waitUntil(
         (async function periodicUpdate() {
           await updateProxies();
-          setInterval(updateProxies, 60000);
+          // setInterval(updateProxies, 60000);
         })(),
       );
 
@@ -530,7 +530,7 @@ function mamangenerateHTML() {
   <title>Proxy Checker</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <style>
-  
+
           :root {
         --primary: #00ff88;
         --secondary: #00ffff;
@@ -541,7 +541,7 @@ function mamangenerateHTML() {
         --card-bg: rgba(8, 12, 20, 0.95);
         --glow: 0 0 20px rgba(0, 255, 136, 0.3);
       }
-      
+
       @keyframes rainbow {
       0% { color: red; }
       14% { color: black; }
@@ -569,7 +569,7 @@ function mamangenerateHTML() {
       }
 
       body {
-      	
+
       font-family: monospace;
     background: black;
     color: #0f0;
@@ -589,13 +589,13 @@ function mamangenerateHTML() {
             text-align: center;
             font-size: 9vw;
             font-weight: bold;
-            text-shadow: 
+            text-shadow:
                 0 0 5px rgba(0, 123, 255, 0.8),
                 0 0 10px rgba(0, 123, 255, 0.8),
                 0 0 20px rgba(0, 123, 255, 0.8),
                 0 0 30px rgba(0, 123, 255, 0.8),
                 0 0 40px rgba(0, 123, 255, 0.8);
-    
+
          background: linear-gradient(45deg, var(--primary), var(--secondary), var(--dark));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -608,13 +608,13 @@ function mamangenerateHTML() {
         0%, 100% { transform: scale(1); filter: brightness(1); }
         50% { transform: scale(1.02); filter: brightness(1.2); }
       }
-    
+
     h2 {
       color: black;
             text-align: center;
             font-size: 4vw;
             font-weight: bold;
-            text-shadow: 
+            text-shadow:
                 0 0 5px rgba(0, 123, 255, 0.8),
                 0 0 10px rgba(0, 123, 255, 0.8),
                 0 0 20px rgba(0, 123, 255, 0.8),
@@ -644,7 +644,7 @@ function mamangenerateHTML() {
     footer {
       bottom: 0;
     }
-    
+
       .swal-popup-extra-small-text {
     font-size: 12px; /* Ukuran font untuk seluruh pop-up */
 }
@@ -682,10 +682,10 @@ function mamangenerateHTML() {
     margin-left: 10px;
     font-weight: bold; /* Menambahkan ketebalan pada teks */
 }
-    
+
 
         #loading { display: none; font-size: 18px; font-weight: bold; }
-    
+
     @keyframes moveColors {
   100% {
     background-position: -200%; /* Mulai dari luar kiri */
@@ -697,15 +697,15 @@ function mamangenerateHTML() {
 
   #loading {
   display: none; font-size: 20px; font-weight: bold;
-  
+
   background: linear-gradient(90deg, red, orange, yellow, green, blue, purple);
   background-size: 200%;
   color: transparent;
   -webkit-background-clip: text;
   animation: moveColors 5s linear infinite;
 }
-  
-  
+
+
     .container {
     width: 90%;
     max-width: 600px;
@@ -737,7 +737,7 @@ function mamangenerateHTML() {
 }
 
 ${getNavbarCSS()}
-        
+
         @keyframes blink {
     0% { opacity: 1; }
     100% { opacity: 0.3; }
@@ -753,7 +753,7 @@ ${getNavbarCSS()}
             font-size: 16px;
             text-align: center;
         }
-        
+
         #map {
   height: 350px;
   width: 100%;
@@ -763,7 +763,7 @@ ${getNavbarCSS()}
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-          
+
 
   /* Reset dasar */
   * {
@@ -818,7 +818,7 @@ ${getNavbarCSS()}
     cursor: not-allowed;
   }
 
-  
+
   /* Tabel */
   table {
     width: 100%;
@@ -843,8 +843,8 @@ ${getNavbarCSS()}
     background: rgba(255, 255, 255, 0.05);
   }
 
-  
-  
+
+
   /* Efek fade-in */
   .fade-in {
     opacity: 0;
@@ -861,7 +861,7 @@ ${getNavbarCSS()}
     text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00;
   }
 
-  
+
 </style>
 </head>
 <body>
@@ -1035,7 +1035,7 @@ function updateMap(lat, lon, data) {
         initMap(lat, lon, 7);
     } else {
         map.setView([lat, lon], 7);
-        
+
         // Hapus semua marker sebelum menambahkan yang baru
         map.eachLayer(function (layer) {
             if (layer instanceof L.Marker) map.removeLayer(layer);
@@ -1047,10 +1047,10 @@ function updateMap(lat, lon, data) {
 }
 
 function saveMapData(lat, lon, zoom, proxy = null, isp = null, asn = null) {
-    localStorage.setItem("mapData", JSON.stringify({ 
-        latitude: lat, 
-        longitude: lon, 
-        zoom: zoom 
+    localStorage.setItem("mapData", JSON.stringify({
+        latitude: lat,
+        longitude: lon,
+        zoom: zoom
     }));
 
     const markerData = { latitude: lat, longitude: lon };
@@ -1258,15 +1258,15 @@ async function handleSubRequest(hostnem) {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
       <title>Geo-VPN | VPN Tunnel | CloudFlare</title>
-      
+
       <!-- SEO Meta Tags -->
       <meta name="description" content="Akun Vless Gratis. Geo-VPN offers free Vless accounts with Cloudflare and Trojan support. Secure and fast VPN tunnel services.">
       <meta name="keywords" content="Geo-VPN, Free Vless, Vless CF, Trojan CF, Cloudflare, VPN Tunnel, Akun Vless Gratis">
       <meta name="author" content="Geo-VPN">
-      <meta name="robots" content="index, follow"> 
-      <meta name="robots" content="noarchive"> 
-      <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1"> 
-      
+      <meta name="robots" content="index, follow">
+      <meta name="robots" content="noarchive">
+      <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
       <!-- Social Media Meta Tags -->
       <meta property="og:title" content="Geo-VPN | Free Vless & Trojan Accounts">
       <meta property="og:description" content="Geo-VPN provides free Vless accounts and VPN tunnels via Cloudflare. Secure, fast, and easy setup.">
@@ -1275,41 +1275,41 @@ async function handleSubRequest(hostnem) {
       <meta property="og:type" content="website">
       <meta property="og:site_name" content="Geo-VPN">
       <meta property="og:locale" content="en_US">
-      
+
       <!-- Twitter Card Meta Tags -->
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="Geo-VPN | Free Vless & Trojan Accounts">
       <meta name="twitter:description" content="Get free Vless accounts and fast VPN services via Cloudflare with Geo-VPN. Privacy and security guaranteed.">
-      <meta name="twitter:image" content="https://geoproject.biz.id/circle-flags/bote.png"> 
+      <meta name="twitter:image" content="https://geoproject.biz.id/circle-flags/bote.png">
       <meta name="twitter:site" content="@sampiiiiu">
       <meta name="twitter:creator" content="@sampiiiiu">
       <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css">
       <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.1/css/all.css">
-      
+
       <!-- Telegram Meta Tags -->
-      <meta property="og:image:type" content="image/jpeg"> 
+      <meta property="og:image:type" content="image/jpeg">
       <meta property="og:image:secure_url" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:audio" content="URL-to-audio-if-any"> 
-      <meta property="og:video" content="URL-to-video-if-any"> 
-      
+      <meta property="og:audio" content="URL-to-audio-if-any">
+      <meta property="og:video" content="URL-to-video-if-any">
+
       <!-- Additional Meta Tags -->
-      <meta name="theme-color" content="#000000"> 
-      <meta name="format-detection" content="telephone=no"> 
+      <meta name="theme-color" content="#000000">
+      <meta name="format-detection" content="telephone=no">
       <meta name="generator" content="Geo-VPN">
       <meta name="google-site-verification" content="google-site-verification-code">
-      
+
      <!-- Open Graph Tags for Rich Links -->
       <meta property="og:image:width" content="1200">
       <meta property="og:image:height" content="630">
       <meta property="og:image:alt" content="Geo-VPN Image Preview">
-      
+
       <!-- Favicon and Icon links -->
       <link rel="icon" href="https://geoproject.biz.id/circle-flags/bote.png">
       <link rel="apple-touch-icon" href="https://geoproject.biz.id/circle-flags/bote.png">
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-      
+
     <style>
     :root {
         --color-primary: #00d4ff; /* Biru neon */
@@ -1504,9 +1504,9 @@ async function handleSubRequest(hostnem) {
         text-align: center;
         margin-top: 1rem;
     }
-    
+
     ${getNavbarCSS()}
-    
+
 </style>
 </head>
 <body>
@@ -1741,7 +1741,7 @@ ${getNavbarHTML()}
                         <option value="zm">ZAMBIA</option>
                         <option value="zw">ZIMBABWE</option>
 
-                        
+
                     </select>
                 </div>
 
@@ -1765,7 +1765,7 @@ ${getNavbarHTML()}
             </div>
         </div>
     </div>
-    
+
     <script>
     ${getNavbarScript()}
     </script>
@@ -1797,7 +1797,7 @@ ${getNavbarHTML()}
             appSelect.addEventListener('change', () => {
                 const selectedApp = appSelect.value;
                 const shadowsocksOption = configTypeSelect.querySelector('option[value="shadowsocks"]');
-                
+
                 if (selectedApp === 'surfboard') {
                     configTypeSelect.value = 'trojan';
                     configTypeSelect.querySelector('option[value="trojan"]').selected = true;
@@ -1810,7 +1810,7 @@ ${getNavbarHTML()}
             // Form submission handler
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
+
                 // Reset previous states
                 loadingEl.style.display = 'block';
                 resultEl.style.display = 'none';
@@ -1938,7 +1938,7 @@ async function handleWebRequest(request) {
       if (flag && flag !== "Unknown") {
         try {
           flagElement += `<a href="/web?page=${page}&search=${flag}" class="py-1">
-      <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}" 
+      <span class="flag-circle flag-icon flag-icon-${flag.toLowerCase()}"
       style="display: inline-block; width: 40px; height: 40px; margin: 2px; border: 2px solid #008080; border-radius: 50%;">
 </span>
 </a>`;
@@ -2039,26 +2039,26 @@ async function handleWebRequest(request) {
     <td class="ip-cell">${config.ip}:${config.port}</td>
     <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
     <td class="px-1 py-1 text-center">
-        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}"
               style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
         </span>
     </td>
     <td class="country-cell">${config.countryCode} | ${config.isp}</td>
     <td class="path-cell">${config.path}</td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105"
             onclick="showOptions('VLess', '${vlessTLSRibet}', '${vlessTLSSimple}')">
             VLESS
         </button>
     </td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105"
             onclick="showOptions('Trojan', '${trojanTLSRibet}', '${trojanTLSSimple}')">
             TROJAN
         </button>
     </td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105"
             onclick="showOptions('SS', '${ssTLSRibet}', '${ssTLSSimple}')">
             Shadowsocks
         </button>
@@ -2071,7 +2071,7 @@ async function handleWebRequest(request) {
             width: '270px',
             html: \`
                 <div class="px-1 py-1 text-center">
-                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}"
                 style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
                 </span>
                 </div>
@@ -2097,20 +2097,20 @@ async function handleWebRequest(request) {
                 popup: 'rounded-popup',
                 closeButton: 'close-btn'
             },
-            position: 'center', 
+            position: 'center',
             showClass: {
-                popup: 'animate__animated animate__fadeInLeft' 
+                popup: 'animate__animated animate__fadeInLeft'
             },
             hideClass: {
-                popup: 'animate__animated animate__fadeOutRight' 
+                popup: 'animate__animated animate__fadeOutRight'
             },
             didOpen: () => {
                 const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
+                popup.style.animationDuration = '0.3s';
             },
             didClose: () => {
                 const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
+                popup.style.animationDuration = '0.3s';
             }
         });
     }
@@ -2131,7 +2131,7 @@ async function handleWebRequest(request) {
             console.log("Raw delay:", data.delay);
             console.log("Parsed delay:", delay);
 
-            const divisor = 4; 
+            const divisor = 4;
 
             if (!isNaN(delay)) {
                 delay = Math.round(delay / divisor);
@@ -2139,7 +2139,7 @@ async function handleWebRequest(request) {
             }
 
             if (status === 'ACTIVE') {
-                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
+                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>';
                 statusElement.style.color = '#00FF00';
                 statusElement.style.fontSize = '13px';
                 statusElement.style.fontWeight = 'bold';
@@ -2157,7 +2157,7 @@ async function handleWebRequest(request) {
             });
         </script>
 
-            
+
 `;
       } else {
         return `
@@ -2165,26 +2165,26 @@ async function handleWebRequest(request) {
     <td class="ip-cell">${config.ip}:${config.port}</td>
     <td class="proxy-status" id="status-${ipPort}"><strong><i class="fas fa-spinner fa-spin loading-icon"></i></td>
     <td class="px-1 py-1 text-center">
-        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+        <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}"
               style="width: 40px; height: 40px; border-radius: 50%; display: inline-block;">
         </span>
     </td>
     <td class="country-cell">${config.countryCode} | ${config.isp}</td>
     <td class="path-cell">${config.path}</td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105"
             onclick="showOptions('VLess', '${vlessNTLSRibet}', '${vlessNTLSSimple}')">
             VLESS
         </button>
     </td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105"
             onclick="showOptions('Trojan', '${trojanNTLSRibet}', '${trojanNTLSSimple}')">
             TROJAN
         </button>
     </td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105"
             onclick="showOptions('SS', '${ssNTLSRibet}', '${ssNTLSSimple}')">
             Shadowsocks
         </button>
@@ -2197,7 +2197,7 @@ async function handleWebRequest(request) {
             width: '270px',
             html: \`
                 <div class="px-1 py-1 text-center">
-                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}" 
+                <span class="flag-circle flag-icon flag-icon-${config.countryCode.toLowerCase()}"
                 style="width: 60px; height: 60px; border-radius: 50%; display: inline-block;">
                 </span>
                 </div>
@@ -2223,20 +2223,20 @@ async function handleWebRequest(request) {
                 popup: 'rounded-popup',
                 closeButton: 'close-btn'
             },
-            position: 'center', 
+            position: 'center',
             showClass: {
-                popup: 'animate__animated animate__fadeInLeft' 
+                popup: 'animate__animated animate__fadeInLeft'
             },
             hideClass: {
-                popup: 'animate__animated animate__fadeOutRight' 
+                popup: 'animate__animated animate__fadeOutRight'
             },
             didOpen: () => {
                 const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
+                popup.style.animationDuration = '0.3s';
             },
             didClose: () => {
                 const popup = document.querySelector('.swal2-popup');
-                popup.style.animationDuration = '0.3s'; 
+                popup.style.animationDuration = '0.3s';
             }
         });
     }
@@ -2257,7 +2257,7 @@ async function handleWebRequest(request) {
             console.log("Raw delay:", data.delay);
             console.log("Parsed delay:", delay);
 
-            const divisor = 4; 
+            const divisor = 4;
 
             if (!isNaN(delay)) {
                 delay = Math.round(delay / divisor);
@@ -2265,7 +2265,7 @@ async function handleWebRequest(request) {
             }
 
             if (status === 'ACTIVE') {
-                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>'; 
+                statusElement.innerHTML = 'ACTIVE<br><span style="fas fa-bolt"></i>&nbsp;<span style="color: gold;">(' + delay + 'ms)</span>';
                 statusElement.style.color = '#00FF00';
                 statusElement.style.fontSize = '13px';
                 statusElement.style.fontWeight = 'bold';
@@ -2319,15 +2319,15 @@ async function handleWebRequest(request) {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
       <title>Geo-VPN | VPN Tunnel | CloudFlare</title>
-      
+
       <!-- SEO Meta Tags -->
       <meta name="description" content="Akun Vless Gratis. Geo-VPN offers free Vless accounts with Cloudflare and Trojan support. Secure and fast VPN tunnel services.">
       <meta name="keywords" content="Geo-VPN, Free Vless, Vless CF, Trojan CF, Cloudflare, VPN Tunnel, Akun Vless Gratis">
       <meta name="author" content="Geo-VPN">
-      <meta name="robots" content="index, follow"> 
-      <meta name="robots" content="noarchive"> 
-      <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1"> 
-      
+      <meta name="robots" content="index, follow">
+      <meta name="robots" content="noarchive">
+      <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
       <!-- Social Media Meta Tags -->
       <meta property="og:title" content="Geo-VPN | Free Vless & Trojan Accounts">
       <meta property="og:description" content="Geo-VPN provides free Vless accounts and VPN tunnels via Cloudflare. Secure, fast, and easy setup.">
@@ -2336,41 +2336,41 @@ async function handleWebRequest(request) {
       <meta property="og:type" content="website">
       <meta property="og:site_name" content="Geo-VPN">
       <meta property="og:locale" content="en_US">
-      
+
       <!-- Twitter Card Meta Tags -->
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="Geo-VPN | Free Vless & Trojan Accounts">
       <meta name="twitter:description" content="Get free Vless accounts and fast VPN services via Cloudflare with Geo-VPN. Privacy and security guaranteed.">
-      <meta name="twitter:image" content="https://geoproject.biz.id/circle-flags/bote.png"> 
+      <meta name="twitter:image" content="https://geoproject.biz.id/circle-flags/bote.png">
       <meta name="twitter:site" content="@sampiiiiu">
       <meta name="twitter:creator" content="@sampiiiiu">
       <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css">
       <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.1/css/all.css">
-      
+
       <!-- Telegram Meta Tags -->
-      <meta property="og:image:type" content="image/jpeg"> 
+      <meta property="og:image:type" content="image/jpeg">
       <meta property="og:image:secure_url" content="https://geoproject.biz.id/circle-flags/bote.png">
-      <meta property="og:audio" content="URL-to-audio-if-any"> 
-      <meta property="og:video" content="URL-to-video-if-any"> 
-      
+      <meta property="og:audio" content="URL-to-audio-if-any">
+      <meta property="og:video" content="URL-to-video-if-any">
+
       <!-- Additional Meta Tags -->
-      <meta name="theme-color" content="#000000"> 
-      <meta name="format-detection" content="telephone=no"> 
+      <meta name="theme-color" content="#000000">
+      <meta name="format-detection" content="telephone=no">
       <meta name="generator" content="Geo-VPN">
       <meta name="google-site-verification" content="google-site-verification-code">
-      
+
      <!-- Open Graph Tags for Rich Links -->
       <meta property="og:image:width" content="1200">
       <meta property="og:image:height" content="630">
       <meta property="og:image:alt" content="Geo-VPN Image Preview">
-      
+
       <!-- Favicon and Icon links -->
       <link rel="icon" href="https://geoproject.biz.id/circle-flags/bote.png">
       <link rel="apple-touch-icon" href="https://geoproject.biz.id/circle-flags/bote.png">
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-      
+
     <style>
 /* ================================================= */
 /* MODIFIKASI CYAN TRANSPARAN            */
@@ -3426,7 +3426,7 @@ ${getNavbarCSS()}
             text-align: center;
         }
 
-        
+
         /* --- Kontainer Utama Konten --- */
         .quantum-container {
             width: 95%;
@@ -3440,7 +3440,7 @@ ${getNavbarCSS()}
         .search-quantum > div {
             display: flex;
             width: 100%;
-            max-width: 500px; 
+            max-width: 500px;
             margin: 0 auto;
             gap: 10px;
         }
@@ -3484,7 +3484,7 @@ ${getNavbarCSS()}
         .wildcard-dropdown select option {
             background-color: var(--color-background);
         }
-        
+
         /* Tombol Tailwind - Penyesuaian Gaya Neon */
         .bg-gradient-to-r {
             background: linear-gradient(90deg, #39ff14, #008080);
@@ -3501,14 +3501,14 @@ ${getNavbarCSS()}
         /* --- Tabel Data --- */
 
         .table-wrapper {
-            overflow-x: auto; 
+            overflow-x: auto;
             margin-top: 1.5rem;
             /* Tambahkan efek card pada wrapper tabel */
             background: var(--color-card);
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1); 
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 212, 255, 0.2); 
+            border: 1px solid rgba(0, 212, 255, 0.2);
             padding: 10px;
         }
 
@@ -3516,8 +3516,8 @@ ${getNavbarCSS()}
             width: 100%;
             min-width: 900px; /* Lebar minimum untuk scroll horizontal */
             border-collapse: separate;
-            border-spacing: 0 10px; 
-            table-layout: fixed; 
+            border-spacing: 0 10px;
+            table-layout: fixed;
         }
 
         .quantum-table thead th {
@@ -3528,7 +3528,7 @@ ${getNavbarCSS()}
             font-weight: 700;
             font-size: 0.9rem;
             border: none;
-            position: sticky; 
+            position: sticky;
             top: 0;
             z-index: 10;
         }
@@ -3536,7 +3536,7 @@ ${getNavbarCSS()}
         .quantum-table tbody tr {
             background: rgba(0, 212, 255, 0.05); /* Latar baris transparan */
             transition: background 0.2s ease, box-shadow 0.2s ease;
-            border-radius: 8px; 
+            border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 212, 255, 0.08);
         }
 
@@ -3555,8 +3555,8 @@ ${getNavbarCSS()}
         }
         .quantum-table td:first-child { border-left: none; }
 
-        .flag-circle { 
-            border: 2px solid var(--color-primary) !important; 
+        .flag-circle {
+            border: 2px solid var(--color-primary) !important;
             box-shadow: 0 0 5px var(--color-primary);
         }
 
@@ -3564,7 +3564,7 @@ ${getNavbarCSS()}
             color: var(--color-primary);
             font-size: 1.2rem;
         }
-        
+
         /* Tombol Aksi di Tabel */
         .button-cell button {
             background: var(--color-tertiary); /* Hijau Neon */
@@ -3584,7 +3584,7 @@ ${getNavbarCSS()}
 
         /* --- Navigasi Bendera Horizontal --- */
         .flag-scroll-wrapper {
-            background: rgba(0, 212, 255, 0.1); 
+            background: rgba(0, 212, 255, 0.1);
             box-shadow: 0 0 10px 2px rgba(0, 212, 255, 0.3);
             border-radius: 10px;
             border: 2px solid #008080 !important;
@@ -3601,24 +3601,24 @@ ${getNavbarCSS()}
     <div class="quantum-container">
         <div class="search-quantum" style="display: flex; align-items: center; flex-direction: column;">
             <div style="display: flex; width: 90%; align-items: center; gap: 10px;">
-                <input type="text" id="search-bar" placeholder="Search by IP, CountryCode, or ISP" 
-                       value="${searchQuery}" 
+                <input type="text" id="search-bar" placeholder="Search by IP, CountryCode, or ISP"
+                       value="${searchQuery}"
                        style="flex: 1; height: 45px; padding-left: 10px;">
-                <button id="search-button" class="bg-gradient-to-r from-green-500 to-green-700 p-2 rounded-md shadow-lg flex items-center justify-center cursor-pointer h-[45px] w-[45px] hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 h-6 w-6 text-white"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /> </svg> 
+                <button id="search-button" class="bg-gradient-to-r from-green-500 to-green-700 p-2 rounded-md shadow-lg flex items-center justify-center cursor-pointer h-[45px] w-[45px] hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 h-6 w-6 text-white"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /> </svg>
 </button>
             </div>
             ${
               searchQuery
                 ? `
-                <button id="home-button" class="bg-gradient-to-r from-green-500 to-green-700 p-2 rounded-md shadow-lg flex items-center justify-center cursor-pointer h-[40px] w-[40px] transition duration-300 ease-in-out hover:from-green-700 hover:to-green-900" style="margin: 5px;" onclick="goToHomePage('${hostName}')"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 h-6 w-6 text-white"> <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.15-.439 1.59 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125h14.25c.621 0 1.125-.504 1.125-1.125V9.75M9 14.25h6" /> </svg> 
+                <button id="home-button" class="bg-gradient-to-r from-green-500 to-green-700 p-2 rounded-md shadow-lg flex items-center justify-center cursor-pointer h-[40px] w-[40px] transition duration-300 ease-in-out hover:from-green-700 hover:to-green-900" style="margin: 5px;" onclick="goToHomePage('${hostName}')"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 h-6 w-6 text-white"> <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.15-.439 1.59 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125h14.25c.621 0 1.125-.504 1.125-1.125V9.75M9 14.25h6" /> </svg>
 </button>
              `
                 : ""
             }
         </div>
 
-            <div class="wildcard-dropdown"> 
-        <button onclick="toggleWildcardsWindow()" class="bg-gradient-to-r from-green-500 to-green-700 text-white rounded-full p-2 transition-colors duration-200 hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" /> </svg> 
+            <div class="wildcard-dropdown">
+        <button onclick="toggleWildcardsWindow()" class="bg-gradient-to-r from-green-500 to-green-700 text-white rounded-full p-2 transition-colors duration-200 hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" /> </svg>
 </button>
   <select id="wildcard" name="wildcard" onchange="onWildcardChange(event)" style="width: 90px; height: 45px;">
     <option value="" ${!selectedWildcard ? "selected" : ""}>No Wildcard</option>
@@ -3627,10 +3627,10 @@ ${getNavbarCSS()}
   <select id="configType" name="configType" onchange="onConfigTypeChange(event)" style="width: 60px; height: 45px;">
     <option value="tls" ${selectedConfigType === "tls" ? "selected" : ""}>TLS</option>
     <option value="non-tls" ${selectedConfigType === "non-tls" ? "selected" : ""}>NON TLS</option> </select>
-    
-          <a href="${telegrambot}" target="_blank"> <button class="bg-gradient-to-r from-green-500 to-green-700 rounded-full p-2 block text-white border-2 border-green-900 transition duration-300 ease-in-out hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6"> <path d="M22 12A10 10 0 0 1 12 2A10 10 0 0 1 2 12A10 10 0 0 1 12 22A10 10 0 0 1 22 12z"></path> <path d="M7 10l5 5l5-5"></path> <path d="M12 15l-5 5"></path> <path d="M12 15l5 5"></path> </svg> </button> 
+
+          <a href="${telegrambot}" target="_blank"> <button class="bg-gradient-to-r from-green-500 to-green-700 rounded-full p-2 block text-white border-2 border-green-900 transition duration-300 ease-in-out hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6"> <path d="M22 12A10 10 0 0 1 12 2A10 10 0 0 1 2 12A10 10 0 0 1 12 22A10 10 0 0 1 22 12z"></path> <path d="M7 10l5 5l5-5"></path> <path d="M12 15l-5 5"></path> <path d="M12 15l5 5"></path> </svg> </button>
 </a>
-            
+
 </div>
 <div class="w-full h-12 overflow-x-auto px-2 py-1 flex items-center space-x-2 shadow-lg bg-transparent border"
             style="border-width: 2px; border-style: solid; border-color: #008080; height: 55px; border-radius: 10px;">
@@ -3684,7 +3684,7 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
                     <a href="https://t.me/sampiiiiu" target="_blank" rel="noopener noreferrer">
                         <img src="${telegramku}" alt="menu" width="30"> ADMIN TELEGRAM
                     </a>
-                </span> 
+                </span>
                 <span class="menu">
                     <a href="https://wa.me/6282339191527" target="_blank" rel="noopener noreferrer">
                         <img src="${whatsappku}" alt="menu" width="30"> ADMIN WHATSAPP
@@ -3752,7 +3752,7 @@ ${getNavbarHTML()}
           const homeURL = \`https://\${hostName}/web\`;
           window.location.href = homeURL;
         }
-        
+
         function onWildcardChange(event) {
           updateURL([{ key: 'wildcard', value: event.target.value }]);
         }
@@ -3838,17 +3838,17 @@ ${getNavbarHTML()}
     </script>
 
     <div id="wildcards-window" class="fixed hidden z-30 top-0 right-0 w-full h-full flex justify-center items-center">
-  <div class="w-[75%] max-w-md h-auto flex flex-col gap-2 p-4 rounded-lg 
-              bg-blue-500 bg-opacity-20 backdrop-blur-md 
-              border border-blue-300 text-white"> 
-      
+  <div class="w-[75%] max-w-md h-auto flex flex-col gap-2 p-4 rounded-lg
+              bg-blue-500 bg-opacity-20 backdrop-blur-md
+              border border-blue-300 text-white">
+
       <!-- Input add domain -->
       <div class="flex w-full h-full gap-2 justify-between">
-          <input id="new-domain-input" 
-                 type="text" 
-                 placeholder="Input wildcard" 
+          <input id="new-domain-input"
+                 type="text"
+                 placeholder="Input wildcard"
                  class="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-          <button id="add-domain-button" onclick="registerDomain()" 
+          <button id="add-domain-button" onclick="registerDomain()"
                   class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center text-white">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                   <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
@@ -3857,17 +3857,17 @@ ${getNavbarHTML()}
       </div>
 
       <!-- Container list domain -->
-      <div id="container-domains" 
+      <div id="container-domains"
            class="w-full h-32 rounded-md flex flex-col gap-1 overflow-y-scroll scrollbar-hide p-2 bg-gray-900 text-white">
       </div>
-  
+
       <!-- Input delete domain -->
       <div class="flex w-full h-full gap-2 justify-between">
-          <input id="delete-domain-input" 
-                 type="number" 
-                 placeholder="Input Nomor" 
+          <input id="delete-domain-input"
+                 type="number"
+                 placeholder="Input Nomor"
                  class="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-          <button id="delete-domain-button" onclick="deleteDomainByNumber()" 
+          <button id="delete-domain-button" onclick="deleteDomainByNumber()"
                   class="p-2 rounded-full bg-red-600 hover:bg-red-700 flex justify-center items-center text-white">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                   <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
@@ -3884,7 +3884,7 @@ ${getNavbarHTML()}
       </div>
 
       <!-- Close button -->
-      <button onclick="toggleWildcardsWindow()" 
+      <button onclick="toggleWildcardsWindow()"
               class="mt-1 p-3 rounded-lg bg-red-500 hover:bg-red-600 text-xs font-semibold transition-colors duration-300 flex items-center justify-center gap-1 px-6 py-2 text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
               <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/>
@@ -3898,7 +3898,7 @@ ${getNavbarHTML()}
         let domains = [];
         const wildcardsWindow = document.getElementById('wildcards-window');
         const domainsContainer = document.getElementById('container-domains');
-        
+
         async function loadDomains() {
             try {
                 const response = await fetch('/api/v1/domains');
@@ -3936,7 +3936,7 @@ ${getNavbarHTML()}
                 addDomainButton.disabled = true;
                 deleteDomainInput.disabled = true;
                 deleteDomainButton.disabled = true;
-                
+
                 progressFill.style.width = '0%';
                 // Use a timeout to ensure the transition is applied after the initial width is set
                 setTimeout(() => {
@@ -4797,7 +4797,7 @@ async function generateClashSub(
       custom: ${geo81}`;
     }
   }
-  return `#### BY : GEO PROJECT #### 
+  return `#### BY : GEO PROJECT ####
 
 port: 7890
 socks-port: 7891
@@ -5004,7 +5004,7 @@ async function generateSurfboardSub(
 ${ispName} = trojan, ${bug}, 443, password = ${UUIDS}, udp-relay = true, skip-cert-verify = true, sni = ${geo81}, ws = true, ws-path = ${pathinfo}${proxyHost}:${proxyPort}, ws-headers = Host:"${geo81}"\n`;
     }
   }
-  return `#### BY : GEO PROJECT #### 
+  return `#### BY : GEO PROJECT ####
 
 [General]
 dns-server = system, 108.137.44.39, 108.137.44.9, puredns.org:853
@@ -5484,7 +5484,7 @@ async function generateHusiSub(
     },`;
     }
   }
-  return `#### BY : GEO PROJECT #### 
+  return `#### BY : GEO PROJECT ####
 
 {
   "dns": {
@@ -5802,7 +5802,7 @@ async function generateSingboxSub(
     },`;
     }
   }
-  return `#### BY : GEO PROJECT #### 
+  return `#### BY : GEO PROJECT ####
 
 {
   "log": {
@@ -6094,7 +6094,7 @@ async function generateNekoboxSub(
     },`;
     }
   }
-  return `#### BY : GEO PROJECT #### 
+  return `#### BY : GEO PROJECT ####
 
 {
   "dns": {
