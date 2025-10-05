@@ -2199,19 +2199,19 @@ function buildCountryFlag() {
     <td class="country-cell">${config.countryCode} | ${config.isp}</td>
     <td class="path-cell">${config.path}</td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
             onclick="showOptions('VLess', '${vlessNTLSRibet}', '${vlessNTLSSimple}')">
             VLESS
         </button>
     </td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
             onclick="showOptions('Trojan', '${trojanNTLSRibet}', '${trojanNTLSSimple}')">
             TROJAN
         </button>
     </td>
     <td class="button-cell">
-        <button class="px-3 py-1 bg-gradient-to-r from-[#39ff14] to-[#008080] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
+        <button class="px-3 py-1 bg-gradient-to-r from-[#00FFFF] to-[#00A3A3] text-black font-semibold border-0 rounded-md transform transition hover:scale-105" 
             onclick="showOptions('SS', '${ssNTLSRibet}', '${ssNTLSSimple}')">
             Shadowsocks
         </button>
@@ -2392,34 +2392,48 @@ function buildCountryFlag() {
     <script src="https://cdn.tailwindcss.com"></script>
       
     <style>
-      :root {
-        --primary: #00ff88;
-        --secondary: #00ffff;
-        --accent: #ff00ff;
-        --dark: #080c14;
-        --darker: #040608;
-        --light: #e0ffff;
-        --card-bg: rgba(8, 12, 20, 0.95);
-        --glow: 0 0 20px rgba(0, 255, 136, 0.3);
-      }
-      
-      @keyframes rainbow {
-      0% { color: red; }
-      14% { color: black; }
-      28% { color: black; }
-      42% { color: green; }
-      57% { color: blue; }
-      71% { color: indigo; }
-      85% { color: violet; }
-      100% { color: red; }
+/* ================================================= */
+/* MODIFIKASI CYAN TRANSPARAN            */
+/* ================================================= */
+:root {
+    --primary: #00FFFF; /* CYAN terang untuk aksi utama */
+    --secondary: #00C0C0; /* CYAN lebih gelap */
+    --accent: #ff00ff;
+    --dark: #080c14;
+    --darker: #040608;
+    --light: #e0ffff;
+    --card-bg: rgba(8, 12, 20, 0.95);
+    --glow: 0 0 20px rgba(0, 255, 255, 0.5); /* Glow berbasis CYAN */
+    --color-primary: #00d4ff; /* Biru neon */
+            --color-secondary: #00bfff; /* Biru lebih terang */
+            --color-tertiary: #39ff14; /* Hijau neon untuk tombol */
+            --color-background: #020d1a; /* Latar belakang lebih gelap */
+            --color-card: rgba(0, 212, 255, 0.1); /* Kartu dengan sedikit transparansi */
+            --color-text: #e0f4f4; /* Teks cerah */
+            --color-table-header: rgba(0, 212, 255, 0.2); /* Header tabel */
+            --transition: all 0.3s ease;
+        }
+}
+
+/* --- ANIMASI DAN TOMBOL (TIDAK BERUBAH TOTAL, HANYA WARNA GLOW) --- */
+
+@keyframes rainbow {
+    0% { color: red; }
+    14% { color: black; }
+    28% { color: black; }
+    42% { color: green; }
+    57% { color: blue; }
+    71% { color: indigo; }
+    85% { color: violet; }
+    100% { color: red; }
+}
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
     }
-    @keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .close-btn {
@@ -2437,1038 +2451,1240 @@ function buildCountryFlag() {
     background-color: #c82333;
 }
 
-
+/* LOADING ICON - TETAP UTUH */
 .loading-icon {
-  font-size: 40px;
-  animation: rotate 1s linear infinite;
-  color: #f00; /* default color */
+    font-size: 40px;
+    animation: rotate 1s linear infinite;
+    color: #f00; /* default color */
 }
 
 .loading-icon:before {
-  content: '110'; /* spinner icon */
-  font-family: 'FontAwesome';
-  color: red;
-  animation: spinColors 1.2s linear infinite;
+    content: '110'; /* spinner icon */
+    font-family: 'FontAwesome';
+    color: red;
+    animation: spinColors 1.2s linear infinite;
 }
 
 @keyframes spinColors {
-  0% { color: red; }
-  25% { color: yellow; }
-  50% { color: green; }
-  75% { color: blue; }
-  100% { color: purple; }
+    0% { color: red; }
+    25% { color: yellow; }
+    50% { color: green; }
+    75% { color: blue; }
+    100% { color: purple; }
 }
-      .spinner {
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 1s linear infinite;
-}
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Space Grotesk', sans-serif;
-      }
-
-      body {
-  background: url('https://picsum.photos/1024/1024?') no-repeat center center fixed;
-        background-size: cover;
-        justify-content: center;
-        align-items: center;
-  background-size: 300% 300%; /* Untuk animasi gradient */
-  color: #fff; /* Teks putih agar kontras */
-  margin: 0;
-  font-family: Arial, sans-serif; /* Font sederhana dan bersih */
-  animation: rainbowBackground 10s infinite; /* Animasi bergerak */
+.spinner {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
 }
 
-/* Animasi untuk background */
+/* --- TATA LETAK DAN RESPONSIVITAS --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+body {
+    background: url('https://raw.githubusercontent.com/bitzblack/ip/refs/heads/main/shubham-dhage-5LQ_h5cXB6U-unsplash.jpg') no-repeat center center fixed;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    background-size: 300% 300%;
+    color: #fff;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    animation: rainbowBackground 10s infinite;
+}
+
 @keyframes rainbowBackground {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 @keyframes moveColors {
-  100% {
-    background-position: -200%; /* Mulai dari luar kiri */
-  }
-  0% {
-    background-position: 200%; /* Bergerak ke kanan */
-  }
+    100% {
+        background-position: -200%;
+    }
+    0% {
+        background-position: 200%;
+    }
 }
 
 .warna-text {
-  font-size: 20px;
-  font-weight: bold;
-  display: inline-block;
-  background: linear-gradient(90deg, red, orange, yellow, green, blue, purple);
-  background-size: 200%;
-  color: transparent;
-  -webkit-background-clip: text;
-  animation: moveColors 5s linear infinite;
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-block;
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, purple);
+    background-size: 200%;
+    color: transparent;
+    -webkit-background-clip: text;
+    animation: moveColors 5s linear infinite;
 }
 
+h1 {
+    font-family: 'Rajdhani', sans-serif;
+    padding-top: 10px;
+    margin-top: 10px;
+    color: black;
+    text-align: center;
+    font-size: 9vw;
+    font-weight: bold;
+    /* Glow Biru ke CYAN */
+    text-shadow:
+        0 0 5px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 255, 255, 0.8),
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.8);
 
-     h1 {
-      font-family: 'Rajdhani', sans-serif;
-      padding-top: 10px; /* To avoid content being hidden under the header */
-      margin-top: 10px;
-      color: black;
-            text-align: center;
-            font-size: 9vw;
-            font-weight: bold;
-            text-shadow: 
-                0 0 5px rgba(0, 123, 255, 0.8),
-                0 0 10px rgba(0, 123, 255, 0.8),
-                0 0 20px rgba(0, 123, 255, 0.8),
-                0 0 30px rgba(0, 123, 255, 0.8),
-                0 0 40px rgba(0, 123, 255, 0.8);
-    
-         background: linear-gradient(45deg, var(--primary), var(--secondary), var(--dark));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 30px #000;
-        position: relative;
-        animation: titlePulse 3s ease-in-out infinite;
-    }
+    background: linear-gradient(45deg, var(--primary), var(--secondary), var(--dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px #000;
+    position: relative;
+    animation: titlePulse 3s ease-in-out infinite;
+}
 
-      @keyframes titlePulse {
-        0%, 100% { transform: scale(1); filter: brightness(1); }
-        50% { transform: scale(1.02); filter: brightness(1.2); }
-      }
-    
-    h2 {
-      color: black;
-            text-align: center;
-            font-size: 4vw;
-            font-weight: bold;
-            text-shadow: 
-                0 0 5px rgba(0, 123, 255, 0.8),
-                0 0 10px rgba(0, 123, 255, 0.8),
-                0 0 20px rgba(0, 123, 255, 0.8),
-                0 0 30px rgba(0, 123, 255, 0.8),
-                0 0 40px rgba(0, 123, 255, 0.8);
-    }
-    header, footer {
-      box-sizing: border-box; /* Pastikan padding dihitung dalam lebar elemen */
-      background-color: ;
-      color: white;
-      text-align: center;
-      border: 0px solid rgba(143, 0, 0, 0.89); /* Border dengan warna abu-abu */
-      border-radius: 10px;
-      padding: 0 20px;
-      position: fixed;
-      width: 100%;
-      left: 0;
-      right: 2px;
-      pointer-events: none;
-      z-index: 10;
-    }
+@keyframes titlePulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.02); filter: brightness(1.2); }
+}
 
-    header {
-      top: 0;
-    }
+h2 {
+    color: black;
+    text-align: center;
+    font-size: 4vw;
+    font-weight: bold;
+    /* Glow Biru ke CYAN */
+    text-shadow:
+        0 0 5px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 255, 255, 0.8),
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.8);
+}
 
-    footer {
-      bottom: 0;
-    }
-    
-      .wildcard-dropdown {
-  display: flex;
-  margin-bottom: 5px;
-  margin: 3px;
-  justify-content: center; /* Posisi elemen di tengah */
-  align-items: center; /* Posisi vertikal di tengah */
-  gap: 0.5rem; /* Jarak antar elemen */
-  margin: 0.8rem auto; /* Jarak vertikal */
-  width: 100%; /* Ambil seluruh lebar */
-  max-width: 100%; /* Hindari pembatasan */
-  padding: 0.8rem; /* Tambahkan padding */
-  box-sizing: border-box; /* Padding termasuk dalam ukuran elemen */
+header, footer {
+    box-sizing: border-box;
+    background-color: ;
+    color: white;
+    text-align: center;
+    border: 0px solid rgba(143, 0, 0, 0.89);
+    border-radius: 10px;
+    padding: 0 20px;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 2px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+header {
+    top: 0;
+}
+
+footer {
+    bottom: 0;
+}
+
+.wildcard-dropdown {
+    display: flex;
+    margin-bottom: 5px;
+    margin: 3px;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.8rem auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.8rem;
+    box-sizing: border-box;
 }
 
 .wildcard-dropdown select {
-  margin-bottom: 5px;
-  margin: 3px;
-  flex: 1; /* Setiap dropdown mengambil ruang secara proporsional */
-  max-width: 50%; /* Batasi lebar dropdown agar tidak terlalu besar */
-  min-width: 100px; /* Tambahkan batas minimum untuk dropdown */
+    margin-bottom: 5px;
+    margin: 3px;
+    flex: 1;
+    max-width: 50%;
+    min-width: 100px;
 }
 
 @media (min-width: 768px) {
-  .wildcard-dropdown select {
-    max-width: 300px; /* Pada layar besar, tetapkan batas lebar dropdown */
-  }
+    .wildcard-dropdown select {
+        max-width: 300px;
+    }
 }
 
-      select {
-        width: 100%;
-        max-width: 200px; /* Lebar box lebih kecil */
-        padding: 0.4rem 0.6rem; /* Sesuaikan padding */
-        font-size: 0.8rem; /* Ukuran teks lebih kecil */
-        color: var(--light);
-        background: rgba(0, 255, 136, 0.05);
-        border: 2px solid rgba(0, 255, 136, 0.3);
-        border-radius: 10px;
-        box-shadow: var(--glow);
-        outline: none;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        appearance: none; /* Hilangkan panah default */
-        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23e0ffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M6 9l6 6 6-6"%3E%3C/path%3E%3C/svg%3E');
-        background-position: right 10px center;
-        background-repeat: no-repeat;
-        background-size: 1rem;
-        transition: all 0.3s ease;
-      }
-
-      select:hover {
-        border-color: var(--primary);
-        box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
-      }
-
-      select:focus {
-        border-color: var(--secondary);
-        background: rgba(0, 255, 136, 0.1);
-        box-shadow: 0 0 20px var(--secondary);
-      }
-
-      .button-style {
-    padding: 0.6rem 1rem; /* Ukuran padding */
-    font-family: 'Rajdhani', sans-serif; /* Font */
-    font-weight: 600; /* Ketebalan font */
-    font-size: 0.6rem; /* Ukuran font */
-    color: var(--dark); /* Warna teks */
-    background: var(--primary); /* Warna background */
-    border: none; /* Hilangkan border */
-    border-radius: 5px; /* Kurangi radius untuk sudut lebih tajam */
-    cursor: pointer; /* Ubah kursor saat hover */
-    transition: all 0.3s ease; /* Efek transisi */
-    text-transform: uppercase; /* Teks kapitalisasi */
-    letter-spacing: 1px; /* Jarak antar huruf */
-    position: relative; /* Relatif untuk animasi */
-    overflow: hidden; /* Sembunyikan elemen overflow */
-    display: flex; /* Flexbox */
-    align-items: center; /* Ratakan secara vertikal */
-    justify-content: center; /* Ratakan secara horizontal */
-    gap: 0.5rem; /* Jarak antar elemen */
+select {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    color: var(--light);
+    /* Latar belakang transparan CYAN */
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: var(--glow);
+    outline: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    appearance: none;
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23e0ffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M6 9l6 6 6-6"%3E%3C/path%3E%3C/svg%3E');
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    transition: all 0.3s ease;
 }
 
-      .button-style::before {
-        content: ''; /* Pseudo-element */
-        position: absolute; /* Posisi absolut */
-        top: 0;
-        left: -100%; /* Mulai dari luar */
-        width: 100%; /* Lebar penuh */
-        height: 100%; /* Tinggi penuh */
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.2),
-          transparent
-        ); /* Efek gradient */
-        transition: 0.5s; /* Durasi transisi */
-      }
+select:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
 
-      .button-style:hover::before {
-        left: 100%; /* Gerakkan gradient ke kanan */
-       }
+select:focus {
+    border-color: var(--secondary);
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 20px var(--secondary);
+}
 
-      .button-style:hover {
-        transform: translateY(-2px); /* Efek hover */
-        box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3); /* Bayangan */
-      }
+.button-style {
+    padding: 0.6rem 1rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.6rem;
+    color: var(--dark);
+    /* Background CYAN */
+    background: var(--primary);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
 
-      .button-style:active {
-        transform: translateY(1px); /* Efek klik */
-        box-shadow: 0 3px 10px rgba(0, 255, 136, 0.2); /* Reduksi bayangan */
-      }
+.button-style::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.button-style:hover::before {
+    left: 100%;
+}
+
+.button-style:hover {
+    transform: translateY(-2px);
+    /* Bayangan CYAN */
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+}
+
+.button-style:active {
+    transform: translateY(1px);
+    /* Reduksi bayangan CYAN */
+    box-shadow: 0 3px 10px rgba(0, 255, 255, 0.2);
+}
 
 
-     .menu {
-  display: flex; /* Mengubah elemen menjadi flexbox */
-  align-items: center; /* Memposisikan gambar dan teks di tengah secara vertikal */
-  margin-left: 5px; /* Memberikan jarak 5px dari tepi kiri */
-  margin-bottom: 5px; /* Jarak antar elemen */
-  padding: 5px; /* Memberikan ruang dalam */
-  border-radius: 5px; /* Lengkungan sudut untuk setiap elemen */
+.menu {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 5px;
 }
 
 .menu a {
-  font-family: 'Rajdhani', sans-serif;
-  text-decoration: none; /* Menghapus garis bawah pada teks */
-  display: flex;
-  align-items: center; /* Memastikan gambar dan teks sejajar secara vertikal */
+    font-family: 'Rajdhani', sans-serif;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
 .menu img {
-  margin-right: 5px; /* Jarak antara gambar dan teks */
+    margin-right: 5px;
 }
+
 .menu:nth-child(odd) {
-  color: #fff; /* Warna teks untuk baris ganjil */
-  background-color: rgba(239, 80, 0, 0.87); /* Warna latar belakang untuk baris ganjil */
+    color: #fff;
+    background-color: rgba(239, 80, 0, 0.87);
 }
 
 .menu:nth-child(even) {
-  color: #fff; /* Warna teks untuk baris genap */
-  background-color: rgba(3, 117, 1, 0.87); /* Warna latar belakang untuk baris genap */
+    color: #fff;
+    background-color: rgba(3, 117, 1, 0.87);
 }
 
-      
-      .quantum-container {
-  background-color: rgba(0, 0, 0, 0.82);
-  flex: 1;
-  padding: 20px;
-  margin-top: 95px;
-  margin-bottom: 50px;
-  padding-left: 10px;
-  padding-right: 10px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #fff;
-  border-radius: 10px;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 150, 255, 0.5);
 
-  /* Default untuk HP (sebelum media query spesifik HP) */
-  width: 90%; /* Bisa tetap 90% atau Anda ubah di sini */
-  max-width: 960px;
-  margin-left: auto;
-  margin-right: auto;
+.quantum-container {
+    background-color: rgba(0, 0, 0, 0.82);
+    flex: 1;
+    padding: 20px;
+    margin-top: 95px;
+    margin-bottom: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    /* Glow Biru ke CYAN */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 255, 255, 0.5);
+
+    width: 90%;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Responsif untuk layar HP yang lebih kecil */
-@media (max-width: 767px) { /* Contoh untuk layar HP umumnya */
-  .quantum-container {
-    width: 98%; /* Lebih lebar untuk HP */
-    padding-left: 15px; /* Sesuaikan padding agar tidak terlalu mepet */
-    padding-right: 15px;
-  }
+@media (max-width: 767px) {
+    .quantum-container {
+        width: 98%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
-/* Responsif untuk layar besar (laptop/desktop) */
 @media (min-width: 1024px) {
-  .quantum-container {
-    width: 98%;
-    max-width: 1800px;
-    padding: 40px;
-  }
+    .quantum-container {
+        width: 98%;
+        max-width: 1800px;
+        padding: 40px;
+    }
 }
-      
-      .quantum-card {
-  width: 100%;
-    overflow-x: auto; /* Mengaktifkan scroll horizontal */
+
+.quantum-card {
+    width: 100%;
+    overflow-x: auto;
     margin-bottom: 0px;
-    border: 1px solid #000; /* Border dengan warna abu-abu */
-    border-radius: 10px; /* Membuat sudut melengkung */
-    padding: 0px; /* Memberi jarak antara border dan konten */
-    background-color: rgba(0, 0, 0, 0.82); /* Warna latar belakang */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), /* Glow putih */
-              0 0 30px rgba(0, 150, 255, 0.5);   /* Glow biru */
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 0px;
+    background-color: rgba(0, 0, 0, 0.82);
+    /* Glow Biru ke CYAN */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6),
+        0 0 30px rgba(0, 255, 255, 0.5);
 
 }
 
 @media (min-width: 768px) {
-  .quantum-card {
-    margin: 0 2rem; /* Tambahkan lebih banyak ruang pada layar besar */
-  }
+    .quantum-card {
+        margin: 0 2rem;
+    }
 }
 
-      @keyframes cardFloat {
-        0%, 100% { transform: translateY(0) rotateX(0); }
-        50% { transform: translateY(-10px) rotateX(2deg); }
-      }
+@keyframes cardFloat {
+    0%, 100% { transform: translateY(0) rotateX(0); }
+    50% { transform: translateY(-10px) rotateX(2deg); }
+}
 
 
-      .quantum-title { 
-      font-family: 'Rajdhani', sans-serif;
-      padding-top: 10px; /* To avoid content being hidden under the header */
-      margin-top: 10px;
-      color: black;
-            text-align: center;
-            font-size: 10vw;
-            font-weight: bold;
-            text-shadow: 
-                0 0 5px rgba(0, 123, 255, 0.8),
-                0 0 10px rgba(0, 123, 255, 0.8),
-                0 0 20px rgba(0, 123, 255, 0.8),
-                0 0 30px rgba(0, 123, 255, 0.8),
-                0 0 40px rgba(0, 123, 255, 0.8);
-    
-         background: linear-gradient(45deg, var(--accent), var(--secondary), var(--dark));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 30px #000;
-        position: relative;
-        animation: titlePulse 3s ease-in-out infinite;
-    }
+.quantum-title {
+    font-family: 'Rajdhani', sans-serif;
+    padding-top: 10px;
+    margin-top: 10px;
+    color: black;
+    text-align: center;
+    font-size: 10vw;
+    font-weight: bold;
+    /* Glow Biru ke CYAN */
+    text-shadow:
+        0 0 5px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 255, 255, 0.8),
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.8);
 
-      @keyframes titlePulse {
-        0%, 100% { transform: scale(1); filter: brightness(1); }
-        50% { transform: scale(1.02); filter: brightness(1.2); }
-     }
+    background: linear-gradient(45deg, var(--accent), var(--secondary), var(--dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px #000;
+    position: relative;
+    animation: titlePulse 3s ease-in-out infinite;
+}
 
-      .quantum-title1 {
-        color: black;
-            text-align: center;
-            font-size: 4vw;
-            font-weight: bold;
-            text-shadow: 
-                0 0 5px rgba(0, 123, 255, 0.8),
-                0 0 10px rgba(0, 123, 255, 0.8),
-                0 0 20px rgba(0, 123, 255, 0.8),
-                0 0 30px rgba(0, 123, 255, 0.8),
-                0 0 40px rgba(0, 123, 255, 0.8);
-      }
+.quantum-title1 {
+    color: black;
+    text-align: center;
+    font-size: 4vw;
+    font-weight: bold;
+    /* Glow Biru ke CYAN */
+    text-shadow:
+        0 0 5px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 255, 255, 0.8),
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.8);
+}
 
-      .search-quantum {
-        position: relative;
-        margin-top: 0.1rem;
-        margin-bottom: 0.3rem;
-      }
+.search-quantum {
+    position: relative;
+    margin-top: 0.1rem;
+    margin-bottom: 0.3rem;
+}
 
-      #search-bar {
+#search-bar {
     padding: 2px;
-      width: 100%;
-      max-width: 100%;
-      margin-bottom: 5px;
-      margin-top: 7px;
-      margin: 5px;
-      padding-top: 7px;
-      font-size: 3vw; /* Ukuran font diperbesar */
-    color: var(--light); /* Warna teks */
-    background: rgba(0, 255, 136, 0.05); /* Latar belakang */
-    border: 2px solid rgba(0, 255, 136, 0.3); /* Warna border */
-    border-radius: 5px; /* Sudut tidak terlalu bulat */
-    transition: all 0.3s ease; /* Efek transisi */
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 5px;
+    margin-top: 7px;
+    margin: 5px;
+    padding-top: 7px;
+    font-size: 3vw;
+    color: var(--light);
+    /* Latar belakang transparan CYAN */
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 5px;
+    transition: all 0.3s ease;
 }
 
-      #search-bar:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-        background: rgba(0, 255, 136, 0.1);
-      }
+#search-bar:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    background: rgba(0, 255, 255, 0.1);
+}
 
-      .quantum-table {
-      border-collapse: separate;
-      border-spacing: 0;
-      border: 0px solid rgba(26, 4, 83, 0.81); /* Warna border hijau */
-      border-radius: 10px; /* Sudut melengkung */
-      overflow: hidden;
-      width: 100%; /* Membuat tabel lebar penuh */
+.quantum-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 0px solid rgba(26, 4, 83, 0.81);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.quantum-table th {
+    /* Background transparan CYAN */
+    background-color: rgba(0, 255, 255, 0.1);
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+}
+
+#total-proxy {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.quantum-table td {
+    padding: 10px;
+    text-align: center;
+    /* Background transparan CYAN */
+    background-color: rgba(0, 255, 255, 0.03);
+    color: #fff;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.quantum-table tr {
+    transition: all 0.3s ease;
+}
+
+.quantum-table tr:hover td {
+    /* Background transparan CYAN saat hover */
+    background-color: rgba(0, 255, 255, 0.08);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1);
+}
+
+.copy-btn {
+    padding: 0.8rem 1.5rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--dark);
+    /* Background CYAN */
+    background: var(--primary);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.copy-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.copy-btn:hover::before {
+    left: 100%;
+}
+
+.copy-btn:hover {
+    transform: translateY(-2px);
+    /* Bayangan CYAN */
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+.quantum-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.quantum-pagination a {
+    padding: 0.8rem 1.5rem;
+    /* Background transparan CYAN */
+    background: rgba(0, 255, 255, 0.1);
+    color: var(--primary);
+    text-decoration: none;
+    border-radius: 12px;
+    /* Border transparan CYAN */
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    min-width: 45px;
+    text-align: center;
+}
+
+.quantum-pagination a:hover,
+.quantum-pagination a.active {
+    background: var(--primary);
+    color: var(--dark);
+    transform: translateY(-2px);
+    /* Bayangan CYAN */
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+}
+
+.quantum-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 2rem;
+    background: var(--primary);
+    color: var(--dark);
+    border-radius: 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    /* Bayangan CYAN */
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+    transform: translateY(100%);
+    opacity: 0;
+    animation: toastSlide 0.3s forwards;
+    z-index: 1000;
+}
+
+@keyframes toastSlide {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .quantum-containera {
+        padding: 0.5rem;
+        margin: 0.5rem;
     }
 
-      .quantum-table th {
-        background-color: rgba(0, 255, 136, 0.1); /* Warna hijau */
-      color: white; /* Warna teks putih */
-      font-weight: bold;
-      padding: 10px;
-      text-align: center;
-    }
-    #total-proxy {
-      margin: 20px 0; /* 20px atas dan bawah, 0px kiri dan kanan */
-      text-align: center;
+    .quantum-card {
+        padding: 1rem;
+        margin: 0;
+        width: 100%;
+        border-radius: 10px;
+        max-width: 100%;
     }
 
-      .quantum-table td {
-        padding: 10px;
-      text-align: center;
-      background-color: rgba(0, 255, 136, 0.03); /* Warna hijau transparan */
-      color: #fff; /* Warna teks */
-      border-bottom: 1px solid #ddd; /* Garis pembatas antar baris */
-      transition: background-color 0.3s ease; /* Efek transisi */
+    .quantum-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
     }
 
-      .quantum-table tr {
-        transition: all 0.3s ease;
-      }
-
-      .quantum-table tr:hover td {
-        background-color: rgba(0, 255, 136, 0.08); /* Warna latar biru muda saat baris dihover */
-      color: #fff; /* Warna teks saat dihover */
-      box-shadow: 0 5px 15px rgba(0, 255, 136, 0.1);
+    #search-bar {
+        margin-bottom: 5px;
+        margin: 0.5px;
+        margin-top: 7px;
+        padding: 10px; 1px;
+        padding-top: 7px;
+        font-size: 10px;
     }
 
-      .copy-btn {
-        padding: 0.8rem 1.5rem;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 600;
+    .table-wrapper {
+        margin: 0.5rem 0;
+        padding: 0;
+        border-radius: 10px;
+        max-height: 60vh;
+        overflow-y: auto;
+        /* Background transparan CYAN */
+        background: rgba(0, 255, 255, 0.02);
+    }
+
+    .quantum-table th,
+    .quantum-table td {
+        padding: 0.8rem 0.5rem;
         font-size: 0.9rem;
-        color: var(--dark);
-        background: var(--primary);
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    }
+
+    .copy-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .quantum-pagination {
         gap: 0.5rem;
-      }
-
-      .copy-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: 0.5s;
-      }
-
-      .copy-btn:hover::before {
-        left: 100%;
-      }
-
-      .copy-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
-      }
-
-      .btn-icon {
-        font-size: 1.2rem;
-      }
-
-      .quantum-pagination {
-        display: flex;
-        justify-content: center;
-        gap: 0.8rem;
-        margin-top: 2rem;
         flex-wrap: wrap;
-      }
+    }
 
-      .quantum-pagination a {
-        padding: 0.8rem 1.5rem;
-        background: rgba(0, 255, 136, 0.1);
-        color: var(--primary);
-        text-decoration: none;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 255, 136, 0.3);
-        transition: all 0.3s ease;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 600;
-        min-width: 45px;
+    .quantum-pagination a {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.7rem;
+        min-width: 30px;
+    }
+
+    .quantum-toast {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
         text-align: center;
-      }
+    }
+}
 
-      .quantum-pagination a:hover,
-      .quantum-pagination a.active {
-        background: var(--primary);
-        color: var(--dark);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
-      }
+@media (max-width: 480px) {
+    .quantum-card {
+        padding: 0.5rem;
+        max-width: 100%;
+    }
 
-      .quantum-toast {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        padding: 1rem 2rem;
-        background: var(--primary);
-        color: var(--dark);
-        border-radius: 12px;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 600;
-        box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
-        transform: translateY(100%);
-        opacity: 0;
-        animation: toastSlide 0.3s forwards;
-        z-index: 1000;
-      }
+    .quantum-title {
+        font-size: 1.5rem;
+    }
 
-      @keyframes toastSlide {
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
+    .table-wrapper {
+        margin: 0.5rem -0.5rem;
+        padding: 0 0.5rem;
+    }
 
-      /* Mobile Responsiveness */
-      @media (max-width: 768px) {
-        .quantum-containera {
-          padding: 0.5rem;
-          margin: 0.5rem;
-        }
-        
-        .quantum-card {
-          padding: 1rem;
-          margin: 0;
-          width: 100%;
-          border-radius: 10px;
-          max-width: 100%;
-        }
-    
-        .quantum-title {
-          font-size: 2rem;
-          margin-bottom: 1rem;
-        }
-    
-        #search-bar {
-          margin-bottom: 5px;
-          margin: 0.5px;
-           margin-top: 7px;
-          padding: 10px; 1px;
-          padding-top: 7px;
-          font-size: 10px;
-        }
-    
-        .table-wrapper {
-          margin: 0.5rem 0;
-          padding: 0;
-          border-radius: 10px;
-          max-height: 60vh; /* Restrict the height of the table */
-          overflow-y: auto; /* Allow scrolling within the table */
-          background: rgba(0, 255, 136, 0.02);
-        }
-    
-        .quantum-table th,
-        .quantum-table td {
-          padding: 0.8rem 0.5rem;
-          font-size: 0.9rem;
-        }
-    
-        .copy-btn {
-          padding: 0.6rem 1rem;
-          font-size: 0.8rem;
-        }
-     
-        .quantum-pagination {
-          gap: 0.5rem;
-          flex-wrap: wrap;
-        }
-    
-        .quantum-pagination a {
-          padding: 0.5rem 0.7rem;
-          font-size: 0.7rem;
-          min-width: 30px;
-        }
-    
-        .quantum-toast {
-          left: 1rem;
-          right: 1rem;
-          bottom: 1rem;
-          text-align: center;
-        }
-      }
+    .quantum-table {
+        font-size: 0.8rem;
+    }
 
-      @media (max-width: 480px) {
-        .quantum-card {
-          padding: 0.5rem;
-          max-width: 100%;
-        }
-    
-        .quantum-title {
-          font-size: 1.5rem;
-        }
-    
-        .table-wrapper {
-          margin: 0.5rem -0.5rem;
-          padding: 0 0.5rem;
-        }
-    
-        .quantum-table {
-          font-size: 0.8rem;
-        }
-    
-        .copy-btn {
-          padding: 0.5rem 0.8rem;
-          font-size: 0.7rem;
-        }
-      }
+    .copy-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.7rem;
+    }
+}
 
-      .table-wrapper {
-        width: 100%;
-    overflow-x: auto; /* Mengaktifkan scroll horizontal */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
     margin-bottom: 0px;
-    border: 1px solid #000; /* Border dengan warna abu-abu */
-    border-radius: 10px; /* Membuat sudut melengkung */
-    padding: 0px; /* Memberi jarak antara border dan konten */
-    background-color: rgba(0, 0, 0, 0.82); /* Warna latar belakang */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), /* Glow putih */
-              0 0 30px rgba(0, 150, 255, 0.5);   /* Glow biru */
-      }
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 0px;
+    background-color: rgba(0, 0, 0, 0.82);
+    /* Glow Biru ke CYAN */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6),
+        0 0 30px rgba(0, 255, 255, 0.5);
+}
 
-     
-      .swal-popup-extra-small-text {
-    font-size: 12px; /* Ukuran font untuk seluruh pop-up */
+.swal-popup-extra-small-text {
+    font-size: 12px;
 }
 
 .swal-title-extra-small-text {
-    font-size: 12px; /* Ukuran font untuk judul */
+    font-size: 12px;
     font-weight: bold;
 }
 
 .swal-content-extra-small-text {
-    font-size: 12px; /* Ukuran font untuk teks konten */
+    font-size: 12px;
 }
 
-.button, .button1, .button2, .button3  {
-      white-space: nowrap; /* Mencegah teks melipat */
-     position: relative; /* Pastikan tombol berada di atas elemen lainnya */
-  z-index: 2; /* Tingkatkan prioritas tombol */
-  pointer-events: auto; /* Aktifkan interaksi pointer */
+.button, .button1, .button2, .button3 {
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
 
-      padding: 10px 10px;
-      margin: 10px 5px;
-      border: 0px solid #fff;
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
+    padding: 10px 10px;
+    margin: 10px 5px;
+    border: 0px solid #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
 
-    /* Button Colors */
-    .button1 { 
-      margin: 10px;
-      padding: 10px 10px;
-      border: 0px solid rgba(183, 43, 0, 0.97); /* Border dengan warna abu-abu */
-      border-radius: 10px;
-      border-radius: 5px;
-      background-color: green;
-      color: #fff;
-      cursor: pointer;
-      position: relative; /* Pastikan tombol berada di atas elemen lainnya */
-  z-index: 2; /* Tingkatkan prioritas tombol */
-  pointer-events: auto; /* Aktifkan interaksi pointer */
+/* Button Colors */
+.button1 {
+    margin: 10px;
+    padding: 10px 10px;
+    border: 0px solid rgba(183, 43, 0, 0.97);
+    border-radius: 10px;
+    border-radius: 5px;
+    background-color: green;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+}
 
-      
-    }
-    .button2 { 
-      margin: 10px;
-      padding: 10px 10px;
-      border: 0px solid rgba(183, 43, 0, 0.97); /* Border dengan warna abu-abu */
-      border-radius: 10px;
-      border-radius: 5px;
-      background-color: rgba(14, 116, 255, 0.97);
-      color: #fff;
-      cursor: pointer;
-      position: relative; /* Pastikan tombol berada di atas elemen lainnya */
-  z-index: 2; /* Tingkatkan prioritas tombol */
-  pointer-events: auto; /* Aktifkan interaksi pointer */
+.button2 {
+    margin: 10px;
+    padding: 10px 10px;
+    border: 0px solid rgba(183, 43, 0, 0.97);
+    border-radius: 10px;
+    border-radius: 5px;
+    background-color: rgba(14, 116, 255, 0.97);
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+}
 
-      
-    }
-    .button3 { 
-      margin: 10px;
-      padding: 10px 10px;
-      border: 0px solid rgba(183, 43, 0, 0.97); /* Border dengan warna abu-abu */
-      border-radius: 10px;
-      border-radius: 5px;
-      background-color: rgba(255, 61, 68, 0.97);
-      color: #fff;
-      cursor: pointer;
-      position: relative; /* Pastikan tombol berada di atas elemen lainnya */
-  z-index: 2; /* Tingkatkan prioritas tombol */
-  pointer-events: auto; /* Aktifkan interaksi pointer */
+.button3 {
+    margin: 10px;
+    padding: 10px 10px;
+    border: 0px solid rgba(183, 43, 0, 0.97);
+    border-radius: 10px;
+    border-radius: 5px;
+    background-color: rgba(255, 61, 68, 0.97);
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+}
 
-      
-    }
-    /* Hover Effects */
-    .button:hover { background-color: #2980b9; border: 1px solid rgba(197, 51, 6, 0.89); border-radius: 8px; }
-    
-    /* Click Effects */
-    .button:active {
-      transform: scale(0.95);
-      border: 2px solid #333;
-    }
+/* Hover Effects */
+.button:hover { background-color: #2980b9; border: 1px solid rgba(197, 51, 6, 0.89); border-radius: 8px; }
 
-    /* Shadow/Glow Effects */
-    .button, .button1, .button2, .button3  {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    position: relative; /* Pastikan tombol berada di atas elemen lainnya */
-  z-index: 2; /* Tingkatkan prioritas tombol */
-  pointer-events: auto; /* Aktifkan interaksi pointer */
+/* Click Effects */
+.button:active {
+    transform: scale(0.95);
+    border: 2px solid #333;
+}
 
-    }
-    .button:hover {
-      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
-    }
+/* Shadow/Glow Effects */
+.button, .button1, .button2, .button3 {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+}
 
-  
+.button:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
 
 .button6 {
-      margin : 5px;
-      padding: 5px;
-      border: px solid rgba(183, 43, 0, 0.97); /* Border dengan warna abu-abu */
-      border-radius: 0px;
-      border-radius: 0px;
-      background-color: ;
-      color: #fff;
-      cursor: pointer;
-    position: relative; /* Pastikan tombol berada di atas elemen lainnya */
-  z-index: 2; /* Tingkatkan prioritas tombol */
-  pointer-events: auto; /* Aktifkan interaksi pointer */
+    margin : 5px;
+    padding: 5px;
+    border: px solid rgba(183, 43, 0, 0.97);
+    border-radius: 0px;
+    border-radius: 0px;
+    background-color: ;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+}
 
-    }
-    
 .button7 {
-  margin: 2px;
-  padding: 2px 10px; /* Lebar sedikit lebih besar */
-  border: 1px solid rgba(255, 255, 255, 0.4); /* Border lebih jelas */
-  border-radius: 6px; /* Sudut lebih lembut */
-  background: linear-gradient(135deg, rgba(0, 255, 100, 0.4), rgba(0, 180, 50, 0.6)); /* Gradien hijau lebih kuat */
-  backdrop-filter: blur(8px); /* Blur lebih intens */
-  -webkit-backdrop-filter: blur(8px); /* Untuk Safari */
-  color: white; /* Warna teks tetap putih */
-  font-size: 13px; /* Ukuran font sedikit lebih besar */
-  font-weight: bold;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-  pointer-events: auto;
-  line-height: 1;
-  height: 40px; /* Tinggi tombol */
-  box-shadow: 0 4px 10px rgba(0, 255, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2); /* Shadow luar & dalam */
-  transition: all 0.3s ease-in-out; /* Transisi lebih smooth */
+    margin: 2px;
+    padding: 2px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 6px;
+    /* Gradien Hijau ke CYAN */
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.4), rgba(0, 192, 192, 0.6));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+    line-height: 1;
+    height: 40px;
+    /* Shadow CYAN */
+    box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease-in-out;
 }
 
 .button7:hover {
-  background: linear-gradient(135deg, rgba(0, 255, 150, 0.5), rgba(0, 220, 0, 0.7)); /* Warna lebih terang saat hover */
-  box-shadow: 0 6px 12px rgba(0, 255, 0, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.3);
-  transform: scale(1.05); /* Sedikit membesar saat hover */
+    /* Warna lebih terang saat hover - CYAN */
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.5), rgba(0, 220, 220, 0.7));
+    /* Shadow CYAN lebih kuat */
+    box-shadow: 0 6px 12px rgba(0, 255, 255, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
 }
 
-    .popup-content {
-      background-color: rgba(0, 0, 0, 0.82);
-      padding: 20px;
-      border: 0px solid rgba(197, 51, 6, 0.89); /* Border dengan warna abu-abu */
-      border-radius: 5px;
-      text-align: center;
-    
-      position: relative;
-  z-index: 1000; /* Pastikan elemen ini berada di atas */
-  pointer-events: auto;
-    }
-    
-    .popupnav-content {
-      background-color: rgba(0, 0, 0, 0.82);
-      padding: 10px;
-      border: 0px solid rgba(197, 51, 6, 0.89); /* Border dengan warna abu-abu */
-      border-radius: 10px;
-      text-align: center;
-    
-      position: relative;
-  z-index: 1000; /* Pastikan elemen ini berada di atas */
-  pointer-events: auto;
-    }
-    
-    .popupnav {
-    display: none; /* Popup disembunyikan secara default */
+.popup-content {
+    background-color: rgba(0, 0, 0, 0.82);
+    padding: 20px;
+    border: 0px solid rgba(197, 51, 6, 0.89);
+    border-radius: 5px;
+    text-align: center;
+
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+.popupnav-content {
+    background-color: rgba(0, 0, 0, 0.82);
+    padding: 10px;
+    border: 0px solid rgba(197, 51, 6, 0.89);
+    border-radius: 10px;
+    text-align: center;
+
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+.popupnav {
+    display: none;
     position: fixed;
-    left: 0; /* Memposisikan popup di sebelah kiri */
+    left: 0;
     top: 0;
-    width: 300px; /* Tentukan lebar popup */
-    height: 100%; /* Menjaga tinggi popup penuh */
+    width: 300px;
+    height: 100%;
     background-color: ;
     justify-content: left;
     align-items: center;
     z-index: 100;
     pointer-events: auto;
-    animation: slideInLeft 0.5s forwards; /* Animasi popup muncul dari kiri */
+    animation: slideInLeft 0.5s forwards;
     color: #fff;
-            text-align: left;
-            font-size: 15px;
-            font-weight: bold;
-            text-shadow: 
-                0 0 4px rgba(0, 123, 255, 0.8),
-                0 0 6px rgba(0, 123, 255, 0.8),
-                0 0 8px rgba(0, 123, 255, 0.8),
-                0 0 10px rgba(0, 123, 255, 0.8),
-                0 0 15px rgba(0, 123, 255, 0.8);
-    
-    }
+    text-align: left;
+    font-size: 15px;
+    font-weight: bold;
+    /* Glow Biru ke CYAN */
+    text-shadow:
+        0 0 4px rgba(0, 255, 255, 0.8),
+        0 0 6px rgba(0, 255, 255, 0.8),
+        0 0 8px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 15px rgba(0, 255, 255, 0.8);
+}
 
-/* Animasi untuk popup masuk dari kiri */
 @keyframes slideInLeft {
     from {
-        left: -100%; /* Popup dimulai di luar layar di sebelah kiri */
+        left: -100%;
     }
     to {
-        left: 0; /* Popup bergerak masuk ke kiri layar */
+        left: 0;
     }
 }
 
+.rainbow-text {
+    font-size: 15px;
+    font-weight: bold;
+    animation: rainbow 2s infinite;
+}
 
-    .rainbow-text {
-      font-size: 15px;
-      font-weight: bold;
-      animation: rainbow 2s infinite;
-    }
-
-    .flag-container {
-  display: flex;
-  justify-content: center; /* Menjajarkan konten secara horizontal */
-  align-items: center; /* Menjajarkan konten secara vertikal */
-  height: 100%; /* Atur tinggi sesuai kebutuhan */
-  text-align: center; /* Opsional, untuk memastikan teks sejajar */
-  gap: 8px; /* Jarak antara teks dan ikon */
+.flag-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    gap: 8px;
 }
 
 
 .flag-circle {
-  display: inline-block;
-  width: 30px; /* Sesuaikan ukuran */
-  height: 30px; /* Sama dengan lebar untuk bentuk bulat */
-  border-radius: 50%; /* Membuat elemen berbentuk bulat */
-  background-size: cover; /* Menutupi area lingkaran */
-  background-position: center; /* Memusatkan gambar */
-  overflow: hidden; /* Mencegah isi keluar dari lingkaran */
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
 }
 
 .flag-icon {
-  display: inline-block;
+    display: inline-block;
 }
 
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Space Grotesk', sans-serif;
+}
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Space Grotesk', sans-serif;
-      }
-    /* Animasi Loading */
- .loading-icon {
-    color: #4CAF50; /* Warna untuk ikon spinner */
+/* Animasi Loading */
+.loading-icon {
+    /* Warna ICON Loading */
+    color: var(--primary);
     font-size: 30px;
 }
 
 .loading-text {
     font-size: 18px;
-    color: #FF5722; /* Warna untuk teks 'Loading...' */
+    /* Warna TEXT Loading */
+    color: var(--primary);
     margin-left: 10px;
-    font-weight: bold; /* Menambahkan ketebalan pada teks */
+    font-weight: bold;
 }
 
 .quantum-title {
-          font-size: 2rem;
-          margin-bottom: 1rem;
-        }
-    
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
 /* Animasi Checkmark */
 .check-icon {
-  color: green;
-  font-size: 20px;
-  animation: checkAnim 0.3s ease-in-out;
+    color: green;
+    font-size: 20px;
+    animation: checkAnim 0.3s ease-in-out;
 }
 
 @keyframes checkAnim {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Animasi X (Error) */
 .error-icon {
-  color: red;
-  font-size: 20px;
-  animation: errorAnim 0.3s ease-in-out;
+    color: red;
+    font-size: 20px;
+    animation: errorAnim 0.3s ease-in-out;
+}
+
+/* Progress Bar (Loading) */
+.popup-progress {
+    width: 100%;
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+/* Progress Bar Fill - Gradien CYAN */
+.popup-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00FFFF, #00BFFF);
+    width: 0%;
+    transition: width 0.3s ease;
 }
 
 @keyframes errorAnim {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
-</style>
-<style>
+/* NAV BAR SECTION */
 .navbarconten {
     width: 100%;
-    overflow-x: auto; /* Mengaktifkan scroll horizontal */
+    overflow-x: auto;
     margin-bottom: 0px;
-    border: 1px solid #000; /* Border dengan warna abu-abu */
-    border-radius: 10px; /* Membuat sudut melengkung */
-    padding: 0px; /* Memberi jarak antara border dan konten */
-    background-color: rgba(0, 0, 0, 0.82); /* Warna latar belakang */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), /* Glow putih */
-              0 0 30px rgba(0, 150, 255, 0.5);   /* Glow biru */
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 0px;
+    background-color: rgba(0, 0, 0, 0.82);
+    /* Glow Biru ke CYAN */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6),
+        0 0 30px rgba(0, 255, 255, 0.5);
 
-    }
-      .navbar {
-            position: fixed;
-            top: 60%;
-            left: -80px; /* Awalnya disembunyikan */
-            transform: translateY(-50%);
-            width: 80px;
-            background: ;
-            color: white;
-            padding: 10px 0;
-            transition: left 0.3s ease-in-out;
-            z-index: 1000;
-            border-radius: 0 10px 10px 0;
+}
+.navbar {
+    position: fixed;
+    top: 60%;
+    left: -80px;
+    transform: translateY(-50%);
+    background: ;
+    color: white;
+    padding: 10px 0;
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Saat navbar terbuka */
+.navbar.show {
+    left: 0;
+}
+
+.navbar a img {
+    width: 40px;
+}
+
+.navbar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+}
+
+.navbar a:hover {
+    background: ;
+}
+
+/* Tombol Toggle */
+.toggle-btn {
+    position: absolute;
+    top: 60%;
+    right: -30px;
+    transform: translateY(-50%);
+    background: ;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 10px;
+    border-radius: 0 10px 10px 0;
+    transition: right 0.3s ease-in-out;
+}
+
+.toggle-btn img {
+    width: 20px;
+    height: 150px;
+}
+
+/* Saat navbar terbuka, tombol ikut bergeser */
+.navbar.show .toggle-btn {
+    right: -29px;
+}
+
+        header {
+            width: 100%;
+            text-align: center;
+        }
+
+        
+        /* --- Kontainer Utama Konten --- */
+        .quantum-container {
+            width: 95%;
+            max-width: 1000px; /* Lebar maksimum untuk konten utama */
+            padding: 1rem 0.5rem;
+            margin-top: 0;
+            padding-bottom: 5rem;
+        }
+
+        /* --- Formulir & Dropdown --- */
+        .search-quantum > div {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            width: 100%;
+            max-width: 500px; 
+            margin: 0 auto;
             gap: 10px;
         }
 
-        /* Saat navbar terbuka */
-        .navbar.show {
-            left: 0;
+        #search-bar {
+            flex: 1;
+            height: 45px;
+            padding: 0 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: var(--color-text);
+            transition: var(--transition);
         }
 
-        .navbar a img {
-            width: 40px;
+        #search-bar:focus {
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 8px 3px rgba(0, 255, 255, 0.7);
         }
-        
-        .navbar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
+
+        .wildcard-dropdown {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
-        .navbar a:hover {
-            background: ;
-        }
-        
-        /* Tombol Toggle */
-        .toggle-btn {
-            position: absolute;
-            top: 60%;
-            right: -30px; /* Posisi tombol di tengah kanan navbar */
-            transform: translateY(-50%);
-            background: ;
-            border: none;
+
+        .wildcard-dropdown select {
+            padding: 0.5rem 0.5rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: var(--color-text);
+            appearance: none;
             cursor: pointer;
-            z-index: 1001;
-            padding: 10px;
-            border-radius: 0 10px 10px 0;
-            transition: right 0.3s ease-in-out;
+            font-size: 0.9rem;
         }
 
-        .toggle-btn img {
-            width: 20px; /* Ukuran gambar lebih kecil */
-            height: 150px; /* Ukuran gambar lebih kecil */
-        }
-
-        /* Saat navbar terbuka, tombol ikut bergeser */
-        .navbar.show .toggle-btn {
-            right: -29px;
+        .wildcard-dropdown select option {
+            background-color: var(--color-background);
         }
         
-</style>
+        /* Tombol Tailwind - Penyesuaian Gaya Neon */
+        .bg-gradient-to-r {
+            background: linear-gradient(90deg, #39ff14, #008080);
+            color: black;
+            font-weight: bold;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .bg-gradient-to-r:hover {
+            box-shadow: 0 0 15px 5px rgba(57, 255, 20, 0.7);
+        }
+
+        /* --- Tabel Data --- */
+
+        .table-wrapper {
+            overflow-x: auto; 
+            margin-top: 1.5rem;
+            /* Tambahkan efek card pada wrapper tabel */
+            background: var(--color-card);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1); 
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 212, 255, 0.2); 
+            padding: 10px;
+        }
+
+        .quantum-table {
+            width: 100%;
+            min-width: 900px; /* Lebar minimum untuk scroll horizontal */
+            border-collapse: separate;
+            border-spacing: 0 10px; 
+            table-layout: fixed; 
+        }
+
+        .quantum-table thead th {
+            background: var(--color-table-header);
+            color: var(--color-primary);
+            padding: 1rem 0.5rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            position: sticky; 
+            top: 0;
+            z-index: 10;
+        }
+
+        .quantum-table tbody tr {
+            background: rgba(0, 212, 255, 0.05); /* Latar baris transparan */
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.08);
+        }
+
+        .quantum-table tbody tr:hover {
+            background: rgba(0, 212, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .quantum-table td {
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            vertical-align: middle;
+            border: none;
+            font-size: 0.85rem;
+            border-left: 1px solid rgba(0, 212, 255, 0.1);
+        }
+        .quantum-table td:first-child { border-left: none; }
+
+        .flag-circle { 
+            border: 2px solid var(--color-primary) !important; 
+            box-shadow: 0 0 5px var(--color-primary);
+        }
+
+        .loading-icon {
+            color: var(--color-primary);
+            font-size: 1.2rem;
+        }
+        
+        /* Tombol Aksi di Tabel */
+        .button-cell button {
+            background: var(--color-tertiary); /* Hijau Neon */
+            color: var(--color-background);
+            font-weight: 700;
+            padding: 0.5rem 0.75rem;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+            transition: var(--transition);
+            min-width: 80px;
+        }
+
+        .button-cell button:hover {
+            background: #5eff3d;
+            box-shadow: 0 0 15px 5px rgba(57, 255, 20, 0.7);
+        }
+
+        /* --- Navigasi Bendera Horizontal --- */
+        .flag-scroll-wrapper {
+            background: rgba(0, 212, 255, 0.1); 
+            box-shadow: 0 0 10px 2px rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            border: 2px solid #008080 !important;
+            height: 55px;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -3481,41 +3697,36 @@ function buildCountryFlag() {
                 <input type="text" id="search-bar" placeholder="Search by IP, CountryCode, or ISP" 
                        value="${searchQuery}" 
                        style="flex: 1; height: 45px; padding-left: 10px;">
-                <button id="search-button" style="background: transparent; border: none; padding: 0;">
-                    <img src="https://geoproject.biz.id/circle-flags/search.png" alt="menu" width="66" style="margin-top: 5px;">
-                </button>
+                <button id="search-button" class="bg-gradient-to-r from-green-500 to-green-700 p-2 rounded-md shadow-lg flex items-center justify-center cursor-pointer h-[45px] w-[45px] hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 h-6 w-6 text-white"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /> </svg> 
+</button>
             </div>
             ${searchQuery ? `
-                <button id="home-button" 
-                        class="bg-gradient-to-r from-[#13a101] to-[#13a101] text-white border border-black rounded-md px-3 py-2 text-sm transition duration-300 ease-in-out hover:bg-[#008080] hover:text-[#222222]" 
-                        style="margin: 5px;" 
-                        onclick="goToHomePage('${hostName}')">
-                    Home Page
-                </button>` 
+                <button id="home-button" class="bg-gradient-to-r from-green-500 to-green-700 p-2 rounded-md shadow-lg flex items-center justify-center cursor-pointer h-[40px] w-[40px] transition duration-300 ease-in-out hover:from-green-700 hover:to-green-900" style="margin: 5px;" onclick="goToHomePage('${hostName}')"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 h-6 w-6 text-white"> <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.15-.439 1.59 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125h14.25c.621 0 1.125-.504 1.125-1.125V9.75M9 14.25h6" /> </svg> 
+</button>
+             ` 
             : ''}
         </div>
-            <br>
-            <div class="wildcard-dropdown"><div class="button6" onclick="showPopup('menu')">
-        <img src="https://geoproject.biz.id/circle-flags/options.png
-" alt="menu" width="70">
-</div>
+
+            <div class="wildcard-dropdown"> 
+        <button onclick="toggleWildcardsWindow()" class="bg-gradient-to-r from-green-500 to-green-700 text-white rounded-full p-2 transition-colors duration-200 hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" /> </svg> 
+</button>
   <select id="wildcard" name="wildcard" onchange="onWildcardChange(event)" style="width: 90px; height: 45px;">
     <option value="" ${!selectedWildcard ? 'selected' : ''}>No Wildcard</option>
     ${allWildcards.map(w => `<option value="${w}" ${selectedWildcard === w ? 'selected' : ''}>${w}</option>`).join('')}
   </select>
   <select id="configType" name="configType" onchange="onConfigTypeChange(event)" style="width: 60px; height: 45px;">
     <option value="tls" ${selectedConfigType === 'tls' ? 'selected' : ''}>TLS</option>
-    <option value="non-tls" ${selectedConfigType === 'non-tls' ? 'selected' : ''}>NON TLS</option> </select><a href="${telegrambot}" target="_blank" rel="noopener noreferrer" style="font-family: 'Rajdhani', sans-serif;"><img src="https://geoproject.biz.id/circle-flags/botak.png
-" alt="menu" width="100"></a>
+    <option value="non-tls" ${selectedConfigType === 'non-tls' ? 'selected' : ''}>NON TLS</option> </select>
+    
+          <a href="${telegrambot}" target="_blank"> <button class="bg-gradient-to-r from-green-500 to-green-700 rounded-full p-2 block text-white border-2 border-green-900 transition duration-300 ease-in-out hover:from-green-700 hover:to-green-900"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6"> <path d="M22 12A10 10 0 0 1 12 2A10 10 0 0 1 2 12A10 10 0 0 1 12 22A10 10 0 0 1 22 12z"></path> <path d="M7 10l5 5l5-5"></path> <path d="M12 15l-5 5"></path> <path d="M12 15l5 5"></path> </svg> </button> 
+</a>
+            
 </div>
 <div class="w-full h-12 overflow-x-auto px-2 py-1 flex items-center space-x-2 shadow-lg bg-transparent border"
             style="border-width: 2px; border-style: solid; border-color: #008080; height: 55px; border-radius: 10px;">
             ${buildCountryFlag()}
         </div>
-        <button onclick="toggleWildcardsWindow()" class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center">
-            Manage Wildcards
-        </button>
-        <div class="mt-3">
+        <div class="mt-1">
         </div>
         <div class="table-wrapper">
             <table class="quantum-table">
@@ -3775,7 +3986,7 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
                  type="text" 
                  placeholder="Input wildcard" 
                  class="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-          <button onclick="registerDomain()" 
+          <button id="add-domain-button" onclick="registerDomain()" 
                   class="p-2 rounded-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center text-white">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                   <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
@@ -3794,12 +4005,20 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
                  type="number" 
                  placeholder="Input Nomor" 
                  class="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-          <button onclick="deleteDomainByNumber()" 
+          <button id="delete-domain-button" onclick="deleteDomainByNumber()" 
                   class="p-2 rounded-full bg-red-600 hover:bg-red-700 flex justify-center items-center text-white">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                   <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
               </svg>
           </button>
+      </div>
+
+      <!-- Loading indicator -->
+      <div id="wildcard-loading" class="hidden w-full text-center">
+          <div class="popup-progress">
+              <div class="popup-progress-fill" id="popupProgress"></div>
+          </div>
+          <p style="margin-top: 10px; font-size: 0.9em; color: #aaa;">Loading...</p>
       </div>
 
       <!-- Close button -->
@@ -3841,10 +4060,50 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
             }
         }
 
+        function setLoadingState(isLoading) {
+            const loading = document.getElementById('wildcard-loading');
+            const newDomainInput = document.getElementById('new-domain-input');
+            const addDomainButton = document.getElementById('add-domain-button');
+            const deleteDomainInput = document.getElementById('delete-domain-input');
+            const deleteDomainButton = document.getElementById('delete-domain-button');
+            const progressFill = document.getElementById('popupProgress');
+
+            if (isLoading) {
+                loading.classList.remove('hidden');
+                newDomainInput.disabled = true;
+                addDomainButton.disabled = true;
+                deleteDomainInput.disabled = true;
+                deleteDomainButton.disabled = true;
+                
+                progressFill.style.width = '0%';
+                // Use a timeout to ensure the transition is applied after the initial width is set
+                setTimeout(() => {
+                    progressFill.style.transition = 'width 2s ease-in-out';
+                    progressFill.style.width = '80%';
+                }, 100);
+
+            } else {
+                progressFill.style.width = '100%';
+                setTimeout(() => {
+                    loading.classList.add('hidden');
+                    // Reset for next time
+                    progressFill.style.width = '0%';
+                    progressFill.style.transition = '';
+                }, 500);
+
+                newDomainInput.disabled = false;
+                addDomainButton.disabled = false;
+                deleteDomainInput.disabled = false;
+                deleteDomainButton.disabled = false;
+            }
+        }
+
         async function registerDomain() {
             const input = document.getElementById('new-domain-input');
             const domain = input.value.trim();
             if (!domain) return;
+
+            setLoadingState(true);
 
             try {
                 const response = await fetch('/api/v1/domains', {
@@ -3854,13 +4113,15 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
                 });
                 if (response.ok) {
                     input.value = '';
-                    loadDomains();
+                    await loadDomains();
                 } else {
                     alert('Failed to register domain: ' + await response.text());
                 }
             } catch (error) {
                 console.error('Error registering domain:', error);
                 alert('An error occurred while registering the domain.');
+            } finally {
+                setLoadingState(false);
             }
         }
 
@@ -3873,6 +4134,7 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
             }
 
             const domainToDelete = domains[number - 1];
+            setLoadingState(true);
 
             try {
                 const response = await fetch('/api/v1/domains', {
@@ -3883,13 +4145,15 @@ Assalamualaikum Warahmatullahi Wabarakatuh</span>
 
                 if (response.ok) {
                     input.value = '';
-                    loadDomains();
+                    await loadDomains();
                 } else {
                     alert('Failed to delete domain: ' + await response.text());
                 }
             } catch (error) {
                 console.error('Error deleting domain:', error);
                 alert('An error occurred while deleting the domain.');
+            } finally {
+                setLoadingState(false);
             }
         }
     </script>
